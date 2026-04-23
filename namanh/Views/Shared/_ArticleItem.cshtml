@@ -1,0 +1,22 @@
+﻿@model namanh.Models.Article
+
+<div class="news-item">
+    <a href="@Url.Action("ArticleDetail", new { url = Model.Url })" class="news-img">
+        @if (Model.Image != null)
+        {
+            <img data-src="@Path.Combine("/images/articles/", Model.Image)" src="~/Content/images/img-main/base64.gif" alt="@Model.Subject" class="lazyload" />
+        }
+        else
+        {
+            <img src="~/Content/images/img-main/on-image.jpg" alt="@Model.Subject" />
+        }
+    </a>
+    <div class="body">
+        <div class="subject">
+            <a href="@Url.Action("ArticleDetail", new { url = Model.Url })" title="@Model.Subject">@Model.Subject</a>
+        </div>
+        <div class="desc">
+            @Model.Description
+        </div>
+    </div>
+</div>

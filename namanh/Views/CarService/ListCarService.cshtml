@@ -1,0 +1,88 @@
+﻿@model IEnumerable<namanh.Models.CarService>
+<div class="accordion-item border-left-slate">
+    <div class="accordion-header">
+        <div class="card-title">
+            <i class="fa-solid fa-list"></i>
+            Danh sách trang dịch vụ
+        </div>
+        <button type="button" data-bs-toggle="collapse" data-bs-target="#categoryList">
+            <i class="fa-solid fa-angle-down"></i>
+        </button>
+    </div>
+    <div id="categoryList" class="accordion-collapse collapse show">
+        <div class="accordion-body">
+            <table class="list_table tablecenter mb-4" id="list-cat">
+                <thead>
+                    <tr>
+                        <th>STT</th>
+                        <th>Hình ảnh</th>
+                        <th>Tên</th>
+                        <th>Hoạt động</th>
+                        <th>Nội dung</th>
+                        <th style="width: 160px"></th>
+                    </tr>
+                </thead>
+                <tbody id="sortable-cat">
+                    @foreach (var category in Model)
+                    {
+                        <tr data-id="@category.Id" style="background: #ededed">
+                            <td style="width: 120px;">
+                                <input type="number" name="Sort" value="@category.Sort" class="form_control" />
+                            </td>
+                            <td>
+                                @if (category.ImageUrl != null)
+                                {
+                                    <img src="@Path.Combine("/images/carService/", category.ImageUrl)" style="width: 150px; height: 100px; object-fit: contain" />
+                                }
+                            </td>
+                            <td class="left">
+                                <strong>
+                                    @category.Title
+                                </strong>
+                            </td>
+                            <td>
+                                <label class="form-check-label">
+                                    <input type="checkbox" id="Active" @if (category.Active) { @Html.Raw("value='true' checked")  } else { @Html.Raw("value='false'") } />
+                                    <span class="checkmark"></span>
+                                </label>
+                            </td>
+                            <td class="action-col">
+                                @Html.ActionLink("Chi tiết", "ListDetail", new { id = category.Id })
+                            </td>
+                            <td class="action-col">
+                                @Html.ActionLink("Bảng giá", "ListPrice", new { id = category.Id }) -
+                                @Html.ActionLink("Sửa", "UpdateCarService", new { catId = category.Id }) -
+                                <a href="javascript:;" onclick="deleteArtCategory('@category.Id')" style="color: red">Xóa</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    <script>
+        function deleteArtCategory(id) {
+            if (confirm("Bạn có chắc chắn xóa không?")) {
+                $.post("/CarService/DeleteCarService", { catId: id }, function (data) {
+                    if (data) {
+                        $.toast({
+                            text: 'Đang xóa',
+                            position: 'bottom-right',
+                            icon: 'success',
+                        })
+                        $("tr[data-id='" + id + "']").fadeOut();
+                    } else {
+                        $.toast({
+                            text: 'Quá trình thực hiện không thành công. Hãy thử lại',
+                            icon: 'error',
+                        })
+                    }
+                });
+            }
+        }
+
+    </script>
+    }

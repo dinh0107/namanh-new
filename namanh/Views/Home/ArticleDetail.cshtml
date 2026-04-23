@@ -1,0 +1,101 @@
+﻿@using namanh.Models
+@using Helpers
+@model namanh.ViewModel.ArticleViewModel
+@{
+    var config = (ConfigSite)HttpContext.Current.Application["ConfigSite"];
+    ViewBag.Title = Model.Article.TitleMeta ?? Model.Article.Subject;
+    ViewBag.Description = Model.Article.DescriptionMeta ?? Model.Article.DescriptionMeta;
+    if (Model.Article.Image != null)
+    {
+        ViewBag.ImgShare = Request.Url?.GetLeftPart(UriPartial.Authority) + Path.Combine("/images/articles/", Model.Article.Image);
+    }
+    ViewBag.Canonical = Request.Url?.GetLeftPart(UriPartial.Authority) + Url.Action("ArticleDetail", new { url = Model.Article.Url });
+    ViewContext.HttpContext.Items["articleId"] = Model.Article.Id;
+}
+<div class="container-rs mt-lg-3">
+    <div class="row mt-lg-4 mt-2 box-article">
+        <div class="col-lg-9">
+            <ol class="breadcrumb bg-white p-0">
+                <li class="breadcrumb-item">
+                    <a href="@Url.Action("Index", "Home")">Trang chủ</a>
+                </li>
+                @if (Model.RootCategory != null)
+                {
+                    <li class="breadcrumb-item">
+                        <a href="@Url.Action("ArticleCategory", "Home", new { url = Model.RootCategory.Url })" itemprop="name">@Model.RootCategory.CategoryName</a>
+                    </li>
+                }
+                <li class="breadcrumb-item">
+                    <a href="@Url.Action("ArticleCategory", "Home", new { url = Model.Article.ArticleCategory.Url  })">
+                        @Model.Article.ArticleCategory.CategoryName
+                    </a>
+                </li>
+                <li class="breadcrumb-item active">
+                    @Model.Article.Subject
+                </li>
+            </ol>
+            <h1 class="detail-subject">@Model.Article.Subject</h1>
+            <div class="d-lg-flex justify-content-between align-items-center">
+                <div class="date-post">
+                    <i class="fal fa-calendar-alt"></i> @Model.Article.CreateDate.ToString("dd/MM/yyyy")
+                </div>
+            </div>
+            <div class="sapo-detail">
+                @Model.Article.Description
+            </div>
+            <div class="detail-content">
+                @Html.Raw(Model.Article.Body)
+            </div>
+            <hr />
+            <ul class="ul-block d-flex article-info__share mt-3 mt-lg-4 ul-reset">
+                <li>Chia sẻ: </li>
+                <li><button class="button" onclick="window.open('https://www.facebook.com/sharer.php?u='+encodeURIComponent(location.href)+'&amp;t='+encodeURIComponent(document.title));return false"><img src="~/Content/images/img-main/fb.svg" alt="facebook" /></button></li>
+                <li><button class="button" onclick="window.open('https://twitter.com/intent/tweet?url='+encodeURIComponent(location.href)+'&amp;text='+encodeURIComponent(document.title));return false"><img src="~/Content/images/img-main/tw.svg" alt="tw" /></button></li>
+                <li><button class="button" onclick="window.open('https://www.instagram.com/?url='+encodeURIComponent(location.href)+'&amp;t='+encodeURIComponent(document.title));return false"> <img src="~/Content/images/img-main/instagram.svg" alt="instagram" /></button></li>
+                <li><button class="button" onclick="window.open('https://www.linkedin.com/sharing/share-offsite/?url='+encodeURIComponent(location.href)+'&amp;t='+encodeURIComponent(document.title));return false"><img src="~/Content/images/img-main/linkedin.png" alt="linkedin" /> </button></li>
+            </ul>
+            <hr />
+            <div class="fb-comments" data-href="@Request.Url" data-numposts="10" data-width="100%"></div>
+            @if (Model.Articles.Any())
+            {
+                <div class="title-relate py-3 mb-3">Bài viết liên quan</div>
+                foreach (var item in Model.Articles)
+                {
+                    <article class="media d-flex">
+                        <a href="@Url.Action("ArticleDetail", "Home", new { url = item.Url })">
+                            @if (item.Image != null)
+                            {
+                                <img src="~/Content/images/img-main/base64.gif" data-src="@Path.Combine("/images/articles/",item.Image)" class="relate-img lazyload" alt="@item.Subject" />
+                            }
+                        </a>
+                        <div class="media-body ml-3 body-relate">
+                            <a href="@Url.Action("ArticleDetail", "Home", new { url = item.Url})" class="relate-subject">@item.Subject</a>
+                            <div class="relate-sub">
+                                @item.Description
+                            </div>
+                            <div class="info">
+                                <a href="@Url.Action("ArticleCategory", "Home", new { url = item.ArticleCategory.Url })">@item.ArticleCategory.CategoryName</a>
+                                <span>@item.CreateDate.ToString("dd/MM/yyyy")</span>
+                            </div>
+                        </div>
+                    </article>
+                }
+            }
+        </div>
+        <div class="col-lg-3 pr-lg-0">
+            @Html.Action("ArticleHot")
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    <script type="application/ld+json">
+        {
+          "@Html.Raw("@context")": "https://schema.org",
+          "@Html.Raw("@type"): "BlogPosting",
+          "headline": "@Html.Raw(ViewBag.Title)",
+          "image": "@ViewBag.ImgShare",
+          "description": "@Html.Raw(ViewBag.Description)"
+        }
+    </script>
+}

@@ -1,0 +1,218 @@
+﻿@model namanh.ViewModel.ListCustomerViewModel
+@using PagedList.Mvc
+@{
+    ViewBag.Title = "Danh sách khách hàng";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+<div class="page-header">
+    <div class="page-title">
+        <i class="fa-solid fa-align-right fa-rotate-180 fa-sm"></i>
+        <span>Danh sách khách hàng</span>
+    </div>
+    <div class="header-elements">
+        <a href="@Url.Action("Customer")" class="btn-main btn-labeled btn-primary text-white">
+            <span class="icon">
+                <i class="fa-regular fa-plus fa-lg"></i>
+            </span>
+            Thêm mới
+        </a>
+        <a href="#" onclick="history.go(-1)" class="btn-main btn-labeled bg-brown ms-1">
+            <span class="icon">
+                <i class="fa-solid fa-left"></i>
+            </span>
+            Quay lại
+        </a>
+    </div>
+</div>
+<div class="content">
+    @if (ViewBag.Result == "success")
+    {
+        <div id="AlertBox" class="alert alert-success"><strong>Thêm mới khách hàng thành công</strong></div>
+    }
+    @if (ViewBag.Result == "voucher")
+    {
+        <div id="AlertBox" class="alert alert-success"><strong>Cập nhật voucher thành công</strong></div>
+    }
+    @if (ViewBag.Result == "update")
+    {
+        <div id="AlertBox" class="alert alert-success"><strong>Cập nhật khách hàng thành công</strong></div>
+    }
+    <div class="accordion">
+        <div class="accordion-item border-left-slate">
+            <div class="accordion-header">
+                <div class="card-title">
+                    <i class="fa-regular fa-magnifying-glass fa-lg"></i>
+                    Tìm kiếm
+                </div>
+                <button type="button" data-bs-toggle="collapse" data-bs-target="#searchForm" aria-expanded="true">
+                    <i class="fa-solid fa-angle-down"></i>
+                </button>
+            </div>
+            <div id="searchForm" class="accordion-collapse collapse show">
+                <div class="accordion-body">
+                    <form action="@Url.Action("ListCustomer")" method="get" id="data-search-form">
+                        <div class="row">
+                            <div class="col-lg-3 mb-3">
+                                <label class="mb-1">Tên khách:</label>
+                                @Html.TextBoxFor(a => a.Name, new { @class = "form_control" })
+                            </div>
+                            <div class="col-lg-3 mb-3">
+                                <label class="mb-1">Số điện thoại:</label>
+                                @Html.TextBoxFor(a => a.Mobile, new { @class = "form_control" })
+                            </div>
+                        </div>
+                        <div class="btn-group border-0 pt-0">
+                            <button type="reset" onclick="resetAnyFormById('data-search-form');" class="btn-main btn-white" id="reset">
+                                <span>Đặt lại</span>
+                                <i class="fa-solid fa-rotate-right ms-2"></i>
+                            </button>
+                            <button type="submit" class="btn-main btn-primary text-white ms-3">
+                                <span>Tìm kiếm</span>
+                                <i class="fa-sharp fa-solid fa-paper-plane ms-2"></i>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="accordion-item border-left-slate">
+            <div class="accordion-header">
+                <div class="card-title">
+                    <i class="fa-solid fa-list"></i>
+                    Danh sách khách hàng
+                </div>
+                <button type="button" data-bs-toggle="collapse" data-bs-target="#listArticle" aria-expanded="true">
+                    <i class="fa-solid fa-angle-down"></i>
+                </button>
+            </div>
+            <div id="listArticle" class="accordion-collapse collapse show">
+                <div class="accordion-body">
+                    <p>Có tổng số <strong>@Model.Customers.TotalItemCount</strong> khách hàng</p>
+                    <table class="list_table tablecenter table-striped table-tab table-tab">
+                        <tbody>
+                            <tr>
+                                <th style="width: 100px">Ngày tạo</th>
+                                <th>Mã KH</th>
+                                <th>Tên khách</th>
+                                <th>Số điện thoại</th>
+                                <th>Voucher</th>
+                                <th>Hoạt động</th>
+                                <th style="width: 200px"></th>
+                            </tr>
+                            @foreach (var customer in Model.Customers)
+                            {
+                                <tr data-id="@customer.Id">
+                                    <td>@Html.DisplayFor(a => customer.CreateDate)</td>
+                                    <td>@customer.Code</td>
+                                    <td class="left">
+                                        <a href="@Url.Action("UpdateCustomer", new { customerId = customer.Id })"><strong>@customer.Name</strong></a>
+                                    </td>
+                                    <td><a href="tel:@customer.Mobile">@customer.Mobile</a></td>
+                                    <td>
+                                        @if (customer.Vouchers.Any())
+                                        {
+                                            foreach (var voucher in customer.Vouchers)
+                                            {
+                                                <a href="javascript:;" data-src="@Url.Action("UpdateVoucher", new{ voucherId = voucher.Id })" data-fancybox data-type="ajax" data-touch="false">@voucher.Code</a><br />
+                                            }
+                                        }
+                                    </td>
+                                    <td>
+                                        <label class="form-check-label">
+                                            <input type="checkbox" id="Active" @if (customer.Active) { @Html.Raw("value='true' checked")  } else { @Html.Raw("value='false'") } />
+                                            <span class="checkmark"></span>
+                                        </label>
+                                    </td>
+                                    <td class="action-col">
+                                        @*@Html.ActionLink("Thêm chuyến đi", "CreateTrip", new { customerId = customer.Id })<br />*@
+                                        <a href="javascript:;" data-src="@Url.Action("ListTripCustomer", new { customerId = customer.Id })" data-fancybox data-type="ajax" data-touch="false">Danh sách chuyến đi</a><br />
+                                        <a href="javascript:;" onclick="updateCustomer('@customer.Id')">Cập nhật</a><br />
+                                        @Html.ActionLink("Sửa", "UpdateCustomer", new { customerId = customer.Id })<br />
+                                        <a href="javascript:;" onclick="deleteCustomer('@customer.Id')" style="color: red;">Xóa</a><br />
+                                    </td>
+                                </tr>
+                            }
+                            @if (Model.Customers.PageCount > 1)
+                            {
+                                <tr>
+                                    <td colspan="8">@Html.PagedListPager(Model.Customers, page => Url.Action("ListCustomer", new { page, name = Model.Name, mobile = Model.Mobile }))</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                    <div class="my-accordion">
+                        @foreach (var customer in Model.Customers)
+                        {
+                            <div class="my-accordion-item" data-id="@customer.Id">
+                                <div class="my-accordion-header">@customer.Code | @customer.Name | @customer.Mobile</div>
+                                <div class="my-accordion-content">
+                                    <p>Ngày tạo:  <strong>@Html.DisplayFor(a => customer.CreateDate)</strong> </p>
+                                    <div class="d-flex gap-2">
+                                        <div class="edit"><a href="@Url.Action("CreateTrip", new { customerId = customer.Id })"><i class="fal fa-plus"></i></a></div>
+                                        <div class="edit"><a href="javascript:;" data-src="@Url.Action("ListTripCustomer", new { customerId = customer.Id })" data-fancybox data-type="ajax" data-touch="false"><i class="far fa-list"></i></a></div>
+                                        <div class="edit"><a href="@Url.Action("UpdateCustomer", new { customerId = customer.Id })"><i class="fas fa-edit"></i></a></div>
+                                        <div class="delete" onclick="deleteCustomer('@customer.Id')"><i class="fas fa-trash-alt"></i></div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                        @if (Model.Customers.PageCount > 1)
+                        {
+                            @Html.PagedListPager(Model.Customers, page => Url.Action("ListCustomer", new { page, name = Model.Name, mobile = Model.Mobile }))
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts
+{
+    <script type="text/javascript">
+        function updateCustomer(id) {
+            var divId = $("tr[data-id='" + id + "']");
+            var active = divId.find("input#Active").prop("checked");
+
+            $.post("/Customer/QuickUpdateCustomer", { customerId: id, active }, function (data) {
+                if (data) {
+                    $.toast({
+                        text: 'Cập nhật thành công',
+                        position: 'bottom-right',
+                        icon: 'success',
+                    })
+                } else {
+                    $.toast({
+                        text: 'Quá trình thực hiện không thành công. Hãy thử lại',
+                        icon: 'error',
+                    })
+                }
+            });
+        }
+
+        function deleteCustomer(id) {
+            if (confirm("Bạn có chắc chắn xóa khách hàng này không?")) {
+                $.post("/Customer/DeleteCustomer", { customerId: id }, function (data) {
+                    if (data) {
+                        $.toast({
+                            text: 'Xóa khách hàng thành công',
+                            position: 'bottom-right',
+                            icon: 'success',
+                        })
+                        $("tr[data-id='" + id + "']").fadeOut();
+                        $("div[data-id='" + id + "']").fadeOut();
+                    }
+                    else {
+                        $.toast({
+                            text: 'Quá trình thực hiện không thành công. Hãy thử lại',
+                            icon: 'error',
+                        })
+                    }
+                });
+            }
+        }
+
+    </script>
+}
+
+

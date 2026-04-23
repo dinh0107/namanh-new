@@ -1,0 +1,58 @@
+﻿@using namanh.Models
+@{
+    var config = (ConfigSite)HttpContext.Current.Application["ConfigSite"];
+    var siteTitle = ViewBag.Title ?? config?.Title ?? "Trang chủ";
+    var siteDescription = ViewBag.Description ?? config?.Description ?? "";
+    var canonicalUrl = ViewBag.Canonical ?? Request?.Url?.AbsoluteUri;
+    var imageShare = ViewBag.ImagShare ?? Url.Content("~/images/configs/" + (config?.ImageShare ?? config?.Image));
+}
+<!DOCTYPE html>
+<html lang="vi-VN">
+<head prefix="og:http://ogp.me/ns# fb:http://www.facebook.com/2008/fbml">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>@siteTitle</title>
+    <meta name="description" content="@Html.Raw(siteDescription)" />
+    <meta name="robots" content="@(ViewBag.Robots ?? "index,follow")" />
+    <link rel="canonical" href="@canonicalUrl" />
+    @if (config.Favicon != null)
+    {
+        <link rel="shortcut icon" href="@Url.Content("~/images/configs/" + config.Favicon)" />
+    }
+
+    <!-- Open Graph -->
+    <meta property="og:locale" content="vi_VN" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="@siteTitle" />
+    <meta property="og:description" content="@config.Description" />
+    <meta property="og:url" content="@canonicalUrl" />
+    <meta property="og:site_name" content="@siteTitle" />
+    <meta property="og:image" content="@imageShare" />
+    @Styles.Render("~/Content/css")
+    @*<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.css" />*@
+    @if (!string.IsNullOrWhiteSpace(config?.GoogleAnalytics))
+    {
+        @Html.Raw(config.GoogleAnalytics)
+    }
+    
+</head>
+<body id="scrollbar">
+    @Html.Action("Header", "Home")
+    @RenderBody()
+    @Html.Action("Footer", "Home")
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    @Scripts.Render("~/bundles/jquery", "~/bundles/bootstrap", "~/bundles/jqueryval")
+    @RenderSection("scripts", required: false)
+    <!-- Google Tag Manager (noscript) -->
+    <noscript>
+        <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NKGCWZRN"
+                height="0" width="0" style="display:none;visibility:hidden"></iframe>
+    </noscript>
+    <!-- End Google Tag Manager (noscript) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+    <div id="fb-root"></div>
+    <script async defer crossorigin="anonymous" src="https://connect.facebook.net/vi_VN/sdk.js#xfbml=1&version=v23.0&appId=872873711287852"></script>
+</body>
+</html>

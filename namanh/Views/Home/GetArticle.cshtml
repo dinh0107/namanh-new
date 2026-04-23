@@ -1,0 +1,26 @@
+﻿@model IEnumerable<namanh.Models.Article>
+@if (Model.Any())
+{
+    foreach (var item in Model)
+    {
+        <div class="col-lg-3 col-6">
+            <article class="article mb-4">
+                @if (item.Image != null)
+                {
+                    <a href="@Url.Action("ArticleDetail", new { url = item.Url })">
+                        <img src="~/Content/images/img-main/base64.gif" data-src="@Path.Combine("/images/articles/", item.Image)" alt="@item.Subject" class="lazyload" />
+                    </a>
+                }
+                @*<div class="date my-2">
+                    <i class="fa-regular fa-clock"></i> @item.CreateDate.ToString("dd/MM/yyyy") - @item.CreateDate.ToString("HH:mm")
+                </div>*@
+                <a class="subject" href="@Url.Action("ArticleDetail", new { url = item.Url })">@item.Subject</a>
+                <span class="des-artic mb-2">@item.Description</span>
+                <a href="@Url.Action("ArticleDetail", new { url = item.Url })" class="see">Đọc thêm <i class="fa-solid fa-arrow-right"></i></a>
+            </article>
+        </div>
+    }
+}
+else { 
+    <span class="text-center">Chưa có bài viết</span>
+}

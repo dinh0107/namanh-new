@@ -1,0 +1,83 @@
+﻿@model namanh.Models.Introduce
+@{
+    ViewBag.Title = "Thông tin giới thiệu";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+<div class="page-header">
+    <div class="page-title">
+        <i class="fa-solid fa-align-right fa-rotate-180 fa-sm"></i>
+        <span>Thông tin giới thiệu</span>
+    </div>
+    <a href="#" onclick="history.go(-1)" class="btn-main btn-labeled bg-brown">
+        <span class="icon">
+            <i class="fa-solid fa-left"></i>
+        </span>
+        Quay lại
+    </a>
+</div>
+<div class="content">
+    @if (ViewBag.Result == "success")
+    {
+        <div id="AlertBox" class="alert alert-success"><strong>Cập nhật thông tin thành công</strong></div>
+    }
+    <div class="accordion">
+        <div class="accordion-item border-left-slate">
+            <div class="accordion-header">
+                <div class="card-title">
+                    <i class="fa-light fa-wrench fa-lg"></i>
+                    Thông tin giới thiệu
+                </div>
+                <button type="button" data-bs-toggle="collapse" data-bs-target="#editForm" aria-expanded="true">
+                    <i class="fa-solid fa-angle-down"></i>
+                </button>
+            </div>
+            <div id="editForm" class="accordion-collapse collapse show">
+                <div class="accordion-body">
+                    @using (Html.BeginForm("Introduce", "Mms", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                    {
+                        @Html.ValidationSummary(true)
+                        @Html.HiddenFor(a => a.Id)
+
+                        <div class="mb-3 row">
+                            @Html.LabelFor(a => a.TitleMeta, new { @class = "col-form-label col-lg-3" })
+                            <div class="col-lg-9">@Html.EditorFor(a => a.TitleMeta)</div>
+                        </div>
+                        <div class="mb-3 row">
+                            @Html.LabelFor(a => a.DescriptionMeta, new { @class = "col-form-label col-lg-3" })
+                            <div class="col-lg-9">@Html.EditorFor(a => a.DescriptionMeta)</div>
+                        </div>
+                        <div class="mb-3 row">
+                            @Html.LabelFor(a => a.Image, new { @class = "col-form-label col-lg-3" })
+                            <div class="col-lg-9">@Html.TextBoxFor(a => a.Image, new { type = "file" })</div>
+                        </div>
+                        if (Model.Image != null)
+                        {
+                            <div class="mb-3 row">
+                                <label class="col-form-label col-lg-3"></label>
+                                <div class="col-lg-9"><img class="img-border" src="@Path.Combine("/images/introduces/", Model.Image)?w=150" /></div>
+                            </div>
+                        }
+                        <div class="mb-3 row">
+                            @Html.LabelFor(a => a.AboutText, new { @class = "col-form-label col-lg-3" })
+                            <div class="col-lg-9">@Html.EditorFor(a => a.AboutText)</div>
+                        </div>
+                        <div class="mb-3 row">
+                            @Html.LabelFor(a => a.StaffText, new { @class = "col-form-label col-lg-3" })
+                            <div class="col-lg-9">@Html.EditorFor(a => a.StaffText)</div>
+                        </div>
+                        <div class="mb-3 row">
+                            @Html.LabelFor(a => a.FeedbackText, new { @class = "col-form-label col-lg-3" })
+                            <div class="col-lg-9">@Html.EditorFor(a => a.FeedbackText)</div>
+                        </div>
+                        <div class="btn-group">
+                            <button type="submit" class="btn-main btn-primary text-white ms-3">
+                                <span>Lưu</span>
+                                <i class="fa-solid fa-floppy-disk ms-2"></i>
+                            </button>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,290 @@
+﻿@model namanh.ViewModel.HeaderViewModel
+@using namanh.Models
+@{
+    var config = (ConfigSite)HttpContext.Current.Application["ConfigSite"];
+}
+<header>
+    <div class="container">
+        <ul class="ul-reset nav">
+            <li class="d-lg-none d-block">
+                <div class="d-flex text-right w-100 justify-content-end align-items-center">
+                    <div class="mobile-btn text-dark" onclick="show()">
+                        <i class="fas fa-bars"></i>
+                    </div>
+                </div>
+            </li>
+            <li>
+                <a href="/">
+                    @if (config.Image != null)
+                    {
+                        <img src="@Path.Combine("/images/configs/", config.Image)" alt="@config.Title" class="logo" />
+                    }
+                </a>
+            </li>
+            <li class="d-lg-block d-none">
+                <a href="/">Trang chủ</a>
+            </li>
+            <li class="d-lg-block d-none">
+                <a href="@Url.Action("Introduct")">Giới thiệu</a>
+            </li>
+            @if (Model.ArticleCategories.Any(a => a.TypePost == TypePost.Introduce && a.ParentId == null))
+            {
+                foreach (var item in Model.ArticleCategories.Where(a => a.TypePost == TypePost.Introduce && a.ParentId == null))
+                {
+                    var cat = Url.Action("ArticleCategory", "Home", new { url = item.Url });
+                    if (item.Redirect)
+                    {
+                        cat = item.Url;
+                    }
+                    <li class="d-lg-block d-none @if (Model.ArticleCategories.Any(a => a.TypePost == TypePost.Introduce && a.ParentId == item.Id)) { @Html.Raw("'has-dropdown'") }">
+                        <a href="@cat">
+                            @item.CategoryName
+                            @if (Model.ArticleCategories.Any(a => a.ParentId == item.Id))
+                            {
+                                <i class="fa-regular fa-angle-down"></i>
+                            }
+                        </a>
+                        @if (Model.ArticleCategories.Any(a => a.TypePost == TypePost.Introduce && a.ParentId == item.Id))
+                        {
+                            <ul class="ul-reset sub-nav">
+                                @foreach (var child in Model.ArticleCategories.Where(a => a.TypePost == TypePost.Introduce && a.ParentId == item.Id))
+                                {
+                                    var cat2 = Url.Action("ArticleCategory", "Home", new { url = child.Url });
+                                    if (child.Redirect)
+                                    {
+                                        cat2 = child.Url;
+                                    }
+                                    <li>
+                                        <a href="@cat2">
+                                            <span>@child.CategoryName</span>
+                                        </a>
+                                    </li>
+                                }
+                            </ul>
+                        }
+                    </li>
+                }
+            }
+            <li class="d-lg-block d-none">
+                <a href="javascript:void(0);">
+                    Dịch vụ
+                    @if (Model.Services.Any())
+                    {
+                        <i class="fa-regular fa-angle-down"></i>
+                    }
+                </a>
+                @if (Model.Services.Any())
+                {
+                    <ul class="ul-reset sub-nav">
+                        @foreach (var child in Model.Services)
+                        {
+                            var cat2 = Url.Action("ServiceCar", "Home", new { url = child.Slug });
+                            <li>
+                                <a href="@cat2">
+                                    <span>@child.Title</span>
+                                </a>
+                            </li>
+                        }
+                    </ul>
+                }
+            </li>
+            @*<li class="d-lg-block d-none">
+            <a href="@Url.Action("Introduce")">Bảng giá</a>
+        </li>*@
+            @if (Model.ArticleCategories.Any(a => a.TypePost == TypePost.Article && a.ParentId == null))
+            {
+                foreach (var item in Model.ArticleCategories.Where(a => a.TypePost == TypePost.Article && a.ParentId == null))
+                {
+                    var cat = Url.Action("ArticleCategory", "Home", new { url = item.Url });
+                    if (item.Redirect)
+                    {
+                        cat = item.Url;
+                    }
+                    <li class="d-lg-block d-none @if (Model.ArticleCategories.Any(a => a.TypePost == TypePost.Article && a.ParentId == item.Id)) { @Html.Raw("'has-dropdown'") }">
+                        <a href="@cat">
+                            @item.CategoryName
+                            @if (Model.ArticleCategories.Any(a => a.ParentId == item.Id))
+                            {
+                                <i class="fa-regular fa-angle-down"></i>
+                            }
+                        </a>
+                        @if (Model.ArticleCategories.Any(a => a.TypePost == TypePost.Article && a.ParentId == item.Id))
+                        {
+                            <ul class="ul-reset sub-nav">
+                                @foreach (var child in Model.ArticleCategories.Where(a => a.TypePost == TypePost.Article && a.ParentId == item.Id))
+                                {
+                                    var cat2 = Url.Action("ArticleCategory", "Home", new { url = child.Url });
+                                    if (child.Redirect)
+                                    {
+                                        cat2 = child.Url;
+                                    }
+                                    <li>
+                                        <a href="@cat2">
+                                            <span>@child.CategoryName</span>
+                                        </a>
+                                    </li>
+                                }
+                            </ul>
+                        }
+                    </li>
+                }
+            }
+
+            @*<li class="d-lg-block d-none">
+            <a href=""><i class="far fa-search"></i></a>
+        </li>*@
+
+            <li class="d-lg-block d-none">
+                <a href="@Url.Action("Contact")">Liên hệ</a>
+            </li>
+            <li class="d-block">
+                <div class="d-flex text-right w-100 justify-content-end align-items-center">
+                    <a href="tel:@config.Hotline" class="btn-color m-0">
+                        đặt xe ngay
+                        <div class="box-icon">
+                            <i class="far fa-long-arrow-right"></i>
+                        </div>
+                    </a>
+                </div>
+            </li>
+        </ul>
+    </div>
+</header>
+<div class="overflow" onclick="Close()">
+</div>
+
+<div class="header-mobile p-0 overflow-hidden">
+    <div class="row border-bottom p-2">
+        <div class="col-5">
+            <a href="/">
+                @if (config.Image != null)
+                {
+                    <img src="@Path.Combine("/images/configs/", config.Image)" alt="@config.Title" class="logo logo-mb">
+                }
+            </a>
+        </div>
+        <div class="col-7 text-right text-white d-flex align-items-center justify-content-end">
+            <div class="close-header" onclick="Close()"><i class="fas fa-times"></i></div>
+        </div>
+    </div>
+    <ul class="ul-reset ul-mb mt-4">
+        <li class="li-mb">
+            <div class="d-flex align-items-center justify-content-between p-2 mx-3">
+                <a href="/">Trang chủ</a>
+            </div>
+        </li>
+        <li class="li-mb">
+            <div class="d-flex align-items-center justify-content-between p-2 mx-3">
+                <a href="@Url.Action("Introduct")">Giới thiệu</a>
+            </div>
+        </li>
+        @if (Model.ArticleCategories.Any(a => a.TypePost == TypePost.Introduce && a.ParentId == null))
+        {
+            foreach (var item in Model.ArticleCategories.Where(a => a.TypePost == TypePost.Introduce && a.ParentId == null))
+            {
+                var cat = Url.Action("ArticleCategory", "Home", new { url = item.Url });
+                if (item.Redirect)
+                {
+                    cat = item.Url;
+                }
+                <li class="li-mb">
+                    <div class="d-flex align-items-center justify-content-between p-2 mx-3">
+                        <a href="@cat">@item.CategoryName</a>
+                        @if (Model.ArticleCategories.Any(a => a.TypePost == TypePost.Introduce && a.ParentId == item.Id))
+                        {
+                            <i class="fas fa-caret-down"></i>
+                        }
+                    </div>
+                    @if (Model.ArticleCategories.Any(a => a.TypePost == TypePost.Introduce && a.ParentId == item.Id))
+                    {
+                        <ul>
+                            @foreach (var child in Model.ArticleCategories.Where(a => a.TypePost == TypePost.Introduce && a.ParentId == item.Id))
+                            {
+                                var cat2 = Url.Action("ArticleCategory", "Home", new { url = child.Url });
+                                if (child.Redirect)
+                                {
+                                    cat2 = child.Url;
+                                }
+                                <li class="p-2">
+                                    <a class="mx-4" href="@cat2" @if (child.Redirect) { @Html.Raw(@Html.Raw("target='_blank'")) }>@child.CategoryName</a>
+                                </li>
+                            }
+                        </ul>
+                    }
+                </li>
+                <li class="li-mb">
+                    <div class="d-flex align-items-center justify-content-between p-2 mx-3">
+                        <a href="@Url.Action("Contact")">Liên hệ</a>
+                    </div>
+                </li>
+            }
+
+        }
+        <li class="li-mb">
+            <div class="d-flex align-items-center justify-content-between p-2 mx-3">
+                <a href="javascript:void(0);">
+                    Dịch vụ
+                </a>
+                @if (Model.Services.Any())
+                {
+                    <i class="fas fa-caret-down"></i>
+                }
+            </div>
+            @if (Model.Services.Any())
+            {
+                <ul>
+                    @foreach (var child in Model.Services)
+                    {
+                        var cat2 = Url.Action("ServiceCar", "Home", new { url = child.Slug });
+                        <li class="p-2">
+                            <a class="mx-4" href="@cat2">@child.Title</a>
+                        </li>
+                    }
+                </ul>
+            }
+        </li>
+        @if (Model.ArticleCategories.Any(a => a.TypePost == TypePost.Article && a.ParentId == null))
+        {
+            foreach (var item in Model.ArticleCategories.Where(a => a.TypePost == TypePost.Article && a.ParentId == null))
+            {
+                var cat = Url.Action("ArticleCategory", "Home", new { url = item.Url });
+                if (item.Redirect)
+                {
+                    cat = item.Url;
+                }
+                <li class="li-mb">
+                    <div class="d-flex align-items-center justify-content-between p-2 mx-3">
+                        <a href="@cat">@item.CategoryName</a>
+                        @if (Model.ArticleCategories.Any(a => a.TypePost == TypePost.Article && a.ParentId == item.Id))
+                        {
+                            <i class="fas fa-caret-down"></i>
+                        }
+                    </div>
+                    @if (Model.ArticleCategories.Any(a => a.TypePost == TypePost.Article && a.ParentId == item.Id))
+                    {
+                        <ul>
+                            @foreach (var child in Model.ArticleCategories.Where(a => a.TypePost == TypePost.Article && a.ParentId == item.Id))
+                            {
+                                var cat2 = Url.Action("ArticleCategory", "Home", new { url = child.Url });
+                                if (child.Redirect)
+                                {
+                                    cat2 = child.Url;
+                                }
+                                <li class="p-2">
+                                    <a class="mx-4" href="@cat2" @if (child.Redirect) { @Html.Raw(@Html.Raw("target='_blank'")) }>@child.CategoryName</a>
+                                </li>
+                            }
+                        </ul>
+                    }
+                </li>
+                <li class="li-mb">
+                    <div class="d-flex align-items-center justify-content-between p-2 mx-3">
+                        <a href="@Url.Action("Contact")">Liên hệ</a>
+                    </div>
+                </li>
+            }
+
+        }
+
+    </ul>
+</div>

@@ -1,0 +1,188 @@
+﻿@model namanh.Models.ConfigSite
+@{
+    ViewBag.Title = "Cấu hình Website";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+<div class="page-header">
+    <div class="page-title">
+        <i class="fa-solid fa-align-right fa-rotate-180 fa-sm"></i>
+        <span>Cấu hình Website</span>
+    </div>
+    <a href="#" onclick="history.go(-1)" class="btn-main btn-labeled bg-brown">
+        <span class="icon">
+            <i class="fa-solid fa-left"></i>
+        </span>
+        Quay lại
+    </a>
+</div>
+<div class="content">
+    @if (ViewBag.Result == "success")
+    {
+        <div id="AlertBox" class="alert alert-success"><strong>Cập nhật thông tin thành công</strong></div>
+    }
+    <div class="accordion">
+        <div class="accordion-item border-left-slate">
+            <div class="accordion-header">
+                <div class="card-title">
+                    <i class="fa-light fa-wrench fa-lg"></i>
+                    Cấu hình Website
+                </div>
+                <button type="button" data-bs-toggle="collapse" data-bs-target="#editForm" aria-expanded="true">
+                    <i class="fa-solid fa-angle-down"></i>
+                </button>
+            </div>
+            <div id="editForm" class="accordion-collapse collapse show">
+                <div class="accordion-body">
+                    @using (Html.BeginForm("ConfigSite", "Mms", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                    {
+                        @Html.ValidationSummary(true)
+                        @Html.HiddenFor(a => a.Id)
+                        <div class="mb-3 row">
+                            @Html.LabelFor(a => a.Title, new { @class = "col-form-label col-lg-3" })
+                            <div class="col-lg-9">@Html.EditorFor(a => a.Title)</div>
+                        </div>
+                        <div class="mb-3 row">
+                            @Html.LabelFor(a => a.Description, new { @class = "col-form-label col-lg-3" })
+                            <div class="col-lg-9">@Html.EditorFor(a => a.Description)</div>
+                        </div>
+                        <div class="mb-3 row">
+                            @Html.LabelFor(a => a.Image, new { @class = "col-form-label col-lg-3" })
+                            <div class="col-lg-9">@Html.TextBoxFor(a => a.Image, new { type = "file" })</div>
+                        </div>
+                        if (Model.Image != null)
+                        {
+                            <div class="mb-3 row">
+                                <label class="col-form-label col-lg-3"></label>
+                                <div class="col-lg-9"><img class="img-border" src="@Path.Combine("/images/configs/", Model.Image)?w=150" /></div>
+                            </div>
+                        }
+                        <div class="mb-3 row">
+                            @Html.LabelFor(a => a.Favicon, new { @class = "col-form-label col-lg-3" })
+                            <div class="col-lg-9">@Html.TextBoxFor(a => a.Favicon, new { type = "file" })<div class="text-danger mt-2">Kích thươc: 64px - 64px</div></div>
+                        </div>
+                        if (Model.Favicon != null)
+                        {
+                            <div class="mb-3 row">
+                                <label class="col-form-label col-lg-3"></label>
+                                <div class="col-lg-9"><img class="img-border" src="@Path.Combine("/images/configs/", Model.Favicon)?w=150" /></div>
+                            </div>
+                        }
+                        <div class="mb-3 row">
+                            @Html.LabelFor(a => a.AboutImage, new { @class = "col-form-label col-lg-3" })
+                            <div class="col-lg-9">@Html.TextBoxFor(a => a.AboutImage, new { type = "file" })</div>
+                        </div>
+                        if (Model.AboutImage != null)
+                        {
+                            <div class="mb-3 row">
+                                <label class="col-form-label col-lg-3"></label>
+                                <div class="col-lg-9"><img class="img-border" src="@Path.Combine("/images/configs/", Model.AboutImage)?w=150" /></div>
+                            </div>
+                        }
+                        <div class="mb-3 row">
+                            @Html.LabelFor(a => a.ImageShare, new { @class = "col-form-label col-lg-3" })
+                            <div class="col-lg-9">@Html.TextBoxFor(a => a.ImageShare, new { type = "file" })</div>
+                        </div>
+                        if (Model.ImageShare != null)
+                        {
+                            <div class="mb-3 row">
+                                <label class="col-form-label col-lg-3"></label>
+                                <div class="col-lg-9"><img class="img-border" src="@Path.Combine("/images/configs/", Model.ImageShare)?w=150" /></div>
+                            </div>
+                        }
+                        <div class="mb-3 row">
+                            @Html.LabelFor(a => a.FooterImage, new { @class = "col-form-label col-lg-3" })
+                            <div class="col-lg-9">@Html.TextBoxFor(a => a.FooterImage, new { type = "file" })</div>
+                        </div>
+                        if (Model.FooterImage != null)
+                        {
+                            <div class="mb-3 row">
+                                <label class="col-form-label col-lg-3"></label>
+                                <div class="col-lg-9"><img class="img-border" src="@Path.Combine("/images/configs/", Model.FooterImage)?w=150" /></div>
+                            </div>
+                        }
+                        <div class="mb-3 row">
+                            @Html.LabelFor(a => a.AboutMission, new { @class = "col-form-label col-lg-3" })
+                            <div class="col-lg-9">@Html.TextBoxFor(a => a.AboutMission, new { type = "file" })</div>
+                        </div>
+                        if (Model.AboutMission != null)
+                        {
+                            <div class="mb-3 row">
+                                <label class="col-form-label col-lg-3"></label>
+                                <div class="col-lg-9"><img class="img-border" src="@Path.Combine("/images/configs/", Model.AboutMission)?w=150" /></div>
+                            </div>
+                        }
+                        <div class="mb-3 row">
+                            @Html.LabelFor(a => a.AboutText, new { @class = "col-form-label col-lg-3" })
+                            <div class="col-lg-9">@Html.EditorFor(a => a.AboutText)</div>
+                        </div>
+                        <div class="mb-3 row">
+                            @Html.LabelFor(a => a.AboutUrl, new { @class = "col-form-label col-lg-3" })
+                            <div class="col-lg-9">@Html.EditorFor(a => a.AboutUrl)</div>
+                        </div>
+                        <div class="mb-3 row">
+                            @Html.LabelFor(a => a.Price, new { @class = "col-form-label col-lg-3" })
+                            <div class="col-lg-9">@Html.EditorFor(a => a.Price)</div>
+                        </div>
+                        <div class="mb-3 row">
+                            @Html.LabelFor(a => a.InfoContact, new { @class = "col-form-label col-lg-3" })
+                            <div class="col-lg-9">@Html.EditorFor(a => a.InfoContact)</div>
+                        </div>
+                        <div class="mb-3 row">
+                            @Html.LabelFor(a => a.InfoFooter, new { @class = "col-form-label col-lg-3" })
+                            <div class="col-lg-9">@Html.EditorFor(a => a.InfoFooter)</div>
+                        </div>
+                        <div class="mb-3 row">
+                            @Html.LabelFor(a => a.Place, new { @class = "col-form-label col-lg-3" })
+                            <div class="col-lg-9">@Html.EditorFor(a => a.Place)</div>
+                        </div>
+                        <div class="mb-3 row">
+                            @Html.LabelFor(a => a.Zalo, new { @class = "col-form-label col-lg-3" })
+                            <div class="col-lg-9">@Html.EditorFor(a => a.Zalo)</div>
+                        </div>
+                        <div class="mb-3 row">
+                            @Html.LabelFor(a => a.Hotline, new { @class = "col-form-label col-lg-3" })
+                            <div class="col-lg-9">@Html.EditorFor(a => a.Hotline)</div>
+                        </div>
+                        @*<div class="mb-3 row">
+                @Html.LabelFor(a => a.Hotline2, new { @class = "col-form-label col-lg-3" })
+                <div class="col-lg-9">@Html.EditorFor(a => a.Hotline2)</div>
+            </div>*@
+                        <div class="mb-3 row">
+                            @Html.LabelFor(a => a.Email, new { @class = "col-form-label col-lg-3" })
+                            <div class="col-lg-9">@Html.EditorFor(a => a.Email)</div>
+                        </div>
+                        <div class="mb-3 row">
+                            @Html.LabelFor(a => a.Facebook, new { @class = "col-form-label col-lg-3" })
+                            <div class="col-lg-9">@Html.EditorFor(a => a.Facebook)</div>
+                        </div>
+                        <div class="mb-3 row">
+                            @Html.LabelFor(a => a.Messenger, new { @class = "col-form-label col-lg-3" })
+                            <div class="col-lg-9">@Html.EditorFor(a => a.Messenger)</div>
+                        </div>
+                        <div class="mb-3 row">
+                            @Html.LabelFor(a => a.Instagram, new { @class = "col-form-label col-lg-3" })
+                            <div class="col-lg-9">@Html.EditorFor(a => a.Instagram)</div>
+                        </div>
+                        <div class="mb-3 row">
+                            @Html.LabelFor(a => a.Youtube, new { @class = "col-form-label col-lg-3" })
+                            <div class="col-lg-9">@Html.EditorFor(a => a.Youtube)</div>
+                        </div>
+                        <div class="mb-3 row">
+                            @Html.LabelFor(a => a.GoogleMap, new { @class = "col-form-label col-lg-3" })
+                            <div class="col-lg-9">@Html.EditorFor(a => a.GoogleMap)</div>
+                        </div>
+                        <div class="mb-3 row">
+                            @Html.LabelFor(a => a.GoogleAnalytics, new { @class = "col-form-label col-lg-3" })
+                            <div class="col-lg-9">@Html.EditorFor(a => a.GoogleAnalytics)</div>
+                        </div><div class="btn-group">
+                            <button type="submit" class="btn-main btn-primary text-white ms-3">
+                                <span>Lưu</span>
+                                <i class="fa-solid fa-floppy-disk ms-2"></i>
+                            </button>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,288 @@
+﻿@using namanh.Models
+@model namanh.ViewModel.HomeViewModel
+@{
+    var config = (ConfigSite)HttpContext.Current.Application["ConfigSite"];
+    ViewBag.Title = config?.Title;
+    ViewBag.Description = config?.Description;
+    ViewBag.Canonical = Request.Url?.GetLeftPart(UriPartial.Authority) + Url.Action("Index");
+    var share = config.ImageShare ?? config.Image;
+    if (share != null)
+    {
+        ViewBag.ImageShare = Request.Url?.GetLeftPart(UriPartial.Authority) + Path.Combine("/images/configs/", share);
+    }
+    int count = 1;
+    //var banner = Model.Banners.Where(a => a.GroupId == 6).FirstOrDefault();
+}
+<section class="banner">
+    <img src="~/Content/images/bg-banner.jpg" alt="Banner" class="d-lg-block d-none banner-bg" fetchpriority=high />
+    <div class="banner-form">
+        @Html.Action("Form")
+        <img src="~/Content/images/xe-1.png" alt="Banner" class="banner-anh" />
+    </div>
+    <div class="list-baner">
+        <a href="https://zalo.me/@config.Zalo"><img src="~/Content/images/HOME-mb-02-min.jpg" alt="Banner" class="d-lg-none d-block" /></a>
+    </div>
+</section>
+<div class="container py-3">
+    <div class="d-lg-none d-block align-items-center justify-content-center">
+        @Html.Action("Form")
+    </div>
+</div>
+<section class="page-section ">
+    <div class="container border-bottom pb-lg-4">
+        <div class="row">
+            @foreach (var item in Model.Banners.Where(a => a.GroupId == 2))
+            {
+                <div class="col-lg-3 col-6">
+                    <div class="d-flex intro">
+                        @if (item.Image != null)
+                        {
+                            <img src="@Path.Combine("/images/banners/", item.Image)" alt="@item.BannerName" />
+                        }
+                        <h2>@Html.Raw(item.BannerName)</h2>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</section>
+
+
+<section class="page-section">
+    <h2 class="title">Dịch vụ của chúng tôi</h2>
+    <p class="sub-title">Dịch vụ thuê xe có lái chuyên nghiệp – linh hoạt theo ngày / tháng / năm đáp ứng mọi nhu cầu di chuyển cá nhân.</p>
+    <div class="container">
+        <div class="service-slide">
+            @foreach (var item in Model.Services)
+            {
+                var galleryId = "gallery-" + item.Id;
+                var listImgs = (item.ListImage ?? "")
+                .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                .Select(x => x.Trim())
+                .Where(x => !string.IsNullOrWhiteSpace(x))
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .ToList();
+
+
+                var cat = Url.Action("ServiceCar", "Home", new { url = item.Slug });
+                <article class="card-card">
+                    <div class="tag">
+                        <i class="fas fa-user"></i> @item.Car
+                    </div>
+                    <h3>@item.Title</h3>
+                    <div class="info-car row">
+                        @if (item.Firm != null)
+                        {
+                            <div class="col-6 d-flex align-items-center gap-2 mt-3">
+                                <img src="~/Content/images/svg/icon-2.svg" alt="Icon 1" width="19" height="19" />
+                                <small>@item.Firm</small>
+                            </div>
+                        }
+                        @if (item.Capacity != null)
+                        {
+                            <div class="col-6 d-flex align-items-center gap-2 mt-3">
+                                <img src="~/Content/images/svg/icon-2.svg" alt="Icon 1" width="19" height="19" />
+                                <small>@item.Capacity</small>
+                            </div>
+                        }
+                        @if (item.Type != null)
+                        {
+                            <div class="col-6 d-flex align-items-center gap-2 mt-3">
+                                <img src="~/Content/images/svg/icon-2.svg" alt="Icon 1" width="19" height="19" />
+                                <small>@item.Type</small>
+                            </div>
+                        }
+                        @if (item.Speed != null)
+                        {
+                            <div class="col-6 d-flex align-items-center gap-2 mt-3">
+                                <img src="~/Content/images/svg/icon-2.svg" alt="Icon 1" width="19" height="19" />
+                                <small>@item.Speed</small>
+                            </div>
+                        }
+                    </div>
+                    @if (item.Image != null)
+                    {
+                        <img src="@Path.Combine("/images/carService/", item.Image)" alt="@item.Title" class="car-img" />
+                    }
+                </article>
+            }
+        </div>
+    </div>
+</section>
+@Html.Action("PriceTable")
+<section class="page-section">
+    <div class="container">
+        <h2 class="title text-left">quy trình thuê xe đơn giản</h2>
+        <div class="row mt-4">
+            <div class="col-lg-6 position-relative QA">
+                @if (config.AboutImage != null)
+                {
+                    <img src="~/Content/images/img-main/base64.gif" data-src="@Path.Combine("/images/configs/", config.AboutImage)" alt="@config.Title" class="lazyload step-img" />
+                }
+                @*<h2 class="title">Câu hỏi thường gặp</h2>
+                    <p class="sub-title">Câu hỏi thường gặp</p>
+
+                    </div>*@
+
+            </div>
+            <div class="col-lg-6">
+                <div class="step pb-1">
+                    @foreach (var item in Model.Banners.Where(a => a.GroupId == 3))
+                    {
+                        <div class="d-flex step-item align-items-center gap-2">
+                            <div class="step-count">
+                                @count
+                            </div>
+                            <div>
+                                <div class="step-title">
+                                    Bước @count :
+                                </div>
+                                <div class="step-name h-auto">
+                                    @item.BannerName
+                                </div>
+                            </div>
+                        </div>
+                        count += 1;
+                    }
+                </div>
+                <a href="tel:@config.Hotline" class="btn-color">
+                    đặt xe ngay
+                    <div class="box-icon">
+                        <i class="far fa-long-arrow-right"></i>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="page-section">
+    <div class="container">
+        <h2 class="title ">tin tức -  sự kiện</h2>
+        @*<p class="sub-title  mb-4">
+                Dịch vụ thuê xe có lái chuyên nghiệp – linh hoạt theo ngày / tháng / năm đáp ứng mọi nhu cầu di chuyển cá nhân.
+            </p>*@
+        <div class=" row filter-ar gap-2">
+            @foreach (var item in Model.ArticleCategories)
+            {
+                <button type="button" data-id="@item.Id" class="btn filter-btn">@item.CategoryName</button>
+            }
+        </div>
+        <div class="row article-row mt-3" id="body-ar">
+
+        </div>
+    </div>
+</section>
+
+<section class="page-section">
+    <div class="container">
+        <div class="row mt-3">
+            <div class="col-lg-6">
+                @if (config.AboutMission != null)
+                {
+                    <img src="~/Content/images/img-main/base64.gif" data-src="@Path.Combine("/images/configs/", config.AboutMission)" alt="@config.Title" class="lazyload step-img" />
+                }
+            </div>
+            <div class="col-lg-6">
+                <h2 class="title text-black text-ques">
+                    Hỏi bất cứ điều gì về chúng tôi,
+                    <span style="color: #004596">Câu hỏi thường gặp</span>
+                </h2>
+                @{
+                    var banners = Model.Banners.Where(a => a.GroupId == 4).ToList();
+                    int index = 0;
+                }
+
+                <div class="accordion" id="accordionExample">
+                    @foreach (var item in banners)
+                    {
+                        var headingId = $"heading{index}";
+                        var collapseId = $"collapse{index}";
+                        bool isFirst = index == 0;
+                        int delay = 200;
+                        <div class="accordion-item" data-aos-duration="700" data-aos-delay="@delay" data-aos="fade-right">
+                            <h2 class="accordion-header" id="@headingId">
+                                <button onclick="toggleAccordion(this)" class="accordion-button @(isFirst ? "" : "collapsed")"
+                                        type="button"
+                                        data-bs-toggle="collapse"
+                                        data-bs-target="#@collapseId"
+                                        aria-expanded="@(isFirst.ToString().ToLower())"
+                                        aria-controls="@collapseId">
+                                    @item.BannerName
+                                    <i class="fa-regular fa-angle-down accordion-icon"></i>
+                                </button>
+                            </h2>
+                            <div id="@collapseId"
+                                 class="accordion-collapse collapse @(isFirst ? "show" : "")"
+                                 aria-labelledby="@headingId"
+                                 data-bs-parent="#accordionExample">
+                                <div class="accordion-body">
+                                    @Html.Raw(item.Content)
+                                </div>
+                            </div>
+                        </div>
+
+                        index++; delay += 200;
+                    }
+                </div>
+            </div>
+        </div>
+</section>
+@if (config.FooterImage != null)
+{
+    <a href="@config.Zalo">
+        <img src="~/Content/images/img-main/base64.gif" data-src="@Path.Combine("/images/configs/", config.FooterImage)" alt="@config.Title" class="lazyload w-100" />
+    </a>
+}
+
+@section scripts{
+    <script>
+        homeJs()
+        var rows = $("#myTable tbody tr");
+        var showCount = 5;
+        rows.slice(showCount).hide();
+        $("#show-call-table").removeClass("active");
+        $("#show-more-table").click(function () {
+            rows.show();
+            $(this).hide();
+            $("#show-call-table").addClass("active");
+        });
+
+        function loadArticlesById(id) {
+            $.ajax({
+                url: '@Url.Action("GetArticle", "Home")',
+                type: 'GET',
+                data: { id: id },
+                success: function (result) {
+                    $('#body-ar').html(result);
+                },
+                error: function () {
+                }
+            });
+        }
+
+        $(document).ready(function () {
+            var firstBtn = $('.filter-btn').first();
+            var firstId = firstBtn.data('id');
+            loadArticlesById(firstId);
+            firstBtn.addClass('active');
+        });
+
+        $(document).on('click', '.filter-btn', function() {
+            var id = $(this).data('id');
+            $('.filter-btn').removeClass('active');
+            $(this).addClass('active');
+            loadArticlesById(id);
+        });
+    </script>
+    <script type="application/ld+json">
+        {
+          "@Html.Raw("@context")": "https://schema.org",
+          "@Html.Raw("@type")": "WebPage",
+          "name": "@Html.Raw(ViewBag.Title)",
+          "description": "@Html.Raw(ViewBag.Description)",
+          "url": "@ViewBag.Canonical",
+          "mainEntityOfPage": "@ViewBag.Canonical"
+        }
+    </script>
+}

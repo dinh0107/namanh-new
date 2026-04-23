@@ -1,0 +1,84 @@
+﻿@model namanh.ViewModel.FooterViewModel
+@using namanh.Models
+@{
+    var config = (ConfigSite)HttpContext.Current.Application["ConfigSite"];
+}
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-5">
+                <h2>Liên hệ</h2>
+                <div class="text-black">
+                    @Html.Raw(config.InfoContact)
+                </div>
+            </div>
+            <div class="col-lg-3">
+                <h2>Link nhanh</h2>
+                <ul class="ul-reset ul-ft">
+                    <li>
+                        <a href="@Url.Action("Index")" #myTable>Bảng giá</a>
+                    </li>
+                    @foreach (var item in Model.ArticleCategories)
+                    {
+                        <li>
+                            <a href="@Url.Action("ArticleCategory", new { url = item.Url })">@item.CategoryName</a>
+                        </li>
+                    }
+                </ul>
+            </div>
+            <div class="col-lg-4 overflow-hidden">
+                <h2>fanpage</h2>
+                @if (config.Facebook != null)
+                {
+                    <div class="embed-responsive embed-responsive-16by9 fanpage">
+                        <div class="fb-page" data-href="@config.Facebook" data-tabs="" data-width="500" data-small-header="false" data-adapt-container-width="true" data-hide-cover="false" data-show-facepile="true">
+                            <blockquote cite="@config.Facebook" class="fb-xfbml-parse-ignore">
+                                <a href="@config.Facebook">@config.Title</a>
+                            </blockquote>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</footer>
+<div class="py-2 text-center" style="font-size: 14px; color: #fff; background: #004596">© Copyright bychothuexenamanh 2026</div>
+
+
+
+<a href="https://@config.Messenger" target="_blank" rel="nofollow" class="social-fix mess">
+    <img src="~/Content/images/img-main/mess.png" alt="Messenger" />
+</a>
+<a href="https://zalo.me/@config.Zalo" target="_blank" rel="nofollow" class="social-fix zalo">
+    <img src="~/Content/images/img-main/zalo-logo.png" alt="Zalo" />
+</a>
+<a href="tel:@config.Hotline" class="suntory-alo-phone suntory-alo-green" id="suntory-alo-phoneIcon" style="left: 0; bottom: 0;"><div class="suntory-alo-ph-circle"></div><div class="suntory-alo-ph-circle-fill"></div><div class="suntory-alo-ph-img-circle"><i class="fa-solid fa-phone"></i></div><div class="tel"><p class="fone">@config.Hotline</p></div> </a>
+<ul class="ul-reset bottom-contact">
+    <li>
+        <a href="tel:@config.Hotline">
+            <img src="~/Content/images/img-main/phone-icon-2.png" alt="phone" />
+            <span class="d-block">Gọi điện</span>
+        </a>
+    </li>
+    <li>
+        <a href="sms:@config.Hotline">
+            <img src="~/Content/images/img-main/icon-sms2-1.png.png" alt="sms" />
+            <span class="d-block">Nhắn tin</span>
+        </a>
+    </li>
+    <li>
+        <a href="https://zalo.me/@config.Zalo">
+            <img src="~/Content/images/img-main/icon-chat-zalo-1.png.png" alt="zalo" />
+            <span class="d-block">Chat Zalo</span>
+        </a>
+    </li>
+    <li>
+        <a href="https://@config.Messenger">
+            <img src="~/Content/images/img-main/icon-chat-messenger-1.png.png" alt="messenger" />
+            <span class="d-block">Messenger</span>
+        </a>
+    </li>
+</ul>
+<div class="seed-wrap" id="seedWrap">
+    <div class="seed-item" id="seedItem"></div>
+</div>

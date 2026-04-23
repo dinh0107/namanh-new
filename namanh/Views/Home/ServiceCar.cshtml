@@ -1,0 +1,352 @@
+﻿@model namanh.ViewModel.ServiceCarViewModel
+@using namanh.Models
+@using namanh.Utils
+@{
+    var config = (ConfigSite)HttpContext.Current.Application["ConfigSite"];
+    ViewBag.Title = Model.CarService.TitleMeta ?? Model.CarService.Title;
+    ViewBag.Description = Model.CarService.DescriptionMeta ?? Model.CarService.Description;
+    ViewBag.Canonical = Request.Url?.GetLeftPart(UriPartial.Authority) + Url.Action("Index");
+    var share = Model.CarService.ImageUrl ?? Model.CarService.ImageUrlMobile;
+    if (share != null)
+    {
+        ViewBag.ImageShare = Request.Url?.GetLeftPart(UriPartial.Authority) + Path.Combine("/images/carService/", share);
+    }
+    int count = 1;
+    var banner = Model.Banners.Where(a => a.GroupId == 6).FirstOrDefault();
+
+    var desktopImage = Model.CarService?.ImageUrl ?? Model.CarService?.ImageUrlMobile;
+    var mobileImage = Model.CarService?.ImageUrlMobile ?? Model.CarService?.ImageUrl;
+}
+<style>
+
+    .box-price tbody tr td:first-child {
+        text-align: center;
+    }
+</style>
+
+<section class="banner custom-baner">
+    @if (UserUtils.FBrowserIsMobile())
+    {
+        if (!string.IsNullOrEmpty(mobileImage))
+        {
+            <img src="~/Content/images/img-main/base64.gif" data-src="@Path.Combine("/images/carService/", mobileImage)" alt="@Model.CarService.Title" class="lazyload service-banner d-lg-none d-block" />
+        }
+    }
+    else
+    {
+        if (!string.IsNullOrEmpty(desktopImage))
+        {
+            <img src="~/Content/images/img-main/base64.gif" data-src="@Path.Combine("/images/carService/", desktopImage)" alt="@Model.CarService.Title" class="lazyload service-banner d-lg-block d-none" />
+        }
+    }
+
+    <a href="tel:@config.Hotline" class="call-to-action d-lg-flex d-none">
+        <div class="icon-action">
+            <i class="fas fa-phone-alt"></i>
+        </div>
+        <span>Liên hệ ngay</span>
+    </a>
+    <div class="banner-form">
+        @Html.Action("FormLanding", new { typeCar = Model.CarService.Car })
+    </div>
+</section>
+<div class="container py-3">
+    <div class=" d-lg-none d-block align-items-center justify-content-center">
+        @Html.Action("FormLanding")
+    </div>
+</div>
+
+@if (Model.CarService.CarServicePrices.Any())
+{
+    <section class="page-section">
+        <h2 class="title">bảng giá dịch vụ minh bạch </h2>
+        <p class="sub-title  mb-4">
+            Bảng giá mang tính tham khảo — vui lòng liên hệ để nhận báo giá tốt nhất theo lộ trình của bạn.
+        </p>
+        <div class="container">
+            <div class="box-price">
+                <table class="table table-bordered table-service" id="service-tb">
+                    <thead class="header-tb">
+                        <tr>
+                            <td scope="col">Hành trình <span class="d-block">(2 chiều)</span></td>
+                            <td scope="col"><span class="d-block pb-2">Giá</span></td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.CarService.CarServicePrices.OrderBy(x => x.Sort))
+                        {
+                            var hot = item.Hot ? "class=hot" : "";
+                            var hotImg = item.Hot ? "<img src=\"/Content/images/hot-gif.gif\" width=\"30\" height=\"30\" alt=\"Hot\" />" : "";
+                            <tr @hot>
+                                <td scope="row">@item.RouteDescription @Html.Raw(hotImg) </td>
+                                <td>@item.Price</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+                <div class="d-flex justify-content-center pb-2" id="box-btn">
+                    <div id="show-more-table" class="btn-color more-tabe">
+                        xem bảng giá đầy đủ
+                        <div class="box-icon">
+                            <i class="far fa-long-arrow-right"></i>
+                        </div>
+                    </div>
+                    <a href="https://zalo.me/@config.Zalo" id="show-call-table" class="btn-color more-tabe-2">
+                        Nhận báo giá chính xác
+                    </a>
+                </div>
+            </div>
+            <div class="note mt-3">
+                <small><strong>Ghi chú:</strong></small>
+                <ul class="px-3">
+                    <li><small>Giá trên đã bao gồm xăng dầu, lương lái xe</small></li>
+                    <li><small>Giá chưa gồm phí cầu đường và thuế VAT 8%</small></li>
+                    <li><small>Giá trên có thể thay đổi theo từng thời điểm ( sự thay đổi giá nhiên liệu, hoặc tùy theo hành trình thuê xe của khách hàng)</small></li>
+                    <li><small>Giá trên chưa bao gồm phí lưu đêm của xe ( nếu có )</small></li>
+                </ul>
+            </div>
+        </div>
+    </section>
+}
+@if (Model.CarService.Details.Any(a => a.CarServiceType == CarServiceType.SupportedCar))
+{
+    <section class="page-section overflow-hidden">
+        <div class="container">
+            <h2 class="title">các dòng xe @Model.CarService.Car có lái </h2>
+            <p class="sub-title">Dịch vụ thuê xe có lái chuyên nghiệp – linh hoạt theo ngày / tháng / năm đáp ứng mọi nhu cầu di chuyển cá nhân.</p>
+            <div class="list-car">
+                @foreach (var item in Model.CarService.Details.Where(a => a.CarServiceType == CarServiceType.SupportedCar))
+                {
+                    var galleryId = "detail-" + item.Id;
+                    var listImgs = (item.ListImage ?? "")
+                      .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                      .Select(x => x.Trim())
+                      .Where(x => !string.IsNullOrWhiteSpace(x))
+                      .Distinct(StringComparer.OrdinalIgnoreCase)
+                      .ToList();
+
+                    <div class="car-item" onclick="document.querySelector('#@galleryId-first').click()">
+                        @if (item.Image != null)
+                        {
+                            <img src="~/Content/images/img-main/base64.gif" data-src="@Path.Combine("/images/detail/", item.Image)" alt="@item.Name" class="lazyload" />
+                        }
+                        @if (listImgs.Any())
+                        {
+                            var firstImgUrl = Url.Content("~/images/detail/" + listImgs.First());
+                            <a id="@galleryId-first" href="@firstImgUrl" data-fancybox="@galleryId" data-caption="@item.Name" style="display:none"></a>
+
+                            foreach (var img in listImgs.Skip(1))
+                            {
+                                var imgUrl = Url.Content("~/images/detail/" + img);
+                                <a href="@imgUrl" data-fancybox="@galleryId" data-caption="@item.Name" style="display:none"></a>
+                            }
+                        }
+
+                        @*<div class="car-name">
+                                @item.Name
+                            </div>
+                            <div class="year-car">
+                                @item.Desciption
+                            </div>*@
+                    </div>
+                }
+            </div>
+        </div>
+    </section>
+}
+
+<section class="page-section">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-4">
+                <div class="step">
+                    <h2 class="title text-left">quy trình thuê xe đơn giản</h2>
+                    @foreach (var item in Model.CarService.Details.Where(a => a.CarServiceType == CarServiceType.ProcessStep))
+                    {
+                        <div class="d-flex mt-4 align-items-center gap-2">
+                            <div class="step-count">
+                                @count
+                            </div>
+                            <div class="step-name h-auto">
+                                @item.Name
+                            </div>
+                        </div>
+                        count += 1;
+                    }
+                </div>
+            </div>
+            <div class="col-lg-8 position-relative QA">
+                <h2 class="title">Câu hỏi thường gặp</h2>
+                <p class="sub-title">Câu hỏi thường gặp</p>
+                @{
+                    var banners = Model.CarService.Details.Where(a => a.CarServiceType == CarServiceType.Policy).ToList();
+                    int index = 0;
+                }
+
+                <div class="accordion" id="accordionExample">
+                    @foreach (var item in banners)
+                    {
+                        var headingId = $"heading{index}";
+                        var collapseId = $"collapse{index}";
+                        bool isFirst = index == 0;
+                        int delay = 200;
+                        <div class="accordion-item" data-aos-duration="700" data-aos-delay="@delay" data-aos="fade-right">
+                            <h2 class="accordion-header" id="@headingId">
+                                <button onclick="toggleAccordion(this)" class="accordion-button @(isFirst ? "" : "collapsed")"
+                                        type="button"
+                                        data-bs-toggle="collapse"
+                                        data-bs-target="#@collapseId"
+                                        aria-expanded="@(isFirst.ToString().ToLower())"
+                                        aria-controls="@collapseId">
+                                    @item.Name
+                                    <i class="fal fa-arrow-down accordion-icon"></i>
+                                </button>
+                            </h2>
+                            <div id="@collapseId"
+                                 class="accordion-collapse collapse @(isFirst ? "show" : "")"
+                                 aria-labelledby="@headingId"
+                                 data-bs-parent="#accordionExample">
+                                <div class="accordion-body">
+                                    @Html.Raw(item.Body)
+                                </div>
+                            </div>
+                        </div>
+
+                        index++; delay += 200;
+                    }
+                </div>
+
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="page-section feedback">
+    <div class="container">
+        <h2 class="title">Khách hàng nói gì về chúng tôi</h2>
+        <div class="row mt-3">
+            <div class="col-lg-7">
+                <div id="car-img" class="slider-for">
+                    @if (Model.CarService.Details.Any(a => a.CarServiceType == CarServiceType.SupportedCar))
+                    {
+                        foreach (var item in Model.CarService.Details.Where(a => a.CarServiceType == CarServiceType.SupportedCar))
+                        {
+                            <img src="~/Content/images/img-main/base64.gif" data-src="@Path.Combine("/images/detail/", item.Image)" alt="@item.Name" class="lazyload" />
+                        }
+
+                    }
+                </div>
+                @if (Model.CarService.Details.Any(a => a.CarServiceType == CarServiceType.SupportedCar))
+                {
+                    <div class="slider-nav">
+                        @foreach (var item in Model.CarService.Details.Where(a => a.CarServiceType == CarServiceType.SupportedCar))
+                        {
+                            <img src="~/Content/images/img-main/base64.gif" data-src="@Path.Combine("/images/detail/", item.Image)" alt="@item.Name" class="lazyload" />
+                        }
+                    </div>
+                }
+            </div>
+            <div class="col-lg-5 mt-lg-0 mt-2">
+                <div class="d-flex box-am">
+                    <div id="marquee1" class="marquee-item">
+                        <div>
+                            @foreach (var item in Model.Banners.Where(a => a.GroupId == 5))
+                            {
+                                if (item.Image != null)
+                                {
+                                    <img src="~/Content/images/img-main/base64.gif" data-src="@Path.Combine("/images/banners/", item.Image)" alt="@item.BannerName" class="lazyload" />
+                                }
+                            }
+                        </div>
+                    </div>
+                    <div id="marquee2" class="marquee-item">
+                        <div>
+                            @foreach (var item in Model.Banners.Where(a => a.GroupId == 7))
+                            {
+                                if (item.Image != null)
+                                {
+                                    <img src="~/Content/images/img-main/base64.gif" data-src="@Path.Combine("/images/banners/", item.Image)" alt="@item.BannerName" class="lazyload" />
+
+                                }
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<section class="page-section">
+    <div class="container">
+        <h2 class="title ">tin tức -  sự kiện</h2>
+        @*<p class="sub-title  mb-4">
+                Dịch vụ thuê xe có lái chuyên nghiệp – linh hoạt theo ngày / tháng / năm đáp ứng mọi nhu cầu di chuyển cá nhân.
+            </p>*@
+        <div class=" row filter-ar gap-2">
+            @foreach (var item in Model.ArticleCategories)
+            {
+                <button type="button" data-id="@item.Id" class="btn filter-btn">@item.CategoryName</button>
+            }
+        </div>
+        <div class="row article-row mt-3" id="body-ar">
+
+        </div>
+    </div>
+</section>
+@if (Model.CarService.Body != null)
+{
+    <section class="page-section">
+        <div class="container">
+            <div class="detail-content car-body">
+                @Html.Raw(Model.CarService.Body)
+            </div>
+            <div class="view-all text-center mt-3 text-primary pointer-event">
+                Xem thêm
+            </div>
+        </div>
+    </section>
+}
+
+@section scripts{
+    <script src="~/Scripts/jquery.marquee.min.js"></script>
+    <script>
+        homeJs()
+        function loadArticlesById(id) {
+            $.ajax({
+                url: '@Url.Action("GetArticle", "Home")',
+                type: 'GET',
+                data: { id: id },
+                success: function (result) {
+                    $('#body-ar').html(result);
+                },
+                error: function () {
+                    alert("Lỗi tải dữ liệu!");
+                }
+            });
+        }
+
+        $(document).ready(function () {
+            var firstBtn = $('.filter-btn').first();
+            var firstId = firstBtn.data('id');
+            loadArticlesById(firstId);
+            firstBtn.addClass('active');
+        });
+
+        $(document).on('click', '.filter-btn', function() {
+            var id = $(this).data('id');
+            $('.filter-btn').removeClass('active');
+            $(this).addClass('active');
+            loadArticlesById(id);
+        });
+    </script>
+    <script type="application/ld+json">
+        @Html.Raw(@"{
+          ""@context"": ""https://schema.org"",
+          ""@type"": ""Service"",
+          ""name"": " + Newtonsoft.Json.JsonConvert.SerializeObject(ViewBag.Title) + @",
+          ""image"": " + Newtonsoft.Json.JsonConvert.SerializeObject(ViewBag.ImgShare) + @",
+          ""description"": " + Newtonsoft.Json.JsonConvert.SerializeObject(ViewBag.Description) + @"
+        }")
+    </script>
+
+}
