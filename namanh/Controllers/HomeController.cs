@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Configuration;
 using System.Web.Mvc;
+using System.Web.Razor;
 
 namespace namanh.Controllers
 {
@@ -265,6 +266,13 @@ namespace namanh.Controllers
             }).ToList();
             return Json(result, JsonRequestBehavior.AllowGet);
         }
+
+
+        public PartialViewResult ContactForm()
+        {
+            return PartialView();
+        }
+
 
         //[HttpPost]
         //public ActionResult ImportFromJson()

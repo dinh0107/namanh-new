@@ -260,6 +260,7 @@
     <Content Include="Content\images\img-main\tw.svg" />
     <Content Include="Content\images\img-main\zalo-logo.png" />
     <Content Include="Content\images\no-call-01-min.jpg" />
+    <Content Include="Content\images\Rectangle 63.jpg" />
     <Content Include="Content\images\svg\drive.svg" />
     <Content Include="Content\images\svg\icon-1.svg" />
     <Content Include="Content\images\svg\icon-2.svg" />
@@ -2027,6 +2028,7 @@
     <Content Include="Views\Home\NotFound.cshtml" />
     <Content Include="Views\Home\PriceTable.cshtml" />
     <Content Include="Views\Home\ServiceCar.cshtml" />
+    <Content Include="Views\Home\ContactForm.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

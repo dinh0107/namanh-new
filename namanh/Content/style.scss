@@ -1657,7 +1657,41 @@ footer {
         border: 1px solid $white;
     }
 }
+.container-form {
+    border-radius: 10px;
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+    overflow:hidden
+}
 
+.fb-bg {
+    background: url('../Content/images/bg-banner.jpg');
+}
+
+.fb-slider {
+    .slick-prev {
+        left: -40px;
+    }
+
+    .slick-next {
+        right: -40px;
+    }
+}
+.fb-name {
+    color: #004596;
+    @Include SVN-Medium;
+}
+.slider-thuml-item {
+    img {
+        aspect-ratio: 2;
+        border-radius:10px;
+    }
+}
+.slider-nav-item {
+    img {
+        aspect-ratio: 2;
+        border-radius: 10px;
+    }
+}
 .uu-info {
     p {
         color: #000;
@@ -2695,7 +2729,7 @@ footer {
     }
 
     footer {
-        padding-bottom: 100px;
+        padding-bottom: 44px;
     }
 
     .filer-btn {
@@ -2808,10 +2842,16 @@ footer {
     .banner {
         width: 100%;
         overflow: hidden;
-        /*height: 28vh !important;*/
+        height: 10vh !important;
+
         .slick-slider {
             width: 100%;
         }
+    }
+
+    .service-slide .car-img {
+        margin-left: 0;
+        width: 100%;
     }
 
     .slogan {

@@ -6,6 +6,46 @@ $('.button-wrap').on("click", function () {
     $(".toDate").toggleClass('input-active');
 });
 
+$('.slider-thuml').slick({
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    arrows: false,
+    fade: true,
+    asNavFor: '.slider-nav'
+});
+
+$('.slider-nav').slick({
+    slidesToShow: 5,
+    arrows: false,
+    slidesToScroll: 1,
+    asNavFor: '.slider-thuml',
+    focusOnSelect: true,
+    responsive: [
+        {
+            breakpoint: 900,
+            settings: {
+                dots: false,
+                slidesToShow: 3
+            }
+        },
+        {
+            breakpoint: 768,
+            settings: {
+                centerPadding: '0',
+                dots: false,
+                slidesToShow: 3
+            }
+        },
+        {
+            breakpoint: 480,
+            settings: {
+                centerPadding: '0', dots: false,
+                slidesToShow: 3
+            }
+        }
+    ]
+});
+
 
 document.addEventListener("DOMContentLoaded", function () {
     function initVerticalMarquee(selector, speed = 40) {
@@ -164,20 +204,20 @@ function homeJs() {
     //document.addEventListener('DOMContentLoaded', function () {
     //    Fancybox.bind("[data-fancybox]", { Thumbs: { autoStart: true } });
     //});
-    $('.slider-for').slick({
-        slidesToShow: 1,
-        autoplay: true,
-        autoplaySpeed: 2000,
-        arrows: false,
-        asNavFor: '.slider-nav'
-    })
-    $('.slider-nav').slick({
-        slidesToShow: 4,
-        arrows: false,
-        slidesToScroll: 1,
-        asNavFor: '.slider-for',
-        focusOnSelect: true
-    });
+    //$('.slider-for').slick({
+    //    slidesToShow: 1,
+    //    autoplay: true,
+    //    autoplaySpeed: 2000,
+    //    arrows: false,
+    //    asNavFor: '.slider-nav'
+    //})
+    //$('.slider-nav').slick({
+    //    slidesToShow: 4,
+    //    arrows: false,
+    //    slidesToScroll: 1,
+    //    asNavFor: '.slider-for',
+    //    focusOnSelect: true
+    //});
     //$('.list-baner').slick({
     //    slidesToShow: 1,
     //    autoplay: true,
@@ -236,33 +276,16 @@ function homeJs() {
             content.style.display = "block";
         }
     }
-    $('.list-feedback').slick({
-        slidesToShow: 2,
+
+
+    $('.fb-slider').slick({
+        slidesToShow: 1,
         infinite: true,
-        dots: true,
+        dots: false,
         autoplay: true,
         autoplaySpeed: 3000,
         prevArrow: "<button type='button' aria-label='bên trái' class='slick-prev pull-left'><i class='fa fa-angle-left' aria-hidden='true'></i></button>",
         nextArrow: "<button type='button'aria-label='bên phải' class='slick-next pull-right'><i class='fa fa-angle-right' aria-hidden='true'></i></button>",
-
-        responsive: [
-            {
-                breakpoint: 768,
-                settings: {
-                    dots: false,
-                    arrows: true,
-                    slidesToShow: 1
-                }
-            },
-            {
-                breakpoint: 480,
-                settings: {
-                    dots: false,
-                    arrows: true,
-                    slidesToShow: 1
-                }
-            }
-        ]
     });
     $('.list-car').slick({
         slidesToShow: 3,
@@ -305,7 +328,7 @@ function homeJs() {
 
 
     
-
+ 
 
     const routes = [
         {

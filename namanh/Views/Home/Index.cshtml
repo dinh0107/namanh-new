@@ -20,7 +20,7 @@
         <img src="~/Content/images/xe-1.png" alt="Banner" class="banner-anh" />
     </div>
     <div class="list-baner">
-        <a href="https://zalo.me/@config.Zalo"><img src="~/Content/images/HOME-mb-02-min.jpg" alt="Banner" class="d-lg-none d-block" /></a>
+        @*<a href="https://zalo.me/@config.Zalo"><img src="~/Content/images/HOME-mb-02-min.jpg" alt="Banner" class="d-lg-none d-block" /></a>*@
     </div>
 </section>
 <div class="container py-3">
@@ -155,7 +155,55 @@
         </div>
     </div>
 </section>
-
+<section class="page-section fb-bg">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6">
+                <h2 class="title">feedback</h2>
+                <div class="p-4">
+                    <div class="fb-slider">
+                        @foreach (var item in Model.Banners.Where(a => a.GroupId == 5))
+                        {
+                            <div class="fb-item">
+                                <div>@Html.Raw(item.Content)</div>
+                                <div class="fb-name">
+                                    @item.BannerName
+                                </div>
+                                <small class="fb-position">
+                                    @item.Slogan
+                                </small>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="slider-thuml">
+                    @foreach (var item in Model.Banners.Where(a => a.GroupId == 7))
+                    {
+                        <div class="slider-thuml-item">
+                            @if (item.Image != null)
+                            {
+                                <img src="@Path.Combine("/images/banners/", item.Image)" alt="@config.Title" class="w-100" />
+                            }
+                        </div>
+                    }
+                </div>
+                <div class="slider-nav">
+                    @foreach (var item in Model.Banners.Where(a => a.GroupId == 7))
+                    {
+                        <div class="slider-nav-item">
+                            @if (item.Image != null)
+                            {
+                                <img src="~/Content/images/img-main/base64.gif" data-src="@Path.Combine("/images/banners/", item.Image)" alt="@config.Title" class="lazyload w-100" />
+                            }
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 <section class="page-section">
     <div class="container">
         <h2 class="title ">tin tức -  sự kiện</h2>
@@ -228,6 +276,26 @@
             </div>
         </div>
 </section>
+
+<section class="page-section">
+    <div class="container">
+        <h2 class="title">nhận tư vấn từ chúng tôi</h2>
+        <p class="sub-title">Dịch vụ thuê xe có lái chuyên nghiệp – linh hoạt theo ngày / tháng / năm đáp ứng mọi nhu cầu di chuyển cá nhân.</p>
+
+        <div class="container-form mt-3">
+            <div class="row">
+                <div class="col-lg-4">
+                    <img src="~/Content/images/Rectangle 63.jpg" alt="Liên hệ"  class="w-100"/>
+                </div>
+                <div class="col-lg-8">
+                    @Html.Action("ContactForm")
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
 @if (config.FooterImage != null)
 {
     <a href="@config.Zalo">
