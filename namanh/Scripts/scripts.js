@@ -46,29 +46,6 @@ $('.slider-nav').slick({
     ]
 });
 
-
-document.addEventListener("DOMContentLoaded", function () {
-    function initVerticalMarquee(selector, speed = 40) {
-        const container = document.querySelector(selector);
-        const inner = container.firstElementChild;
-
-        inner.innerHTML += inner.innerHTML;
-
-        let offset = 0;
-        function scroll() {
-            offset += speed / 60; 
-            if (offset >= inner.scrollHeight / 2) {
-                offset = 0;
-            }
-            inner.style.transform = `translateY(-${offset}px)`;
-            requestAnimationFrame(scroll);
-        }
-        scroll();
-    }
-
-    initVerticalMarquee("#marquee1", 50);
-    initVerticalMarquee("#marquee2", 70);
-});
 function autoComplate() {
     const API_KEY = "zxjFUlokomoYCcC9EzXHKSwXml4tYSafvdwJ6Qgn";
     const lat = null;

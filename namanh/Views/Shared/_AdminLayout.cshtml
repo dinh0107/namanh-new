@@ -10,10 +10,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     @*<meta name="viewport" content="width=device-width" />*@
     <title>@ViewBag.Title</title>
-    @*@if (config.Favicon != null)
+    @if (config.Favicon != null)
     {
         <link rel="shortcut icon" href="@Path.Combine("/images/configs/", config.Favicon)?w=64&h=64">
-    }*@
+    }
     @Styles.Render("~/Content/admincss", "~/Content/themes/base/css")
     <link href="~/Content/admin.css" rel="stylesheet" />
     <link href="~/Scripts/multi-upload/jquery.fileupload.css" rel="stylesheet" />
@@ -22,12 +22,12 @@
 <body>
     <div class="navbar navbar-dark">
         <div class="navbar-brand">
-            @*@if (config.Image != null)
+            @if (config.Image != null)
             {
                 <a href="@Url.Action("Index","Home")" target="_blank" class="d-inline-block">
                     <img src="@Path.Combine("/images/configs/", config.Image)" alt="logo" />
                 </a>
-            }*@
+            }
         </div>
         <div class="navbar-collapse">
             <div class="paragraph-justify">
@@ -70,12 +70,12 @@
                             <span>Tổng quan website</span>
                         </a>
                     </li>
-                    <li class="nav-item" data-id="1">
+                    @*<li class="nav-item" data-id="1">
                         <a href="@Url.Action("CarService","CarService")" class="nav-link">
                             <i class="fas fa-home-lg-alt"></i>
                             <span>Trang dịch vụ</span>
                         </a>
-                    </li>
+                    </li>*@
                     <li class="nav-item nav-item-submenu" data-id="2">
                         <a href="javascript:;" class="nav-link">
                             <i class="fas fa-user-cog"></i>
@@ -120,7 +120,7 @@
                             <span>Bảng giá</span>
                         </a>
                     </li>
-                    <li class="nav-item nav-item-submenu" data-id="5">
+                    @*<li class="nav-item nav-item-submenu" data-id="5">
                         <a href="javascript:;" class="nav-link">
                             <i class="fa-light fa-newspaper"></i>
                             <span>Quản lý Bài viết</span>
@@ -145,7 +145,7 @@
                                 </a>
                             </li>
                         </ul>
-                    </li>
+                    </li>*@
                     <li class="nav-item nav-item-submenu" data-id="7">
                         <a href="javascript:;" class="nav-link">
                             <i class="fa-solid fa-image"></i>
@@ -162,96 +162,6 @@
                                 <a href="@Url.Action("ListBanner", "Banner")" class="nav-link">
                                     <i class="fa-light fa-images"></i>
                                     <span>Danh sách banner</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li class="nav-item nav-item-submenu" data-id="7">
-                        <a href="javascript:;" class="nav-link">
-                            <i class="fa-solid fa-users"></i>
-                            <span>Quản lý Khách hàng</span>
-                        </a>
-                        <ul class="nav-group-sub">
-                            @*<li class="nav-item">
-                    <a href="@Url.Action("Customer", "Customer")" class="nav-link">
-                        <i class="fa-light fa-user-plus"></i>
-                        <span>Thêm mới KH</span>
-                    </a>
-                </li>*@
-                            <li class="nav-item">
-                                <a href="@Url.Action("ListCustomer", "Customer")" class="nav-link">
-                                    <i class="fa-light fa-users"></i>
-                                    <span>Danh sách KH</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li class="nav-item nav-item-submenu" data-id="7">
-                        <a href="javascript:;" class="nav-link">
-                            <i class="fa-solid fa-suitcase"></i>
-                            <span>Quản lý Chuyến đi</span>
-                        </a>
-                        <ul class="nav-group-sub">
-                            <li class="nav-item">
-                                <a href="@Url.Action("AddTrip", "Custom")" class="nav-link">
-                                    <i class="fa-light fa-suitcase"></i>
-                                    <span>Thêm chuyến đi</span>
-                                </a>
-                                <a href="@Url.Action("ListTrip", "Customer")" class="nav-link">
-                                    <i class="fa-light fa-suitcase"></i>
-                                    <span>Danh sách Chuyến chạy</span>
-                                </a>
-                                <a href="@Url.Action("ListTripChange", "Customer")" class="nav-link">
-                                    <i class="fa-light fa-suitcase"></i>
-                                    <span>Danh sách Chuyến chuyển</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li class="nav-item nav-item-submenu" data-id="7">
-                        <a href="javascript:;" class="nav-link">
-                            <i class="fa-solid fa-user-tie-hair"></i>
-                            <span>Quản lý Lái xe</span>
-                        </a>
-                        <ul class="nav-group-sub">
-                            <li class="nav-item">
-                                <a href="@Url.Action("CreateDriver", "Mms")" class="nav-link">
-                                    <i class="fa-light fa-user-tie-hair"></i>
-                                    <span>Thêm mới lái xe</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li class="nav-item nav-item-submenu" data-id="7">
-                        <a href="javascript:;" class="nav-link">
-                            <i class="fa-solid fa-money-bill-1-wave"></i>
-                            <span>Quản lý Khoản chi</span>
-                        </a>
-                        <ul class="nav-group-sub">
-                            <li class="nav-item">
-                                <a href="@Url.Action("Expense", "Mms")" class="nav-link">
-                                    <i class="fa-light fa-money-bill-1-wave"></i>
-                                    <span>Thêm mới khoản chi</span>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="@Url.Action("ListExpense", "Mms")" class="nav-link">
-                                    <i class="fa-solid fa-money-bills"></i>
-                                    <span>Danh sách khoản chi</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li class="nav-item nav-item-submenu" data-id="7">
-                        <a href="javascript:;" class="nav-link">
-                            <i class="fa-solid fa-ticket"></i>
-                            <span>Quản lý Voucher</span>
-                        </a>
-                        <ul class="nav-group-sub">
-                            <li class="nav-item">
-                                <a href="@Url.Action("CreateVoucher", "Customer")" class="nav-link">
-                                    <i class="fa-light fa-ticket"></i>
-                                    <span>Danh sách Voucher</span>
                                 </a>
                             </li>
                         </ul>
