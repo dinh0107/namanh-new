@@ -46,6 +46,41 @@ $('.slider-nav').slick({
     ]
 });
 
+
+$('.price-slick').slick({
+    slidesToShow: 3,
+    arrows: false,
+    slidesToScroll: 1,
+    centerMode: true,
+    centerPadding: '0',
+    responsive: [
+        {
+            breakpoint: 900,
+            settings: {
+                dots: false,
+                slidesToShow: 3
+            }
+        },
+        {
+            breakpoint: 768,
+            settings: {
+                centerPadding: '0',
+                dots: false,
+                slidesToShow: 3
+            }
+        },
+        {
+            breakpoint: 480,
+            settings: {
+                centerPadding: '0', dots: false,
+                slidesToShow: 1
+            }
+        }
+    ]
+});
+
+
+
 function autoComplate() {
     const API_KEY = "zxjFUlokomoYCcC9EzXHKSwXml4tYSafvdwJ6Qgn";
     const lat = null;

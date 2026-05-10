@@ -4,11 +4,11 @@
     var config = (ConfigSite)HttpContext.Current.Application["ConfigSite"];
 }
 <section class="page-section price-section">
-    <img src="~/Content/images/bg-price.jpg" alt="Anh" class="price-bg"/>
+    <img src="~/Content/images/bg-price.jpg" alt="Anh" class="price-bg" />
     <h2 class="title">bảng giá dịch vụ minh bạch </h2>
     @*<p class="sub-title  mb-4">
-        Bảng giá mang tính tham khảo — vui lòng liên hệ để nhận báo giá tốt nhất theo lộ trình của bạn.
-    </p>*@
+            Bảng giá mang tính tham khảo — vui lòng liên hệ để nhận báo giá tốt nhất theo lộ trình của bạn.
+        </p>*@
     <div class="container">
         <div class="d-flex justify-content-center">
             <div class="btn-group filer-btn row" role="group" aria-label="Basic example">
@@ -33,57 +33,43 @@
             </div>
         </div>
         <div class="box-price">
-            <table id="priceTable" class="table table-bordered">
-                <thead>
-                    <tr>
-                        <th>Hành trình</th>
-                        <th id="priceHeader"><span class="d-block pb-2">Giá</span></th>
-                    </tr>
-                </thead>
-                <tbody></tbody>
-            </table>
-            <table class="table table-bordered" id="myTable">
-                <thead class="header-tb">
-                    <tr>
-                        <td scope="col" style="width:247px">Hành trình</td>
-                        <td scope="col">4 chỗ</td>
-                        <td scope="col">7 chỗ</td>
-                        <td scope="col">16 chỗ</td>
-                        <td scope="col">29 chỗ</td>
-                        <td scope="col">45 chỗ</td>
-                        <td scope="col">Limousine</td>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var item in Model.PriceTables)
-                    {
-                        var hot = item.Hot ? "class=hot" : "";
-                        var hotImg = item.Hot ? "<img src=\"/Content/images/hot-gif.gif\" width=\"30\" height=\"30\" alt=\"Hot\" />" : "";
+            <div class="price-slick">
+                @foreach (var item in Model.PriceLangdings)
+                {
+                    <div class="car-card">
+                        <div class="card-header">
+                            <div class="seat">
+                               @item.Name
+                            </div>
+                        </div>
 
-                        <tr @hot>
-                            <td scope="row" >@item.RouteDescription @Html.Raw(hotImg)</td>
-                            <td>@item.Price4</td>
-                            <td>@item.Price7</td>
-                            <td>@item.Price16</td>
-                            <td>@item.Price29</td>
-                            <td>@item.Price45</td>
-                            <td>@item.PriceLim</td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-            
-        </div>
-        <div class="d-flex justify-content-center pb-2">
-            <div id="show-more-table" class="btn-color">
-                xem bảng giá đầy đủ
-                <div class="box-icon">
-                    <i class="far fa-long-arrow-right"></i>
-                </div>
+                        <div class="card-body">
+                            <div class="title-card">
+                                Tuyến đường phổ biến
+                            </div>
+
+                            <div class="location-list">
+                                @foreach (var loc in item.Locations.Take(5))
+                                {
+                                    <div class="location-item">@loc.Name</div>
+                                }
+                            </div>
+
+                            <ul class="feature-list">
+                                <li><i class="fa fa-check"></i> Xe sạch sẽ đời mới</li>
+                                <li><i class="fa fa-check"></i> Tài xế chuyên nghiệp</li>
+                                <li><i class="fa fa-check"></i> Đưa đón tận nơi</li>
+                                <li><i class="fa fa-check"></i> Hỗ trợ 24/7</li>
+                            </ul>
+
+                            <a href="@config.Zalo" class="btn-book">
+                                Đặt xe ngay
+                            </a>
+
+                        </div>
+                    </div>
+                }
             </div>
-            <a href="https://zalo.me/@config.Zalo" id="show-call-table" class="btn-color">
-                Nhận báo giá chính xác
-            </a>
         </div>
     </div>
 </section>

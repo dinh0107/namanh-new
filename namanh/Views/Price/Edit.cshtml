@@ -1,0 +1,197 @@
+﻿@model namanh.Models.PriceLangding
+@{
+    ViewBag.Title = "Thêm giá";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+<div class="page-header">
+    <div class="page-title">
+        <i class="fa-solid fa-align-right fa-rotate-180 fa-sm"></i>
+        <span>Thêm giá</span>
+    </div>
+    <a href="#" onclick="history.go(-1)" class="btn-main btn-labeled bg-brown">
+        <span class="icon">
+            <i class="fa-solid fa-left"></i>
+        </span>
+        Quay lại
+    </a>
+</div>
+<div class="content">
+    @if (ViewBag.ArticleCat == "success")
+    {
+        <div id="AlertBox" class="alert alert-success"><strong>Thêm mới thành công</strong></div>
+    }
+    @if (ViewBag.ArticleCat == "update")
+    {
+        <div id="AlertBox" class="alert alert-success"><strong>Cập nhật thành công</strong></div>
+    }
+    <div class="accordion">
+        <div class="accordion-item border-left-slate">
+            <div class="accordion-header">
+                <div class="card-title">
+                    <i class="fa-light fa-octagon-plus fa-lg"></i>
+                    Thêm giá
+                </div>
+                <button type="button" data-bs-toggle="collapse" data-bs-target="#createForm" aria-expanded="true">
+                    <i class="fa-solid fa-angle-down"></i>
+                </button>
+            </div>
+            <div id="createForm" class="accordion-collapse collapse show">
+                <div class="accordion-body">
+                    @using (Html.BeginForm("Edit", "Price", FormMethod.Post, new { @id = "data-insert-form", enctype = "multipart/form-data" }))
+                    {
+                        @Html.ValidationSummary(true)
+                        <div class="mb-3 row">
+                            <label class="col-form-label col-lg-3" for="CategoryName">Lộ trình <span class="text-danger">*</span></label>
+                            <div class="col-lg-9">
+                                @Html.EditorFor(a => a.Name)
+                            </div>
+                        </div>
+                        <div class="mb-3 row">
+                            <label class="col-form-label col-lg-3" for="CategoryName">Mô tả<span class="text-danger">*</span></label>
+                            <div class="col-lg-9">
+                                @Html.EditorFor(a => a.Description)
+                            </div>
+                        </div>
+                        <div class="mb-3 row">
+                            <label class="col-form-label col-lg-3">
+                                Địa điểm
+                            </label>
+
+                            <div class="col-lg-9">
+
+                                <div id="location-wrapper">
+
+                                    @if (Model.Locations != null && Model.Locations.Any())
+                                    {
+                                        int index = 0;
+
+                                        foreach (var item in Model.Locations)
+                                        {
+                                            <div class="location-item d-flex mb-2">
+
+                                                <input type="hidden"
+                                                       name="Locations[@index].Id"
+                                                       value="@item.Id" />
+
+                                                <input type="text"
+                                                       name="Locations[@index].Name"
+                                                       value="@item.Name"
+                                                       class="form_control"
+                                                       placeholder="Nhập địa điểm" />
+
+                                                @if (index == 0)
+                                                {
+                                                    <button type="button"
+                                                            class="btn btn-success ms-2 add-location">
+                                                        <i class="fa-solid fa-plus"></i>
+                                                    </button>
+                                                }
+                                                else
+                                                {
+                                                    <button type="button"
+                                                            class="btn btn-danger ms-2 remove-location">
+                                                        <i class="fa-solid fa-minus"></i>
+                                                    </button>
+                                                }
+
+                                            </div>
+
+                                            index++;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <div class="location-item d-flex mb-2">
+
+                                            <input type="text"
+                                                   name="Locations[0].Name"
+                                                   class="form-control"
+                                                   placeholder="Nhập địa điểm" />
+
+                                            <button type="button"
+                                                    class="btn btn-success ms-2 add-location">
+                                                <i class="fa-solid fa-plus"></i>
+                                            </button>
+
+                                        </div>
+                                    }
+
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="mb-3 row">
+                            @Html.LabelFor(a => a.Sort, new { @class = "col-form-label col-lg-3" })
+                            <div class="col-lg-9">
+                                @Html.EditorFor(a => a.Sort)
+                            </div>
+                        </div>
+                        <div class="mb-3 row">
+                            @Html.LabelFor(a => a.Active, new { @class = "col-form-label col-lg-3" })
+                            <div class="col-lg-9">
+                                <label class="form-check-label">
+                                    <input type="checkbox" name="Active" @if (Model.Active) { @Html.Raw("value='true' checked")  } else { @Html.Raw("value='false'") } />
+                                    <span class="checkmark"></span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="btn-group">
+                            <button type="reset" onclick="resetAnyFormById('data-insert-form');" class="btn-main btn-white" id="reset">
+                                <span>Đặt lại</span>
+                                <i class="fa-solid fa-rotate-right ms-2"></i>
+                            </button>
+                            <button type="submit" class="btn-main btn-primary text-white ms-3">
+                                <span>Lưu</span>
+                                <i class="fa-solid fa-floppy-disk ms-2"></i>
+                            </button>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts {
+
+    <script>
+
+    var locationIndex = @(Model.Locations != null
+        ? Model.Locations.Count()
+        : 1);
+
+    $(document).ready(function () {
+
+        // thêm
+        $(document).on('click', '.add-location', function () {
+
+            var html = `
+                <div class="location-item d-flex mb-2">
+
+                    <input type="text"
+                           name="Locations[${locationIndex}].Name"
+                           class="form_control"
+                           placeholder="Nhập địa điểm" />
+
+                    <button type="button"
+                            class="btn btn-danger ms-2 remove-location">
+                        <i class="fa-solid fa-minus"></i>
+                    </button>
+
+                </div>
+            `;
+
+            $('#location-wrapper').append(html);
+
+            locationIndex++;
+        });
+
+        // xóa
+        $(document).on('click', '.remove-location', function () {
+            $(this).closest('.location-item').remove();
+        });
+
+    });
+
+    </script>
+
+}

@@ -10,6 +10,7 @@ namespace namanh.ViewModel
         public IEnumerable<Banner> Banners { get; set; }
         public IEnumerable<Article> Articles { get; set; }
         public IEnumerable<PriceTable>  PriceTables { get; set; }
+        public IEnumerable<PriceLangding>  PriceLangdings { get; set; }
         public IEnumerable<CarService> Services { get; set; }
         public IEnumerable<ArticleCategory> ArticleCategories { get; set; }
     }

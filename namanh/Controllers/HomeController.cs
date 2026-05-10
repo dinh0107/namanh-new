@@ -234,7 +234,7 @@ namespace namanh.Controllers
         {
             var model = new HomeViewModel
             {
-                PriceTables = _unitOfWork.PriceTableRepository.GetQuery(orderBy: a => a.OrderBy(b => b.Sort))
+                PriceLangdings = _unitOfWork.PriceLangdingRepository.GetQuery(orderBy: a => a.OrderBy(b => b.Sort))
             };
             return PartialView(model);
         }

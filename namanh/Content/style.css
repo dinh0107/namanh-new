@@ -1049,10 +1049,113 @@ header {
   height: auto;
 }
 
+.car-card {
+  width: 360px;
+  background: #fff;
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  transition: 0.3s;
+}
+
+.car-card:hover {
+  transform: translateY(-8px);
+}
+
+.card-header {
+  background: linear-gradient(135deg, #0d6efd, #0047b3);
+  padding: 20px;
+  color: #fff;
+  text-align: center;
+}
+
+.card-header i {
+  font-size: 48px;
+  margin-bottom: 15px;
+}
+
+.seat {
+  font-size: 32px;
+  font-family: "SVN-Bold";
+  margin-bottom: 10px;
+}
+
+.price {
+  font-size: 42px;
+  font-family: "SVN-Bold";
+}
+
+.price span {
+  font-size: 18px;
+  font-weight: normal;
+}
+
+.card-body {
+  padding: 28px;
+}
+
+.title-card {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 18px;
+  color: #222;
+}
+
+.location-list {
+  display: flex;
+  height: 72px;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 25px;
+  align-items: flex-start;
+}
+
+.location-item {
+  background: #eef4ff;
+  color: #0d6efd;
+  padding: 6px 16px;
+  border-radius: 30px;
+  font-size: 12px;
+  font-family: "SVN-Bold";
+}
+
+.feature-list {
+  list-style: none;
+  padding-left: 0;
+  margin-bottom: 30px;
+}
+
+.feature-list li {
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #444;
+}
+
+.feature-list i {
+  color: #28a745;
+}
+
+.btn-book {
+  display: block;
+  width: 100%;
+  text-align: center;
+  padding: 10px;
+  background: #0d6efd;
+  color: #fff;
+  border-radius: 14px;
+  text-decoration: none;
+  font-weight: bold;
+  transition: 0.3s;
+}
+
+.btn-book:hover {
+  background: #0047b3;
+  color: #fff;
+}
+
 .box-price {
-  background: #F6F6F6;
-  border: 13px solid transparent;
-  border-radius: 20px;
   margin-top: 30px;
 }
 .box-price tbody tr th {
@@ -2115,6 +2218,13 @@ footer h2 {
     transform: rotate(0deg) scale(1) skew(1deg);
   }
 }
+.price-slick .slick-slide {
+  margin: 0 20px;
+}
+.price-slick .slick-list {
+  margin: 0 20px;
+}
+
 @media (max-width: 1024px) {
   .img-banner {
     width: 500px;
@@ -2671,7 +2781,6 @@ footer h2 {
     font-size: 13px;
   }
   .slick-slider {
-    width: 80%;
     margin: 0 auto;
   }
   .service-slide a {

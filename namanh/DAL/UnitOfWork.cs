@@ -25,8 +25,13 @@ namespace namanh.DAL
         private GenericRepository<CarServiceDetail> _carServiceDetailRepository;
         private GenericRepository<CarServicePrice> _carServicePriceRepository;
         private GenericRepository<PriceTable> _priceTableRepository;
+        private GenericRepository<PriceLangding> _priceLangdingRepository;
+        private GenericRepository<Location> _locationRepository;
 
-
+        public GenericRepository<PriceLangding> PriceLangdingRepository =>
+        _priceLangdingRepository ?? (_priceLangdingRepository = new GenericRepository<PriceLangding>(_context));
+        public GenericRepository<Location> LocationRepository =>
+        _locationRepository ?? (_locationRepository = new GenericRepository<Location>(_context));
         public GenericRepository<PriceTable> PriceTableRepository =>
           _priceTableRepository ?? (_priceTableRepository = new GenericRepository<PriceTable>(_context));
         public GenericRepository<CarService> CarServiceRepository =>

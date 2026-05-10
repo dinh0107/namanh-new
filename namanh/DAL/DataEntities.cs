@@ -27,5 +27,7 @@ namespace namanh.DAL
         public DbSet<CarServiceDetail>  CarServiceDetails { get; set; }
         public DbSet<CarServicePrice> CarServicePrices { get; set; }
         public DbSet<PriceTable> PriceTables { get; set; }
+        public DbSet<PriceLangding> PriceLangdings { get; set; }
+        public DbSet<Location> Locations { get; set; }
     }
 }

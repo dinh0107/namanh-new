@@ -151,6 +151,7 @@
     <Compile Include="Controllers\ErrorController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\MmsController.cs" />
+    <Compile Include="Controllers\PriceController.cs" />
     <Compile Include="Controllers\SitemapController.cs" />
     <Compile Include="Controllers\UploaderController.cs" />
     <Compile Include="DAL\DataEntities.cs" />
@@ -167,6 +168,14 @@
     <Compile Include="Migrations\202604230817152_add-img.cs" />
     <Compile Include="Migrations\202604230817152_add-img.Designer.cs">
       <DependentUpon>202604230817152_add-img.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202605091605565_add-table.cs" />
+    <Compile Include="Migrations\202605091605565_add-table.Designer.cs">
+      <DependentUpon>202605091605565_add-table.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202605100352323_add-table-price.cs" />
+    <Compile Include="Migrations\202605100352323_add-table-price.Designer.cs">
+      <DependentUpon>202605100352323_add-table-price.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Admin.cs" />
@@ -194,6 +203,7 @@
     <Compile Include="ViewModel\ContactViewModel.cs" />
     <Compile Include="ViewModel\CustomerViewModel.cs" />
     <Compile Include="ViewModel\HomeViewModel.cs" />
+    <Compile Include="ViewModel\PriceViewModel.cs" />
     <Compile Include="ViewModel\ProductViewModel.cs" />
     <Compile Include="ViewModel\ServiceViewModel.cs" />
   </ItemGroup>
@@ -2029,6 +2039,9 @@
     <Content Include="Views\Home\PriceTable.cshtml" />
     <Content Include="Views\Home\ServiceCar.cshtml" />
     <Content Include="Views\Home\ContactForm.cshtml" />
+    <Content Include="Views\Price\List.cshtml" />
+    <Content Include="Views\Price\Price.cshtml" />
+    <Content Include="Views\Price\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -2066,6 +2079,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202604230817152_add-img.resx">
       <DependentUpon>202604230817152_add-img.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202605091605565_add-table.resx">
+      <DependentUpon>202605091605565_add-table.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202605100352323_add-table-price.resx">
+      <DependentUpon>202605100352323_add-table-price.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
