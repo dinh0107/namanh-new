@@ -6,12 +6,12 @@ namespace namanh.Migrations
     {
         public override void Up()
         {
-            if (!ColumnExists("dbo.Locations", "Price"))
-            {
-                AddColumn("dbo.Locations", "Price", c => c.String());
-            }
-
             Sql(@"
+IF COL_LENGTH('dbo.Locations', 'Price') IS NULL
+BEGIN
+    ALTER TABLE dbo.Locations ADD Price NVARCHAR(MAX) NULL;
+END
+
 IF COL_LENGTH('dbo.Locations', 'Price4') IS NOT NULL
 BEGIN
     UPDATE dbo.Locations
@@ -23,10 +23,12 @@ END
 
         public override void Down()
         {
-            if (ColumnExists("dbo.Locations", "Price"))
-            {
-                DropColumn("dbo.Locations", "Price");
-            }
+            Sql(@"
+IF COL_LENGTH('dbo.Locations', 'Price') IS NOT NULL
+BEGIN
+    ALTER TABLE dbo.Locations DROP COLUMN Price;
+END
+");
         }
     }
 }
