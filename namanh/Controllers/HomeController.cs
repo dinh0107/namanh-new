@@ -250,7 +250,7 @@ namespace namanh.Controllers
             return PartialView(model);
         }
 
-        public JsonResult GetRoutePrices(int langdingId, string carType = "_4_cho")
+        public JsonResult GetRoutePrices(int langdingId, string carType = null)
         {
             var locations = _unitOfWork.LocationRepository
                 .Get(x => x.PriceLangdingId == langdingId && x.Active, orderBy: q => q.OrderBy(l => l.Sort))
@@ -265,37 +265,15 @@ namespace namanh.Controllers
                 from = fromCity,
                 to = x.Name,
                 hot = x.Hot,
-                price = GetLocationPrice(x, carType)
+                price = GetLocationPrice(x)
             });
 
             return Json(result, JsonRequestBehavior.AllowGet);
         }
 
-        private static string GetLocationPrice(Location location, string carType)
+        private static string GetLocationPrice(Location location)
         {
-            string price;
-            switch (carType)
-            {
-                case "_7_cho":
-                    price = location.Price7;
-                    break;
-                case "_16_cho":
-                    price = location.Price16;
-                    break;
-                case "_29_cho":
-                    price = location.Price29;
-                    break;
-                case "_45_cho":
-                    price = location.Price45;
-                    break;
-                case "limousine":
-                    price = location.PriceLim;
-                    break;
-                default:
-                    price = location.Price4;
-                    break;
-            }
-
+            var price = location.GetDisplayPrice();
             return string.IsNullOrWhiteSpace(price) ? "Liên hệ" : price;
         }
 

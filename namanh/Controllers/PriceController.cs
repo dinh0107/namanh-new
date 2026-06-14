@@ -141,12 +141,7 @@ namespace namanh.Controllers
                 {
                     Name = item.Name.Trim(),
                     PriceLangdingId = priceLangdingId,
-                    Price4 = item.Price4,
-                    Price7 = item.Price7,
-                    Price16 = item.Price16,
-                    Price29 = item.Price29,
-                    Price45 = item.Price45,
-                    PriceLim = item.PriceLim,
+                    Price = item.Price,
                     Sort = item.Sort > 0 ? item.Sort : sort,
                     Hot = item.Hot,
                     Active = item.Active

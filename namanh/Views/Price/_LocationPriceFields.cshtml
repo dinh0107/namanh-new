@@ -4,19 +4,15 @@
         ? Model.Locations.OrderBy(x => x.Sort).ToList()
         : new List<namanh.Models.Location> { new namanh.Models.Location { Sort = 1, Active = true } };
     var locationIndex = 0;
+    var tabLabel = string.IsNullOrWhiteSpace(Model.Name) ? "loại xe này" : Model.Name;
 }
 
 <div class="table-responsive">
     <table class="list_table tablecenter table-striped location-price-table">
         <thead>
             <tr>
-                                <th>Tuyến đến</th>
-                <th>4 chỗ</th>
-                <th>7 chỗ</th>
-                <th>16 chỗ</th>
-                <th>29 chỗ</th>
-                <th>45 chỗ</th>
-                <th>Limousine</th>
+                <th>Tuyến đến</th>
+                <th>Giá (@tabLabel)</th>
                 <th>STT</th>
                 <th>Hot</th>
                 <th></th>
@@ -25,17 +21,15 @@
         <tbody id="location-wrapper">
             @foreach (var item in locations)
             {
+                var priceValue = !string.IsNullOrWhiteSpace(item.Price) ? item.Price : item.GetDisplayPrice();
                 <tr class="location-item">
                     <td>
                         <input type="hidden" name="Locations[@locationIndex].Id" value="@item.Id" />
                         <input type="text" name="Locations[@locationIndex].Name" value="@item.Name" class="form_control" placeholder="VD: Lào Cai" />
                     </td>
-                    <td><input type="text" name="Locations[@locationIndex].Price4" value="@item.Price4" class="form_control" placeholder="1.000.000 đ" /></td>
-                    <td><input type="text" name="Locations[@locationIndex].Price7" value="@item.Price7" class="form_control" /></td>
-                    <td><input type="text" name="Locations[@locationIndex].Price16" value="@item.Price16" class="form_control" /></td>
-                    <td><input type="text" name="Locations[@locationIndex].Price29" value="@item.Price29" class="form_control" /></td>
-                    <td><input type="text" name="Locations[@locationIndex].Price45" value="@item.Price45" class="form_control" /></td>
-                    <td><input type="text" name="Locations[@locationIndex].PriceLim" value="@item.PriceLim" class="form_control" /></td>
+                    <td>
+                        <input type="text" name="Locations[@locationIndex].Price" value="@priceValue" class="form_control" placeholder="1.000.000 đ hoặc Liên hệ" />
+                    </td>
                     <td><input type="number" name="Locations[@locationIndex].Sort" value="@(item.Sort > 0 ? item.Sort : locationIndex + 1)" class="form_control" style="width:70px" /></td>
                     <td class="text-center">
                         <input type="hidden" name="Locations[@locationIndex].Hot" value="false" />
@@ -58,3 +52,4 @@
         </tbody>
     </table>
 </div>
+<p class="text-muted small mb-0">Mỗi tab là một loại xe (4 chỗ, 8 chỗ, Limousine…). Thêm tab mới ở danh sách bảng giá, mỗi tuyến chỉ nhập một giá tương ứng loại xe đó.</p>

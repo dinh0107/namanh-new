@@ -10,36 +10,9 @@
 }
 
 @functions {
-    string GetTabPrice(Location route, string tabName)
+    string FormatRoutePrice(Location route)
     {
-        var tab = (tabName ?? "").ToLowerInvariant();
-        string price = null;
-
-        if (tab.Contains("limousine"))
-        {
-            price = route.PriceLim;
-        }
-        else if (tab.Contains("45"))
-        {
-            price = route.Price45;
-        }
-        else if (tab.Contains("29"))
-        {
-            price = route.Price29;
-        }
-        else if (tab.Contains("16"))
-        {
-            price = route.Price16;
-        }
-        else if (tab.Contains("7"))
-        {
-            price = route.Price7;
-        }
-        else
-        {
-            price = route.Price4;
-        }
-
+        var price = route.GetDisplayPrice();
         return string.IsNullOrWhiteSpace(price) ? "Liên hệ" : price;
     }
 }
@@ -100,7 +73,7 @@
                                     <ul class="price-route-table">
                                         @foreach (var route in routes)
                                         {
-                                            var priceText = GetTabPrice(route, tab.Name);
+                                            var priceText = FormatRoutePrice(route);
                                             var routeLabel = departure + " → " + route.Name + " | Ngược lại";
                                             <li class="price-route-row @(route.Hot ? "is-hot" : "")">
                                                 @if (!string.IsNullOrWhiteSpace(zaloUrl))

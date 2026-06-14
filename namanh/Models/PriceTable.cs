@@ -64,6 +64,9 @@ namespace namanh.Models
         [Display(Name = "Điểm đến")]
         public string Name { get; set; }
 
+        [Display(Name = "Giá"), UIHint("TextBox")]
+        public string Price { get; set; }
+
         public int PriceLangdingId { get; set; }
 
         [ForeignKey("PriceLangdingId")]
@@ -95,6 +98,18 @@ namespace namanh.Models
 
         [Display(Name = "Hoạt động")]
         public bool Active { get; set; }
+
+        /// <summary>Giá hiển thị — ưu tiên cột Price; fallback cột cũ nếu dữ liệu chưa migrate.</summary>
+        public string GetDisplayPrice()
+        {
+            if (!string.IsNullOrWhiteSpace(Price))
+            {
+                return Price.Trim();
+            }
+
+            var legacy = Price4 ?? Price7 ?? Price16 ?? Price29 ?? Price45 ?? PriceLim;
+            return string.IsNullOrWhiteSpace(legacy) ? null : legacy.Trim();
+        }
     }
 
 }
