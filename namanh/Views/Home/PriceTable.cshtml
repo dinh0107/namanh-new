@@ -4,6 +4,9 @@
     var config = (ConfigSite)HttpContext.Current.Application["ConfigSite"];
     var tabs = Model.PriceLangdings?.Where(a => a.Active).OrderBy(a => a.Sort).ToList() ?? new List<PriceLangding>();
     var departure = "Hà Nội";
+    var zaloUrl = !string.IsNullOrWhiteSpace(config?.Zalo)
+        ? "https://zalo.me/" + config.Zalo.Trim()
+        : null;
 }
 
 @functions {
@@ -98,15 +101,38 @@
                                         @foreach (var route in routes)
                                         {
                                             var priceText = GetTabPrice(route, tab.Name);
+                                            var routeLabel = departure + " → " + route.Name + " | Ngược lại";
                                             <li class="price-route-row @(route.Hot ? "is-hot" : "")">
-                                                <span class="price-route-name">
-                                                    <span class="price-route-text">@departure → @route.Name | Ngược lại</span>
-                                                    @if (route.Hot)
-                                                    {
-                                                        <img src="~/Content/images/hot-gif.gif" width="20" height="20" alt="Hot" class="price-route-hot" />
-                                                    }
-                                                </span>
-                                                <span class="price-route-price @(priceText == "Liên hệ" ? "is-contact" : "")">@priceText</span>
+                                                @if (!string.IsNullOrWhiteSpace(zaloUrl))
+                                                {
+                                                    <a href="@zaloUrl"
+                                                       class="price-route-link"
+                                                       target="_blank"
+                                                       rel="nofollow noopener"
+                                                       title="Chat Zalo báo giá @routeLabel - @tab.Name">
+                                                        <span class="price-route-name">
+                                                            <span class="price-route-text">@routeLabel</span>
+                                                            @if (route.Hot)
+                                                            {
+                                                                <img src="~/Content/images/hot-gif.gif" width="20" height="20" alt="Hot" class="price-route-hot" />
+                                                            }
+                                                        </span>
+                                                        <span class="price-route-price @(priceText == "Liên hệ" ? "is-contact" : "")">@priceText</span>
+                                                    </a>
+                                                }
+                                                else
+                                                {
+                                                    <div class="price-route-link">
+                                                        <span class="price-route-name">
+                                                            <span class="price-route-text">@routeLabel</span>
+                                                            @if (route.Hot)
+                                                            {
+                                                                <img src="~/Content/images/hot-gif.gif" width="20" height="20" alt="Hot" class="price-route-hot" />
+                                                            }
+                                                        </span>
+                                                        <span class="price-route-price @(priceText == "Liên hệ" ? "is-contact" : "")">@priceText</span>
+                                                    </div>
+                                                }
                                             </li>
                                         }
                                     </ul>
@@ -122,7 +148,15 @@
                 </div>
             </div>
 
-            @if (!string.IsNullOrWhiteSpace(config?.Hotline))
+            @if (!string.IsNullOrWhiteSpace(zaloUrl))
+            {
+                <div class="price-routes-cta">
+                    <a href="@zaloUrl" target="_blank" rel="nofollow noopener" class="btn-color price-routes-btn">
+                        Chat Zalo báo giá
+                    </a>
+                </div>
+            }
+            else if (!string.IsNullOrWhiteSpace(config?.Hotline))
             {
                 <div class="price-routes-cta">
                     <a href="tel:@config.Hotline" class="btn-color price-routes-btn">
