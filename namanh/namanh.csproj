@@ -1996,6 +1996,7 @@
     <Content Include="webfonts\SVN-Aguda Bold.woff2" />
     <Content Include="Views\Home\ErrorPage.cshtml" />
     <Content Include="Views\Home\Header.cshtml" />
+    <Content Include="Views\Home\_HeaderNav.cshtml" />
     <Content Include="Views\Home\Footer.cshtml" />
     <Content Include="Scripts\popper-utils.js.map" />
     <Content Include="Scripts\popper-utils.min.js.map" />
@@ -2060,6 +2061,7 @@
     <Content Include="Views\Price\List.cshtml" />
     <Content Include="Views\Price\Price.cshtml" />
     <Content Include="Views\Price\Edit.cshtml" />
+    <Content Include="Views\Price\_LocationPriceFields.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
