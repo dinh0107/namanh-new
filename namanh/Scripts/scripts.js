@@ -342,23 +342,8 @@ function homeJs() {
     
  
 
-    initPriceRoutes();
 }
 
-function initPriceRoutes() {
-    var $section = $('.price-routes-section');
-    if (!$section.length) {
-        return;
-    }
-
-    $section.on('click', '.price-route-tab', function () {
-        var tabId = $(this).data('tab');
-        $section.find('.price-route-tab').removeClass('active');
-        $(this).addClass('active');
-        $section.find('.price-route-panel').removeClass('active');
-        $section.find('.price-route-panel[data-panel="' + tabId + '"]').addClass('active');
-    });
-}
 function show() {
     $(".menu-drawer").addClass("open");
     $(".menu-overlay").addClass("active");

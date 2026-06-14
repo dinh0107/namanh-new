@@ -3316,45 +3316,40 @@ footer h2 {
   overflow: hidden;
 }
 
-.price-route-tabs {
-  display: flex;
+.price-routes-box .price-route-tabs {
   flex-wrap: wrap;
-  list-style: none;
-  margin: 0;
-  padding: 0;
   border-bottom: 2px solid #eee;
   background: #fafafa;
+  padding: 0 8px;
+  gap: 4px;
 }
 
-.price-route-tabs li {
-  list-style: none;
-}
-
-.price-route-tab {
+.price-routes-box .price-route-tabs .nav-link {
   border: 0;
-  background: transparent;
+  border-bottom: 3px solid transparent;
+  border-radius: 0;
   padding: 14px 22px;
   font-family: "Display-Bold", sans-serif;
   color: #555;
-  cursor: pointer;
-  border-bottom: 3px solid transparent;
-  margin-bottom: -2px;
+  background: transparent;
   transition: all 0.2s ease;
 }
 
-.price-route-tab.active,
-.price-route-tab:hover {
+.price-routes-box .price-route-tabs .nav-link:hover,
+.price-routes-box .price-route-tabs .nav-link:focus {
   color: #FF4605;
-  border-bottom-color: #FF4605;
+  border-color: transparent;
+  isolation: isolate;
 }
 
-.price-route-panel {
-  display: none;
+.price-routes-box .price-route-tabs .nav-link.active {
+  color: #FF4605;
+  background: transparent;
+  border-color: transparent transparent #FF4605;
+}
+
+.price-route-tab-content {
   padding: 8px 0;
-}
-
-.price-route-panel.active {
-  display: block;
 }
 
 .price-route-list {
@@ -3439,7 +3434,7 @@ footer h2 {
     padding: 14px 16px;
   }
 
-  .price-route-tab {
+  .price-routes-box .price-route-tabs .nav-link {
     padding: 12px 14px;
     font-size: 0.9rem;
   }
