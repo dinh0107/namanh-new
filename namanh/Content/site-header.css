@@ -24,7 +24,7 @@
 
 .masthead > .container {
   position: relative;
-  padding-bottom: 36px;
+  padding-bottom: 0;
 }
 
 .icon-boxs {
@@ -74,7 +74,7 @@
 
 .masthead .logo img,
 .header-sticky .logo img {
-  max-width: 250px;
+  max-width: 150px;
   width: auto;
   height: auto;
   filter: none !important;
