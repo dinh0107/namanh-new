@@ -6,12 +6,16 @@ namespace namanh.Migrations
     {
         public override void Up()
         {
+            // Tách 2 lệnh Sql riêng — SQL Server compile cả batch trước khi chạy IF,
+            // nên UPDATE Price trong cùng batch với ALTER TABLE sẽ báo Invalid column name.
             Sql(@"
 IF COL_LENGTH('dbo.Locations', 'Price') IS NULL
 BEGIN
     ALTER TABLE dbo.Locations ADD Price NVARCHAR(MAX) NULL;
 END
+");
 
+            Sql(@"
 IF COL_LENGTH('dbo.Locations', 'Price4') IS NOT NULL
 BEGIN
     UPDATE dbo.Locations
