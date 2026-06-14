@@ -10,6 +10,13 @@
     var newsUrl = articleParents.Any()
         ? GetCategoryUrl(articleParents.First())
         : "javascript:void(0);";
+    var newsChildren = articleParents
+        .SelectMany(p => Model.ArticleCategories.Where(c => c.ParentId == p.Id))
+        .ToList();
+    if (!newsChildren.Any())
+    {
+        newsChildren = articleParents.ToList();
+    }
 }
 
 @functions {
@@ -23,20 +30,20 @@
     }
 }
 
-<ul class="nav ul-reset">
+<ul class="main-nav ul-reset">
     <li>
         <a href="/">Trang chủ</a>
     </li>
     <li>
         <a href="@Url.Action("Introduct")">Về chúng tôi</a>
     </li>
-    <li>
+    <li class="has-dropdown">
         <a href="@serviceUrl">Dịch vụ</a>
         @if (Model.Services.Any())
         {
-            <i class="fa-regular fa-angle-right"></i>
-            <div class="drop">
-                <ul class="sub-nav ul-reset">
+            <i class="fa-regular fa-angle-down"></i>
+            <div class="nav-drop">
+                <ul class="nav-sub ul-reset">
                     @foreach (var service in Model.Services)
                     {
                         <li>
@@ -49,22 +56,13 @@
     </li>
     @if (articleParents.Any())
     {
-        <li>
+        <li class="has-dropdown">
             <a href="@newsUrl">Tin tức</a>
-            @{
-                var newsChildren = articleParents
-                    .SelectMany(p => Model.ArticleCategories.Where(c => c.ParentId == p.Id))
-                    .ToList();
-                if (!newsChildren.Any())
-                {
-                    newsChildren = articleParents.ToList();
-                }
-            }
             @if (newsChildren.Any())
             {
-                <i class="fa-regular fa-angle-right"></i>
-                <div class="drop">
-                    <ul class="sub-nav ul-reset">
+                <i class="fa-regular fa-angle-down"></i>
+                <div class="nav-drop">
+                    <ul class="nav-sub ul-reset">
                         @foreach (var child in newsChildren)
                         {
                             <li>

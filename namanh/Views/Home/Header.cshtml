@@ -15,6 +15,13 @@
     var newsUrl = articleParents.Any()
         ? GetCategoryUrl(articleParents.First())
         : "javascript:void(0);";
+    var newsChildren = articleParents
+        .SelectMany(p => Model.ArticleCategories.Where(c => c.ParentId == p.Id))
+        .ToList();
+    if (!newsChildren.Any())
+    {
+        newsChildren = articleParents;
+    }
 }
 
 @functions {
@@ -28,156 +35,142 @@
     }
 }
 
-<section class="masthead" id="masthead">
-    <div class="container">
-        <div class="d-flex align-items-center justify-content-between">
-            <a href="/" class="logo">
-                @if (logoUrl != null)
-                {
-                    <img class="img-fluid" src="@logoUrl" alt="@siteTitle" />
-                }
-            </a>
-            <div class="icon-boxs d-flex">
-                @if (!string.IsNullOrWhiteSpace(hotline))
-                {
-                    <div class="icon-box">
-                        <div class="icon-img">
-                            <i class="fa-solid fa-phone-volume"></i>
-                        </div>
-                        <div class="icon-text">
-                            <p>Gọi cho chúng tôi ngay</p>
-                            <a href="tel:@hotline">@hotline</a>
-                        </div>
-                    </div>
-                }
-                @if (!string.IsNullOrWhiteSpace(email))
-                {
-                    <div class="icon-box">
-                        <div class="icon-img">
-                            <i class="fa-solid fa-envelope"></i>
-                        </div>
-                        <div class="icon-text">
-                            <p>Gửi email ngay bây giờ</p>
-                            <a href="mailto:@email">@email</a>
-                        </div>
-                    </div>
-                }
-            </div>
-        </div>
-        <div class="wide-nav">
-            <div class="container">
-                <div class="row">
-                    <div class="col-4"></div>
-                    <div class="col-8">
-                        @Html.Partial("_HeaderNav", Model)
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<section class="header-sticky" id="header-sticky">
-    <div class="container">
-        <div class="row align-items-center">
-            <div class="col-lg-3">
-                <a href="/" class="logo">
+<section class="site-header" id="site-header">
+    <div class="site-header-top">
+        <div class="container">
+            <div class="site-header-top-inner">
+                <a href="/" class="site-logo">
                     @if (logoUrl != null)
                     {
                         <img src="@logoUrl" alt="@siteTitle" />
                     }
                 </a>
+                <div class="site-header-contact">
+                    @if (!string.IsNullOrWhiteSpace(hotline))
+                    {
+                        <div class="contact-item">
+                            <div class="contact-icon">
+                                <i class="fa-solid fa-phone-volume"></i>
+                            </div>
+                            <div class="contact-text">
+                                <p>Gọi cho chúng tôi ngay</p>
+                                <a href="tel:@hotline">@hotline</a>
+                            </div>
+                        </div>
+                    }
+                    @if (!string.IsNullOrWhiteSpace(email))
+                    {
+                        <div class="contact-item">
+                            <div class="contact-icon">
+                                <i class="fa-solid fa-envelope"></i>
+                            </div>
+                            <div class="contact-text">
+                                <p>Gửi email ngay bây giờ</p>
+                                <a href="mailto:@email">@email</a>
+                            </div>
+                        </div>
+                    }
+                </div>
             </div>
-            <div class="col-lg-9">
+        </div>
+    </div>
+    <div class="site-header-nav d-none d-lg-block">
+        <div class="container">
+            @Html.Partial("_HeaderNav", Model)
+        </div>
+    </div>
+</section>
+
+<section class="site-header-sticky" id="site-header-sticky">
+    <div class="container">
+        <div class="site-header-sticky-inner">
+            <a href="/" class="site-logo">
+                @if (logoUrl != null)
+                {
+                    <img src="@logoUrl" alt="@siteTitle" />
+                }
+            </a>
+            <div class="d-none d-lg-block">
                 @Html.Partial("_HeaderNav", Model)
             </div>
+            @if (!string.IsNullOrWhiteSpace(hotline))
+            {
+                <a href="tel:@hotline" class="site-header-cta d-none d-lg-inline-flex">
+                    <i class="fa-solid fa-phone"></i>
+                    Đặt xe ngay
+                </a>
+            }
+            <button type="button" class="site-menu-btn d-lg-none" aria-label="Mở menu">
+                <i class="fa-solid fa-bars"></i>
+            </button>
         </div>
     </div>
 </section>
 
-<section class="header-mb">
-    <a href="/" class="logo">
+<section class="site-menu-drawer" aria-hidden="true">
+    <div class="site-menu-head">
         @if (logoUrl != null)
         {
             <img src="@logoUrl" alt="@siteTitle" />
         }
-    </a>
-    <div class="menu-btn">
-        <i class="fa-solid fa-bars fa-lg"></i>
+        <button type="button" class="site-menu-close" onclick="toggleMenu()" aria-label="Đóng menu">
+            <i class="fa-solid fa-times"></i>
+        </button>
     </div>
-</section>
-
-<section class="menu-drawer">
-    <div class="menu-header">
-        @if (logoUrl != null)
-        {
-            <img src="@logoUrl" alt="@siteTitle" />
-        }
-        <div class="menu-close" onclick="toggleMenu()">
-            <i class="fa-solid fa-times fa-lg"></i>
-        </div>
-    </div>
-    <a href="/" class="menu-link">
+    <a href="/" class="site-menu-link">
         <i class="fa-solid fa-home"></i>
         Trang chủ
     </a>
-    <a href="@Url.Action("Introduct")" class="menu-link">
+    <a href="@Url.Action("Introduct")" class="site-menu-link">
         <i class="fa-solid fa-user-group"></i>
         Về chúng tôi
     </a>
-    <div class="menu-item has-children">
-        <a href="@serviceUrl" class="menu-link">
+    <div class="site-menu-group@(Model.Services.Any() ? " has-children" : "")">
+        <a href="@serviceUrl" class="site-menu-link">
             <i class="fa-solid fa-car"></i>
             Dịch vụ
         </a>
         @if (Model.Services.Any())
         {
-            <span class="expand-bar"></span>
-            <div class="menu-children">
+            <button type="button" class="site-menu-expand" aria-label="Mở danh mục dịch vụ"></button>
+            <div class="site-menu-children">
                 @foreach (var service in Model.Services)
                 {
-                    <a href="@Url.Action("ServiceCar", "Home", new { url = service.Slug })" class="menu-child-link">@service.Title</a>
+                    <a href="@Url.Action("ServiceCar", "Home", new { url = service.Slug })" class="site-menu-child">@service.Title</a>
                 }
             </div>
         }
     </div>
     @if (articleParents.Any())
     {
-        var newsChildren = articleParents
-            .SelectMany(p => Model.ArticleCategories.Where(c => c.ParentId == p.Id))
-            .ToList();
-        if (!newsChildren.Any())
-        {
-            newsChildren = articleParents;
-        }
-        <div class="menu-item@(newsChildren.Any() ? " has-children" : "")">
-            <a href="@newsUrl" class="menu-link">
+        <div class="site-menu-group@(newsChildren.Any() ? " has-children" : "")">
+            <a href="@newsUrl" class="site-menu-link">
                 <i class="fa-solid fa-newspaper"></i>
                 Tin tức
             </a>
             @if (newsChildren.Any())
             {
-                <span class="expand-bar"></span>
-                <div class="menu-children">
+                <button type="button" class="site-menu-expand" aria-label="Mở danh mục tin tức"></button>
+                <div class="site-menu-children">
                     @foreach (var child in newsChildren)
                     {
-                        <a href="@GetCategoryUrl(child)" class="menu-child-link">@child.CategoryName</a>
+                        <a href="@GetCategoryUrl(child)" class="site-menu-child">@child.CategoryName</a>
                     }
                 </div>
             }
         </div>
     }
-    <a href="@Url.Action("Contact")" class="menu-link">
+    <a href="@Url.Action("Contact")" class="site-menu-link">
         <i class="fa-solid fa-phone"></i>
         Liên hệ
     </a>
     @if (!string.IsNullOrWhiteSpace(hotline))
     {
-        <div class="menu-hotline-box">
-            <div class="menu-hotline-title">Hotline</div>
-            <a href="tel:@hotline" class="menu-hotline-number">@hotline</a>
+        <div class="site-menu-hotline">
+            <div class="site-menu-hotline-label">Hotline</div>
+            <a href="tel:@hotline">@hotline</a>
         </div>
     }
 </section>
 
-<div class="menu-overlay"></div>
+<div class="site-menu-overlay"></div>
