@@ -3261,122 +3261,118 @@ footer h2 {
 
 /* Bảng giá tuyến - style saodieu.vn */
 .price-routes-section {
-  padding: 50px 0 60px;
-  background: #f8f9fb;
+  padding: 56px 0 64px;
+  background: #f4f6f8;
 }
 
 .price-routes-head {
   text-align: center;
-  margin-bottom: 28px;
+  margin-bottom: 32px;
 }
 
 .price-routes-title {
   font-family: "Display-Bold", "SVN-Bold", sans-serif;
-  font-size: 1.75rem;
-  color: #222;
+  font-size: 1.85rem;
+  color: #1a1a1a;
   text-transform: uppercase;
-  margin-bottom: 8px;
+  letter-spacing: 0.02em;
+  margin-bottom: 10px;
 }
 
 .price-routes-sub {
-  color: #666;
-  margin: 0;
-}
-
-.price-car-filter {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 10px;
-  margin-bottom: 24px;
-}
-
-.price-car-btn {
-  border: 1px solid #FF4605;
-  background: #fff;
-  color: #FF4605;
-  padding: 8px 18px;
-  border-radius: 999px;
-  font-family: "Display-Medium", sans-serif;
-  font-size: 0.9rem;
-  cursor: pointer;
-  transition: all 0.25s ease;
-}
-
-.price-car-btn.active,
-.price-car-btn:hover {
-  background: #FF4605;
-  color: #fff;
+  color: #6b7280;
+  margin: 0 auto;
+  max-width: 640px;
+  font-size: 0.95rem;
+  line-height: 1.6;
 }
 
 .price-routes-box {
   background: #fff;
-  border-radius: 12px;
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+  border-radius: 10px;
+  border: 1px solid #e8edf2;
+  box-shadow: 0 10px 40px rgba(15, 23, 42, 0.06);
   overflow: hidden;
 }
 
 .price-routes-box .price-route-tabs {
   flex-wrap: wrap;
-  border-bottom: 2px solid #eee;
-  background: #fafafa;
-  padding: 0 8px;
-  gap: 4px;
+  justify-content: center;
+  gap: 10px;
+  margin: 0;
+  padding: 20px 20px 8px;
+  border-bottom: 0;
+  background: #fff;
 }
 
 .price-routes-box .price-route-tabs .nav-link {
-  border: 0;
-  border-bottom: 3px solid transparent;
-  border-radius: 0;
-  padding: 14px 22px;
+  border: 1px solid #dce3ea;
+  border-radius: 999px;
+  padding: 10px 22px;
   font-family: "Display-Bold", sans-serif;
-  color: #555;
-  background: transparent;
+  font-size: 0.92rem;
+  color: #4b5563;
+  background: #fff;
+  line-height: 1.2;
   transition: all 0.2s ease;
 }
 
 .price-routes-box .price-route-tabs .nav-link:hover,
 .price-routes-box .price-route-tabs .nav-link:focus {
   color: #FF4605;
-  border-color: transparent;
-  isolation: isolate;
+  border-color: #FF4605;
+  background: #fff7f3;
 }
 
 .price-routes-box .price-route-tabs .nav-link.active {
-  color: #FF4605;
-  background: transparent;
-  border-color: transparent transparent #FF4605;
+  color: #fff;
+  background: #FF4605;
+  border-color: #FF4605;
+  box-shadow: 0 6px 16px rgba(255, 70, 5, 0.25);
 }
 
 .price-route-tab-content {
-  padding: 8px 0;
+  padding: 0;
 }
 
 .price-route-list {
   list-style: none;
   margin: 0;
-  padding: 0;
+  padding: 8px 0 0;
 }
 
 .price-route-item {
+  border-bottom: 1px solid #eef2f6;
+}
+
+.price-route-item:last-child {
+  border-bottom: 0;
+}
+
+.price-route-link {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 16px;
-  padding: 16px 24px;
-  border-bottom: 1px solid #f0f0f0;
+  gap: 20px;
+  padding: 15px 24px;
+  text-decoration: none;
+  color: inherit;
   transition: background 0.2s ease;
 }
 
-.price-route-item:hover {
-  background: #fff8f5;
+.price-route-link:hover {
+  background: #fafbfc;
 }
 
-.price-route-item.is-hot {
-  background: #fffaf0;
+.price-route-item.is-hot .price-route-link {
+  background: linear-gradient(90deg, #fff9f5 0%, #fff 100%);
 }
 
-.price-route-info {
+.price-route-item.is-hot .price-route-link:hover {
+  background: linear-gradient(90deg, #fff3eb 0%, #fffaf7 100%);
+}
+
+.price-route-main {
   display: flex;
   align-items: center;
   gap: 10px;
@@ -3384,67 +3380,122 @@ footer h2 {
   min-width: 0;
 }
 
-.price-route-info h3 {
+.price-route-name {
   margin: 0;
   font-family: "Display-Medium", sans-serif;
   font-size: 1rem;
-  color: #222;
-  font-weight: 600;
+  line-height: 1.45;
+  font-weight: 500;
+  color: #1f2937;
 }
 
-.price-route-info h3 i {
-  color: #FF4605;
-  margin: 0 6px;
-  font-size: 0.85rem;
+.price-route-from {
+  font-weight: 600;
+  color: #111827;
+}
+
+.price-route-to {
+  margin-left: 6px;
+  font-weight: 600;
+  color: #111827;
 }
 
 .price-route-return {
-  color: #888;
+  margin-left: 6px;
+  color: #9ca3af;
   font-weight: 400;
-  font-size: 0.9rem;
-  margin-left: 4px;
+  font-size: 0.88rem;
 }
 
-.price-route-value {
+.price-route-hot {
   flex-shrink: 0;
 }
 
 .price-route-price {
+  flex-shrink: 0;
   font-family: "Display-Bold", sans-serif;
   color: #FF4605;
-  font-size: 1.05rem;
+  font-size: 1.02rem;
+  font-weight: 700;
   white-space: nowrap;
 }
 
+.price-route-price.is-contact {
+  color: #2563eb;
+  font-size: 0.95rem;
+}
+
 .price-route-empty {
-  padding: 30px 24px;
-  color: #888;
+  padding: 36px 24px;
+  color: #9ca3af;
   text-align: center;
   margin: 0;
+  font-size: 0.95rem;
 }
 
 .price-routes-cta {
-  margin-top: 28px;
+  margin-top: 32px;
+}
+
+.price-routes-cta .btn-color {
+  padding: 12px 28px;
+  border-radius: 999px;
+  font-family: "Display-Bold", sans-serif;
+  font-size: 0.95rem;
+}
+
+@media (min-width: 992px) {
+  .price-route-list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0;
+  }
+
+  .price-route-item:nth-child(odd) {
+    border-right: 1px solid #eef2f6;
+  }
+
+  .price-route-item:nth-last-child(-n+2) {
+    border-bottom: 0;
+  }
 }
 
 @media (max-width: 768px) {
-  .price-route-item {
-    flex-direction: column;
-    align-items: flex-start;
-    padding: 14px 16px;
+  .price-routes-section {
+    padding: 40px 0 48px;
+  }
+
+  .price-routes-title {
+    font-size: 1.45rem;
+  }
+
+  .price-routes-box .price-route-tabs {
+    justify-content: flex-start;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding: 16px 12px 8px;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .price-routes-box .price-route-tabs::-webkit-scrollbar {
+    display: none;
   }
 
   .price-routes-box .price-route-tabs .nav-link {
-    padding: 12px 14px;
-    font-size: 0.9rem;
+    padding: 9px 16px;
+    font-size: 0.85rem;
+    white-space: nowrap;
   }
 
-  .price-car-filter {
+  .price-route-link {
+    flex-direction: column;
+    align-items: flex-start;
     gap: 8px;
+    padding: 14px 16px;
   }
 
-  .price-car-btn {
-    padding: 7px 12px;
-    font-size: 0.8rem;
+  .price-route-price {
+    align-self: flex-end;
   }
 }

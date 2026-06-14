@@ -43,15 +43,15 @@
 
 @if (tabs.Any())
 {
-    <section class="page-section price-routes-section">
+    <section class="page-section price-routes-section" id="price-routes">
         <div class="container">
             <div class="price-routes-head">
-                <h2 class="price-routes-title">Bảng giá thuê xe phổ biến</h2>
-                <p class="price-routes-sub">Chọn loại xe để xem giá các tuyến từ @departure — liên hệ hotline để nhận báo giá tốt nhất</p>
+                <h2 class="price-routes-title">Các tuyến đường phổ biến</h2>
+                <p class="price-routes-sub">Chọn loại xe để xem giá thuê từ @departure — cam kết báo giá minh bạch, tốt nhất thị trường</p>
             </div>
 
             <div class="price-routes-box">
-                <ul class="nav nav-tabs price-route-tabs" id="priceRouteTabs" role="tablist">
+                <ul class="nav nav-pills price-route-tabs" id="priceRouteTabs" role="tablist">
                     @{
                         var tabIndex = 0;
                     }
@@ -92,22 +92,25 @@
                                 <ul class="price-route-list">
                                     @foreach (var route in routes)
                                     {
+                                        var priceText = GetTabPrice(route, tab.Name);
+                                        var contactUrl = !string.IsNullOrWhiteSpace(config?.Hotline)
+                                            ? "tel:" + config.Hotline
+                                            : "#price-routes";
                                         <li class="price-route-item @(route.Hot ? "is-hot" : "")">
-                                            <div class="price-route-info">
-                                                <h3>
-                                                    @departure
-                                                    <i class="fa-regular fa-arrow-right-long"></i>
-                                                    @route.Name
-                                                    <span class="price-route-return">| Ngược lại</span>
-                                                </h3>
-                                                @if (route.Hot)
-                                                {
-                                                    <img src="~/Content/images/hot-gif.gif" width="28" height="28" alt="Hot" class="price-route-hot" />
-                                                }
-                                            </div>
-                                            <div class="price-route-value">
-                                                <span class="price-route-price">@GetTabPrice(route, tab.Name)</span>
-                                            </div>
+                                            <a href="@contactUrl" class="price-route-link" title="Liên hệ báo giá @departure - @route.Name">
+                                                <div class="price-route-main">
+                                                    <h3 class="price-route-name">
+                                                        <span class="price-route-from">@departure</span>
+                                                        <span class="price-route-to">@route.Name</span>
+                                                        <span class="price-route-return">| Ngược lại</span>
+                                                    </h3>
+                                                    @if (route.Hot)
+                                                    {
+                                                        <img src="~/Content/images/hot-gif.gif" width="24" height="24" alt="Hot" class="price-route-hot" />
+                                                    }
+                                                </div>
+                                                <span class="price-route-price @(priceText == "Liên hệ" ? "is-contact" : "")">@priceText</span>
+                                            </a>
                                         </li>
                                     }
                                 </ul>
