@@ -6,20 +6,17 @@ namespace namanh.Migrations
     {
         public override void Up()
         {
-            Sql(@"
-IF COL_LENGTH('dbo.Locations', 'Price4') IS NULL
-BEGIN
-    ALTER TABLE dbo.Locations ADD Price4 NVARCHAR(MAX) NULL;
-    ALTER TABLE dbo.Locations ADD Price7 NVARCHAR(MAX) NULL;
-    ALTER TABLE dbo.Locations ADD Price16 NVARCHAR(MAX) NULL;
-    ALTER TABLE dbo.Locations ADD Price29 NVARCHAR(MAX) NULL;
-    ALTER TABLE dbo.Locations ADD Price45 NVARCHAR(MAX) NULL;
-    ALTER TABLE dbo.Locations ADD PriceLim NVARCHAR(MAX) NULL;
-    ALTER TABLE dbo.Locations ADD Sort INT NOT NULL CONSTRAINT DF_Locations_Sort DEFAULT 1;
-    ALTER TABLE dbo.Locations ADD Hot BIT NOT NULL CONSTRAINT DF_Locations_Hot DEFAULT 0;
-    ALTER TABLE dbo.Locations ADD Active BIT NOT NULL CONSTRAINT DF_Locations_Active DEFAULT 1;
-END
+            AddColumn("dbo.Locations", "Price4", c => c.String());
+            AddColumn("dbo.Locations", "Price7", c => c.String());
+            AddColumn("dbo.Locations", "Price16", c => c.String());
+            AddColumn("dbo.Locations", "Price29", c => c.String());
+            AddColumn("dbo.Locations", "Price45", c => c.String());
+            AddColumn("dbo.Locations", "PriceLim", c => c.String());
+            AddColumn("dbo.Locations", "Sort", c => c.Int(nullable: false, defaultValue: 1));
+            AddColumn("dbo.Locations", "Hot", c => c.Boolean(nullable: false, defaultValue: false));
+            AddColumn("dbo.Locations", "Active", c => c.Boolean(nullable: false, defaultValue: true));
 
+            Sql(@"
 DELETE FROM dbo.Locations;
 DELETE FROM dbo.PriceLangdings;
 
@@ -118,6 +115,16 @@ SET IDENTITY_INSERT dbo.Locations OFF;
 DELETE FROM dbo.Locations;
 DELETE FROM dbo.PriceLangdings;
 ");
+
+            DropColumn("dbo.Locations", "Active");
+            DropColumn("dbo.Locations", "Hot");
+            DropColumn("dbo.Locations", "Sort");
+            DropColumn("dbo.Locations", "PriceLim");
+            DropColumn("dbo.Locations", "Price45");
+            DropColumn("dbo.Locations", "Price29");
+            DropColumn("dbo.Locations", "Price16");
+            DropColumn("dbo.Locations", "Price7");
+            DropColumn("dbo.Locations", "Price4");
         }
     }
 }
