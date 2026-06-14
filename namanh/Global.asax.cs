@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Security.Principal;
+using System.Text;
 using System.Threading;
 using System.Web;
 using System.Web.Mvc;
@@ -32,6 +33,13 @@ namespace namanh
                 Application["ConfigSite"] = unitofWork.ConfigSiteRepository.GetQuery().FirstOrDefault();
             }
         }
+        protected void Application_BeginRequest(object sender, EventArgs e)
+        {
+            Response.Charset = "utf-8";
+            Response.ContentEncoding = Encoding.UTF8;
+            Response.HeaderEncoding = Encoding.UTF8;
+        }
+
         protected void Application_PostAuthenticateRequest(Object sender, EventArgs e)
         {
             var authCookie = Request.Cookies[FormsAuthentication.FormsCookieName];

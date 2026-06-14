@@ -10,6 +10,7 @@
 <html lang="vi-VN">
 <head prefix="og:http://ogp.me/ns# fb:http://www.facebook.com/2008/fbml">
     <meta charset="utf-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <title>@siteTitle</title>
@@ -30,7 +31,7 @@
     <meta property="og:site_name" content="@siteTitle" />
     <meta property="og:image" content="@imageShare" />
     @Styles.Render("~/Content/css")
-    <link rel="stylesheet" href="@Url.Content("~/Content/site-header.css")?v=4" />
+    <link rel="stylesheet" href="@Url.Content("~/Content/site-header.css")?v=6" />
     @*<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.css" />*@
     @if (!string.IsNullOrWhiteSpace(config?.GoogleAnalytics))
     {

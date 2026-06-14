@@ -1,11 +1,14 @@
 ﻿@model namanh.ViewModel.HeaderViewModel
 @using namanh.Models
+@using System.Configuration
 @{
     var config = (ConfigSite)HttpContext.Current.Application["ConfigSite"];
     var logoUrl = config?.Image != null ? Path.Combine("/images/configs/", config.Image) : null;
     var siteTitle = config?.Title ?? "Trang chủ";
     var hotline = config?.Hotline;
-    var email = config?.Email;
+    var email = !string.IsNullOrWhiteSpace(config?.Email)
+        ? config.Email.Trim()
+        : ConfigurationManager.AppSettings["email"];
     var articleParents = Model.ArticleCategories
         .Where(a => a.TypePost == TypePost.Article && a.ParentId == null)
         .ToList();
@@ -44,31 +47,31 @@
                     <img class="img-fluid" src="@logoUrl" alt="@siteTitle" />
                 }
             </a>
-            <div class="icon-boxs d-flex">
-                @if (!string.IsNullOrWhiteSpace(hotline))
-                {
-                    <div class="icon-box">
-                        <div class="icon-img">
-                            <i class="fa-solid fa-phone-volume"></i>
-                        </div>
-                        <div class="icon-text">
-                            <p>Gọi cho chúng tôi ngay</p>
+            <div class="icon-boxs d-flex align-items-center">
+                <div class="icon-box">
+                    <div class="icon-img">
+                        <i class="fa-solid fa-phone-volume"></i>
+                    </div>
+                    <div class="icon-text">
+                        <p>Gọi cho chúng tôi ngay</p>
+                        @if (!string.IsNullOrWhiteSpace(hotline))
+                        {
                             <a href="tel:@hotline">@hotline</a>
-                        </div>
+                        }
                     </div>
-                }
-                @if (!string.IsNullOrWhiteSpace(email))
-                {
-                    <div class="icon-box">
-                        <div class="icon-img">
-                            <i class="fa-solid fa-envelope"></i>
-                        </div>
-                        <div class="icon-text">
-                            <p>Gửi email ngay bây giờ</p>
+                </div>
+                <div class="icon-box">
+                    <div class="icon-img">
+                        <i class="fa-solid fa-envelope"></i>
+                    </div>
+                    <div class="icon-text">
+                        <p>Gửi email ngay bây giờ</p>
+                        @if (!string.IsNullOrWhiteSpace(email))
+                        {
                             <a href="mailto:@email">@email</a>
-                        </div>
+                        }
                     </div>
-                }
+                </div>
             </div>
         </div>
         <div class="wide-nav">

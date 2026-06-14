@@ -1,8 +1,8 @@
-/* Header - font project (Display/SVN), màu chủ đạo #f7a730 */
+/* Header - font project, màu brand #FF4605 */
 
 :root {
-  --header-primary: #f7a730;
-  --header-primary-dark: #e8941a;
+  --header-primary: #FF4605;
+  --header-primary-dark: #FF8A05;
   --header-text: #222;
   --header-muted: #666;
 }
@@ -24,7 +24,24 @@
 
 .masthead > .container {
   position: relative;
-  padding-bottom: 0;
+  padding-bottom: 36px;
+}
+
+.icon-boxs {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.icon-box {
+  display: flex;
+  align-items: center;
+  margin-right: 25px;
+  margin-bottom: 40px;
+}
+
+.icon-box:last-child {
+  margin-right: 0;
 }
 
 .header-mb {
@@ -64,17 +81,18 @@
   object-fit: contain;
 }
 
-.icon-box {
-  display: flex;
-  align-items: center;
-  margin-right: 25px;
-  margin-bottom: 40px;
+.masthead .icon-img {
+  font-size: 2rem;
+  color: #FF4605 !important;
+  margin-right: 15px;
+  width: auto;
+  height: auto;
+  flex-shrink: 0;
+  aspect-ratio: auto;
 }
 
-.icon-img {
-  font-size: 2rem;
-  color: var(--header-primary);
-  margin-right: 15px;
+.masthead .icon-img i {
+  color: #FF4605 !important;
 }
 
 .icon-text p {
@@ -104,7 +122,7 @@
 
 .wide-nav .nav {
   position: relative;
-  background: var(--header-primary);
+  background: #FF4605 !important;
   padding-inline: 40px;
   display: flex;
   justify-content: space-between;
@@ -123,7 +141,7 @@
   left: -79px;
   width: 80px;
   height: 100%;
-  background: var(--header-primary);
+  background: #FF4605 !important;
   clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 50% 100%);
 }
 
