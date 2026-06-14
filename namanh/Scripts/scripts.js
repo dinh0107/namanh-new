@@ -474,13 +474,40 @@ function homeJs() {
     });
 }
 function show() {
-    $(".header-mobile").addClass('active')
-    $(".overflow").addClass('active')
+    $(".menu-drawer").addClass("open");
+    $(".menu-overlay").addClass("active");
 }
 function Close() {
-    $(".header-mobile").removeClass('active')
-    $(".overflow").removeClass('active')
+    toggleMenu();
 }
+function toggleMenu() {
+    $(".menu-overlay").removeClass("active");
+    $(".menu-drawer").removeClass("open");
+}
+
+$(document).ready(function () {
+    $(window).on("scroll", function () {
+        if ($(this).scrollTop() > 200) {
+            $(".header-sticky").addClass("active");
+        } else {
+            $(".header-sticky").removeClass("active");
+        }
+    });
+
+    $(".menu-btn").on("click", function () {
+        $(".menu-drawer").addClass("open");
+        $(".menu-overlay").addClass("active");
+    });
+
+    $(".menu-overlay").on("click", function () {
+        toggleMenu();
+    });
+
+    $(".expand-bar").on("click", function () {
+        $(this).toggleClass("open");
+        $(this).parent().toggleClass("open");
+    });
+});
 function productDetail() {
     $('.list-car').slick({
         slidesToShow: 3,
