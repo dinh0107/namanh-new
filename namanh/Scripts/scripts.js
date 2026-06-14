@@ -474,38 +474,37 @@ function homeJs() {
     });
 }
 function show() {
-    openSiteMenu();
+    $(".menu-drawer").addClass("open");
+    $(".menu-overlay").addClass("active");
 }
 function Close() {
     toggleMenu();
 }
-function openSiteMenu() {
-    $(".site-menu-drawer").addClass("open");
-    $(".site-menu-overlay").addClass("active");
-}
 function toggleMenu() {
-    $(".site-menu-overlay").removeClass("active");
-    $(".site-menu-drawer").removeClass("open");
+    $(".menu-overlay").removeClass("active");
+    $(".menu-drawer").removeClass("open");
 }
 
 $(document).ready(function () {
     $(window).on("scroll", function () {
-        if ($(window).width() >= 992 && $(this).scrollTop() > 120) {
-            $("#site-header-sticky").addClass("active");
+        if ($(this).scrollTop() > 200) {
+            $("#header-sticky").addClass("active");
         } else {
-            $("#site-header-sticky").removeClass("active");
+            $("#header-sticky").removeClass("active");
         }
     });
 
-    $(".site-menu-btn").on("click", function () {
-        openSiteMenu();
+    $(".menu-btn").on("click", function () {
+        $(".menu-drawer").addClass("open");
+        $(".menu-overlay").addClass("active");
     });
 
-    $(".site-menu-overlay").on("click", function () {
+    $(".menu-overlay").on("click", function () {
         toggleMenu();
     });
 
-    $(".site-menu-expand").on("click", function () {
+    $(".expand-bar").on("click", function () {
+        $(this).toggleClass("open");
         $(this).parent().toggleClass("open");
     });
 });

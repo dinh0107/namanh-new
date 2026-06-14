@@ -30,20 +30,20 @@
     }
 }
 
-<ul class="main-nav ul-reset">
+<ul class="nav ul-reset">
     <li>
         <a href="/">Trang chủ</a>
     </li>
     <li>
         <a href="@Url.Action("Introduct")">Về chúng tôi</a>
     </li>
-    <li class="has-dropdown">
+    <li>
         <a href="@serviceUrl">Dịch vụ</a>
         @if (Model.Services.Any())
         {
-            <i class="fa-regular fa-angle-down"></i>
-            <div class="nav-drop">
-                <ul class="nav-sub ul-reset">
+            <i class="fa-regular fa-angle-right"></i>
+            <div class="drop">
+                <ul class="sub-nav ul-reset">
                     @foreach (var service in Model.Services)
                     {
                         <li>
@@ -56,13 +56,13 @@
     </li>
     @if (articleParents.Any())
     {
-        <li class="has-dropdown">
+        <li>
             <a href="@newsUrl">Tin tức</a>
             @if (newsChildren.Any())
             {
-                <i class="fa-regular fa-angle-down"></i>
-                <div class="nav-drop">
-                    <ul class="nav-sub ul-reset">
+                <i class="fa-regular fa-angle-right"></i>
+                <div class="drop">
+                    <ul class="sub-nav ul-reset">
                         @foreach (var child in newsChildren)
                         {
                             <li>
