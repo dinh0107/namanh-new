@@ -91,29 +91,19 @@
                                  tabindex="0">
                                 @if (routes.Any())
                                 {
-                                    <ul class="route clearfix">
+                                    <ul class="price-route-table">
                                         @foreach (var route in routes)
                                         {
                                             var priceText = GetTabPrice(route, tab.Name);
-                                            var contactUrl = !string.IsNullOrWhiteSpace(config?.Hotline)
-                                                ? "tel:" + config.Hotline
-                                                : "#price-routes";
-                                            <li class="@(route.Hot ? "is-hot" : "")">
-                                                <h3>
-                                                    <a href="@contactUrl" title="@departure - @route.Name">
-                                                        @departure
-                                                        <span class="route-arrow"><i class="fa-solid fa-arrow-right"></i></span>
-                                                        @route.Name
-                                                    </a>
-                                                    <span class="return"> | Ngược lại</span>
+                                            <li class="price-route-row @(route.Hot ? "is-hot" : "")">
+                                                <span class="price-route-col price-route-name">
+                                                    @departure → @route.Name | Ngược lại
                                                     @if (route.Hot)
                                                     {
-                                                        <img src="~/Content/images/hot-gif.gif" width="22" height="22" alt="Hot" class="price-route-hot" />
+                                                        <img src="~/Content/images/hot-gif.gif" width="20" height="20" alt="Hot" class="price-route-hot" />
                                                     }
-                                                </h3>
-                                                <div class="price-date">
-                                                    <span class="price @(priceText == "Liên hệ" ? "is-contact" : "")">@priceText</span>
-                                                </div>
+                                                </span>
+                                                <span class="price-route-col price-route-price @(priceText == "Liên hệ" ? "is-contact" : "")">@priceText</span>
                                             </li>
                                         }
                                     </ul>
