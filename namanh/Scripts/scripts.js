@@ -357,14 +357,6 @@ function toggleMenu() {
 }
 
 $(document).ready(function () {
-    $(window).on("scroll", function () {
-        if ($(this).scrollTop() > 200) {
-            $("#header-sticky").addClass("active");
-        } else {
-            $("#header-sticky").removeClass("active");
-        }
-    });
-
     $(".menu-btn").on("click", function () {
         $(".menu-drawer").addClass("open");
         $(".menu-overlay").addClass("active");

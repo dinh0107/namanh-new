@@ -87,24 +87,6 @@
     </div>
 </section>
 
-<section class="header-sticky" id="header-sticky">
-    <div class="container">
-        <div class="row align-items-center">
-            <div class="col-lg-3">
-                <a href="/" class="logo">
-                    @if (logoUrl != null)
-                    {
-                        <img src="@logoUrl" alt="@siteTitle" />
-                    }
-                </a>
-            </div>
-            <div class="col-lg-9">
-                @Html.Partial("_HeaderNav", Model)
-            </div>
-        </div>
-    </div>
-</section>
-
 <section class="header-mb">
     <a href="/" class="logo">
         @if (logoUrl != null)

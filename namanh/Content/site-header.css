@@ -279,24 +279,7 @@
 }
 
 .header-sticky {
-  position: fixed;
-  top: -100px;
-  left: 0;
-  width: 100%;
-  background: #fff;
-  padding-block: 10px;
-  box-shadow: 0 10px 20px rgba(121, 145, 173, 0.44);
-  z-index: 99;
-  transition: all 0.5s;
-}
-
-.header-sticky.active {
-  top: 0;
-}
-
-.header-sticky .logo img {
-  height: 55px;
-  max-width: 250px;
+  display: none !important;
 }
 
 .menu-overlay {
