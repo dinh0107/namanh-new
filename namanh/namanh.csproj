@@ -287,6 +287,7 @@
     <Content Include="Content\select2.css" />
     <Content Include="Content\skitter.css" />
     <Content Include="Content\slick.css" />
+    <Content Include="Content\site-header.css" />
     <Content Include="Content\style.css">
       <DependentUpon>style.scss</DependentUpon>
     </Content>

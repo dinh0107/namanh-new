@@ -40,7 +40,8 @@ namespace namanh
                       "~/Content/jquery.toast.css",
                       "~/Content/jquery.fancybox.css",
                       "~/Content/daterangepicker.css",
-                      "~/Content/style.css"));
+                      "~/Content/style.css",
+                      "~/Content/site-header.css"));
 
             bundles.Add(new StyleBundle("~/Content/admincss").Include(
                       "~/Content/bootstrap.css",
