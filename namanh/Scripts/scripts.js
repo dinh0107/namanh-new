@@ -351,27 +351,6 @@ function initPriceRoutes() {
         return;
     }
 
-    var carMap = {
-        '_4_cho': 'p4',
-        '_7_cho': 'p7',
-        '_16_cho': 'p16',
-        '_29_cho': 'p29',
-        '_45_cho': 'p45',
-        'limousine': 'plim'
-    };
-
-    function formatPrice(value) {
-        return value && $.trim(value) ? value : 'Liên hệ';
-    }
-
-    function applyCarType(carType) {
-        var key = carMap[carType] || 'p4';
-        $section.find('.price-route-item').each(function () {
-            var price = formatPrice($(this).data(key));
-            $(this).find('.price-route-price').text(price);
-        });
-    }
-
     $section.on('click', '.price-route-tab', function () {
         var tabId = $(this).data('tab');
         $section.find('.price-route-tab').removeClass('active');
@@ -379,14 +358,6 @@ function initPriceRoutes() {
         $section.find('.price-route-panel').removeClass('active');
         $section.find('.price-route-panel[data-panel="' + tabId + '"]').addClass('active');
     });
-
-    $section.on('click', '.price-car-btn', function () {
-        $section.find('.price-car-btn').removeClass('active');
-        $(this).addClass('active');
-        applyCarType($(this).data('car'));
-    });
-
-    applyCarType('_4_cho');
 }
 function show() {
     $(".menu-drawer").addClass("open");

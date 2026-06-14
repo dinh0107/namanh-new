@@ -33,15 +33,15 @@
                     {
                         @Html.ValidationSummary(true)
                         <div class="mb-3 row">
-                            <label class="col-form-label col-lg-3">Tên tuyến / điểm đi <span class="text-danger">*</span></label>
-                            <div class="col-lg-9">@Html.EditorFor(a => a.Name)</div>
+                            <label class="col-form-label col-lg-3">Loại xe (tab) <span class="text-danger">*</span></label>
+                            <div class="col-lg-9">@Html.EditorFor(a => a.Name, new { htmlAttributes = new { placeholder = "VD: 4 chỗ, 7 chỗ, 16 chỗ" } })</div>
                         </div>
                         <div class="mb-3 row">
                             <label class="col-form-label col-lg-3">Mô tả</label>
                             <div class="col-lg-9">@Html.EditorFor(a => a.Description)</div>
                         </div>
                         <div class="mb-3 row">
-                            <label class="col-form-label col-lg-3">Danh sách điểm đến &amp; giá</label>
+                            <label class="col-form-label col-lg-3">Các tuyến đi &amp; giá</label>
                             <div class="col-lg-9">
                                 @Html.Partial("_LocationPriceFields", Model)
                             </div>

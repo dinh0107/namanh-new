@@ -3,6 +3,42 @@
 @{
     var config = (ConfigSite)HttpContext.Current.Application["ConfigSite"];
     var tabs = Model.PriceLangdings?.Where(a => a.Active).OrderBy(a => a.Sort).ToList() ?? new List<PriceLangding>();
+    var departure = "Hà Nội";
+}
+
+@functions {
+    string GetTabPrice(Location route, string tabName)
+    {
+        var tab = (tabName ?? "").ToLowerInvariant();
+        string price = null;
+
+        if (tab.Contains("limousine"))
+        {
+            price = route.PriceLim;
+        }
+        else if (tab.Contains("45"))
+        {
+            price = route.Price45;
+        }
+        else if (tab.Contains("29"))
+        {
+            price = route.Price29;
+        }
+        else if (tab.Contains("16"))
+        {
+            price = route.Price16;
+        }
+        else if (tab.Contains("7"))
+        {
+            price = route.Price7;
+        }
+        else
+        {
+            price = route.Price4;
+        }
+
+        return string.IsNullOrWhiteSpace(price) ? "Liên hệ" : price;
+    }
 }
 
 @if (tabs.Any())
@@ -10,17 +46,8 @@
     <section class="page-section price-routes-section">
         <div class="container">
             <div class="price-routes-head">
-                <h2 class="price-routes-title">Các tuyến đường phổ biến</h2>
-                <p class="price-routes-sub">Bảng giá tham khảo theo loại xe — liên hệ hotline để nhận báo giá tốt nhất</p>
-            </div>
-
-            <div class="price-car-filter" role="group" aria-label="Loại xe">
-                <button type="button" class="price-car-btn active" data-car="_4_cho">4 chỗ</button>
-                <button type="button" class="price-car-btn" data-car="_7_cho">7 chỗ</button>
-                <button type="button" class="price-car-btn" data-car="_16_cho">16 chỗ</button>
-                <button type="button" class="price-car-btn" data-car="_29_cho">29 chỗ</button>
-                <button type="button" class="price-car-btn" data-car="_45_cho">45 chỗ</button>
-                <button type="button" class="price-car-btn" data-car="limousine">Limousine</button>
+                <h2 class="price-routes-title">Bảng giá thuê xe phổ biến</h2>
+                <p class="price-routes-sub">Chọn loại xe để xem giá các tuyến từ @departure — liên hệ hotline để nhận báo giá tốt nhất</p>
             </div>
 
             <div class="price-routes-box">
@@ -53,16 +80,10 @@
                             <ul class="price-route-list">
                                 @foreach (var route in routes)
                                 {
-                                    <li class="price-route-item @(route.Hot ? "is-hot" : "")"
-                                        data-p4="@(route.Price4 ?? "")"
-                                        data-p7="@(route.Price7 ?? "")"
-                                        data-p16="@(route.Price16 ?? "")"
-                                        data-p29="@(route.Price29 ?? "")"
-                                        data-p45="@(route.Price45 ?? "")"
-                                        data-plim="@(route.PriceLim ?? "")">
+                                    <li class="price-route-item @(route.Hot ? "is-hot" : "")">
                                         <div class="price-route-info">
                                             <h3>
-                                                @tab.Name
+                                                @departure
                                                 <i class="fa-regular fa-arrow-right-long"></i>
                                                 @route.Name
                                                 <span class="price-route-return">| Ngược lại</span>
@@ -73,7 +94,7 @@
                                             }
                                         </div>
                                         <div class="price-route-value">
-                                            <span class="price-route-price">@(string.IsNullOrWhiteSpace(route.Price4) ? "Liên hệ" : route.Price4)</span>
+                                            <span class="price-route-price">@GetTabPrice(route, tab.Name)</span>
                                         </div>
                                     </li>
                                 }
@@ -81,7 +102,7 @@
                         }
                         else
                         {
-                            <p class="price-route-empty">Chưa có tuyến đường cho khu vực này.</p>
+                            <p class="price-route-empty">Chưa có tuyến cho loại xe này.</p>
                         }
                     </div>
                     tabIndex++;
