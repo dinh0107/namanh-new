@@ -1,0 +1,262 @@
+/* Bảng giá tuyến - theo saodieu.vn (routes / route-list) */
+
+.price-routes-section.s-block.routes {
+  margin-top: 30px;
+  margin-bottom: 30px;
+  padding: 0;
+  background: transparent;
+}
+
+.price-routes-section .s-block-title-bg {
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.price-routes-section .s-block-title-bg h2 {
+  display: inline-block;
+  margin: 0;
+  padding: 0 0 20px;
+  border: 0;
+  color: #484848;
+  font-family: "Display-Bold", "SVN-Bold", sans-serif;
+  font-size: 24px;
+  font-weight: 600;
+  text-transform: none;
+  line-height: 1.3;
+}
+
+.price-routes-section .s-block-content.route-list {
+  padding: 0;
+  margin: 0;
+  background: none;
+  border: none;
+  overflow: hidden;
+}
+
+.price-routes-section .content-tabs {
+  width: 100%;
+}
+
+/* Tabs - giống saodieu ul.tabs */
+.price-routes-section ul.price-route-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  float: none;
+  margin: 10px 0 -1px;
+  padding: 0;
+  z-index: 50;
+  list-style: none;
+  border: 0;
+}
+
+.price-routes-section ul.price-route-tabs .nav-item {
+  list-style: none !important;
+  margin: 0 5px 0 0;
+  padding: 0;
+}
+
+.price-routes-section ul.price-route-tabs .nav-link {
+  display: block;
+  margin: 0;
+  padding: 6px 12px;
+  border: 1px solid #ccc;
+  border-bottom: 0;
+  border-radius: 0;
+  background: #f0f0f0;
+  color: #222;
+  font-family: "Display-Medium", sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.4;
+  text-decoration: none;
+  outline: none;
+  box-shadow: none;
+}
+
+.price-routes-section ul.price-route-tabs .nav-link:hover,
+.price-routes-section ul.price-route-tabs .nav-link:focus {
+  background: #f9f9f9;
+  color: #222;
+  border-color: #ccc;
+}
+
+.price-routes-section ul.price-route-tabs .nav-link.active {
+  background: #fff;
+  color: #222;
+  border-color: #ccc;
+  border-bottom: 1px solid #fff;
+}
+
+/* Tab content box */
+.price-routes-section .tab_container.price-route-tab-content {
+  clear: both;
+  margin: 0;
+  padding: 10px;
+  border: 1px solid #ccc;
+  background: #fff;
+}
+
+.price-routes-section .tab_content.tab-pane {
+  float: left;
+  width: 100%;
+  min-height: 100px;
+}
+
+/* Danh sách tuyến - ul.route clearfix */
+.price-routes-section ul.route {
+  clear: both;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.price-routes-section ul.route::after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+.price-routes-section ul.route > li {
+  position: relative;
+  float: left;
+  width: 100%;
+  margin: 0;
+  padding: 10px 12px 32px;
+  border-top: 1px solid #ddd;
+  color: #ccc;
+  list-style: none;
+}
+
+.price-routes-section ul.route > li:nth-child(1) {
+  border-top: 0;
+}
+
+.price-routes-section ul.route > li h3 {
+  display: inline;
+  margin: 0;
+  padding: 0;
+  font-size: inherit;
+  font-weight: inherit;
+  line-height: inherit;
+}
+
+.price-routes-section ul.route > li h3 a {
+  display: inline-block;
+  color: #484848;
+  font-family: "Display-Medium", sans-serif;
+  font-size: 15px;
+  font-weight: 500;
+  text-decoration: none;
+  line-height: 1.5;
+}
+
+.price-routes-section ul.route > li h3 a:hover,
+.price-routes-section ul.route > li h3 a:hover .route-arrow {
+  color: #FF4605;
+}
+
+.price-routes-section ul.route > li .route-arrow {
+  display: inline-block;
+  padding: 0 4px;
+  color: #ccc;
+  font-size: 12px;
+}
+
+.price-routes-section ul.route > li .return {
+  color: #0f204b;
+  font-size: 14px;
+  font-style: italic;
+}
+
+.price-routes-section ul.route > li .price-date {
+  position: absolute;
+  right: 10px;
+  bottom: 9px;
+}
+
+.price-routes-section ul.route > li .price {
+  font-family: "Display-Bold", sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  padding-left: 10px;
+  color: #FF4605;
+}
+
+.price-routes-section ul.route > li .price.is-contact {
+  color: #0f204b;
+  font-weight: 600;
+}
+
+.price-routes-section ul.route > li.is-hot {
+  background: #fffaf5;
+}
+
+.price-routes-section ul.route > li .price-route-hot {
+  margin-left: 6px;
+  vertical-align: middle;
+}
+
+.price-routes-section .price-route-empty {
+  padding: 24px 12px;
+  margin: 0;
+  text-align: center;
+  color: #888;
+  font-size: 14px;
+}
+
+.price-routes-section .price-routes-cta {
+  margin-top: 24px;
+  text-align: center;
+}
+
+/* Desktop 2 cột - giống saodieu */
+@media screen and (min-width: 590px) {
+  .price-routes-section ul.route > li {
+    width: 50%;
+    padding: 6px 12px 28px;
+  }
+
+  .price-routes-section ul.route > li:nth-child(2) {
+    border-top: 0;
+  }
+
+  .price-routes-section ul.route > li:nth-child(even) {
+    border-left: 1px solid #eee;
+  }
+}
+
+@media screen and (max-width: 589px) {
+  .price-routes-section ul.price-route-tabs {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .price-routes-section ul.price-route-tabs::-webkit-scrollbar {
+    display: none;
+  }
+
+  .price-routes-section ul.price-route-tabs .nav-item {
+    flex: 0 0 auto;
+  }
+
+  .price-routes-section ul.price-route-tabs .nav-link {
+    white-space: nowrap;
+    font-size: 13px;
+    padding: 6px 10px;
+  }
+
+  .price-routes-section .s-block-title-bg h2 {
+    font-size: 20px;
+  }
+
+  .price-routes-section ul.route > li h3 a {
+    font-size: 14px;
+    padding-right: 90px;
+  }
+
+  .price-routes-section ul.route > li .price {
+    font-size: 13px !important;
+  }
+}

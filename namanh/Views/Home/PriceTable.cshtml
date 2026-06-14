@@ -43,91 +43,95 @@
 
 @if (tabs.Any())
 {
-    <section class="page-section price-routes-section" id="price-routes">
+    <section class="page-section s-block routes price-routes-section" id="price-routes">
         <div class="container">
-            <div class="price-routes-head">
-                <h2 class="price-routes-title">Các tuyến đường phổ biến</h2>
-                <p class="price-routes-sub">Chọn loại xe để xem giá thuê từ @departure — cam kết báo giá minh bạch, tốt nhất thị trường</p>
+            <div class="s-block-title">
+                <div class="s-block-title-bg">
+                    <h2>Các tuyến đường phổ biến</h2>
+                </div>
             </div>
 
-            <div class="price-routes-box">
-                <ul class="nav nav-pills price-route-tabs" id="priceRouteTabs" role="tablist">
-                    @{
-                        var tabIndex = 0;
-                    }
-                    @foreach (var tab in tabs)
-                    {
-                        var tabId = "price-tab-" + tab.Id;
-                        <li class="nav-item" role="presentation">
-                            <button type="button"
-                                    class="nav-link @(tabIndex == 0 ? "active" : "")"
-                                    id="@(tabId)-btn"
-                                    data-bs-toggle="tab"
-                                    data-bs-target="#@tabId"
-                                    role="tab"
-                                    aria-controls="@tabId"
-                                    aria-selected="@(tabIndex == 0 ? "true" : "false")">
-                                @tab.Name
-                            </button>
-                        </li>
-                        tabIndex++;
-                    }
-                </ul>
+            <div class="s-block-content route-list">
+                <div class="content-tabs">
+                    <ul class="nav nav-tabs price-route-tabs" id="priceRouteTabs" role="tablist">
+                        @{
+                            var tabIndex = 0;
+                        }
+                        @foreach (var tab in tabs)
+                        {
+                            var tabId = "price-tab-" + tab.Id;
+                            <li class="nav-item" role="presentation">
+                                <button type="button"
+                                        class="nav-link @(tabIndex == 0 ? "active" : "")"
+                                        id="@(tabId)-btn"
+                                        data-bs-toggle="tab"
+                                        data-bs-target="#@tabId"
+                                        role="tab"
+                                        aria-controls="@tabId"
+                                        aria-selected="@(tabIndex == 0 ? "true" : "false")">
+                                    @tab.Name
+                                </button>
+                            </li>
+                            tabIndex++;
+                        }
+                    </ul>
 
-                <div class="tab-content price-route-tab-content" id="priceRouteTabContent">
-                    @{
-                        tabIndex = 0;
-                    }
-                    @foreach (var tab in tabs)
-                    {
-                        var tabId = "price-tab-" + tab.Id;
-                        var routes = tab.Locations?.Where(l => l.Active).OrderBy(l => l.Sort).ToList() ?? new List<Location>();
-                        <div class="tab-pane fade @(tabIndex == 0 ? "show active" : "")"
-                             id="@tabId"
-                             role="tabpanel"
-                             aria-labelledby="@(tabId)-btn"
-                             tabindex="0">
-                            @if (routes.Any())
-                            {
-                                <ul class="price-route-list">
-                                    @foreach (var route in routes)
-                                    {
-                                        var priceText = GetTabPrice(route, tab.Name);
-                                        var contactUrl = !string.IsNullOrWhiteSpace(config?.Hotline)
-                                            ? "tel:" + config.Hotline
-                                            : "#price-routes";
-                                        <li class="price-route-item @(route.Hot ? "is-hot" : "")">
-                                            <a href="@contactUrl" class="price-route-link" title="Liên hệ báo giá @departure - @route.Name">
-                                                <div class="price-route-main">
-                                                    <h3 class="price-route-name">
-                                                        <span class="price-route-from">@departure</span>
-                                                        <span class="price-route-to">@route.Name</span>
-                                                        <span class="price-route-return">| Ngược lại</span>
-                                                    </h3>
+                    <div class="tab-content tab_container price-route-tab-content" id="priceRouteTabContent">
+                        @{
+                            tabIndex = 0;
+                        }
+                        @foreach (var tab in tabs)
+                        {
+                            var tabId = "price-tab-" + tab.Id;
+                            var routes = tab.Locations?.Where(l => l.Active).OrderBy(l => l.Sort).ToList() ?? new List<Location>();
+                            <div class="tab-pane tab_content fade @(tabIndex == 0 ? "show active" : "")"
+                                 id="@tabId"
+                                 role="tabpanel"
+                                 aria-labelledby="@(tabId)-btn"
+                                 tabindex="0">
+                                @if (routes.Any())
+                                {
+                                    <ul class="route clearfix">
+                                        @foreach (var route in routes)
+                                        {
+                                            var priceText = GetTabPrice(route, tab.Name);
+                                            var contactUrl = !string.IsNullOrWhiteSpace(config?.Hotline)
+                                                ? "tel:" + config.Hotline
+                                                : "#price-routes";
+                                            <li class="@(route.Hot ? "is-hot" : "")">
+                                                <h3>
+                                                    <a href="@contactUrl" title="@departure - @route.Name">
+                                                        @departure
+                                                        <span class="route-arrow"><i class="fa-solid fa-arrow-right"></i></span>
+                                                        @route.Name
+                                                    </a>
+                                                    <span class="return"> | Ngược lại</span>
                                                     @if (route.Hot)
                                                     {
-                                                        <img src="~/Content/images/hot-gif.gif" width="24" height="24" alt="Hot" class="price-route-hot" />
+                                                        <img src="~/Content/images/hot-gif.gif" width="22" height="22" alt="Hot" class="price-route-hot" />
                                                     }
+                                                </h3>
+                                                <div class="price-date">
+                                                    <span class="price @(priceText == "Liên hệ" ? "is-contact" : "")">@priceText</span>
                                                 </div>
-                                                <span class="price-route-price @(priceText == "Liên hệ" ? "is-contact" : "")">@priceText</span>
-                                            </a>
-                                        </li>
-                                    }
-                                </ul>
-                            }
-                            else
-                            {
-                                <p class="price-route-empty">Chưa có tuyến cho loại xe này.</p>
-                            }
-                        </div>
-                        tabIndex++;
-                    }
+                                            </li>
+                                        }
+                                    </ul>
+                                }
+                                else
+                                {
+                                    <p class="price-route-empty">Chưa có tuyến cho loại xe này.</p>
+                                }
+                            </div>
+                            tabIndex++;
+                        }
+                    </div>
                 </div>
             </div>
 
             @if (!string.IsNullOrWhiteSpace(config?.Hotline))
             {
-                <div class="price-routes-cta text-center">
+                <div class="price-routes-cta">
                     <a href="tel:@config.Hotline" class="btn-color">
                         Liên hệ báo giá: @config.Hotline
                     </a>
