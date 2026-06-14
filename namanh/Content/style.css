@@ -3258,3 +3258,198 @@ footer h2 {
     display: none;
   }
 }
+
+/* Bảng giá tuyến - style saodieu.vn */
+.price-routes-section {
+  padding: 50px 0 60px;
+  background: #f8f9fb;
+}
+
+.price-routes-head {
+  text-align: center;
+  margin-bottom: 28px;
+}
+
+.price-routes-title {
+  font-family: "Display-Bold", "SVN-Bold", sans-serif;
+  font-size: 1.75rem;
+  color: #222;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.price-routes-sub {
+  color: #666;
+  margin: 0;
+}
+
+.price-car-filter {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 24px;
+}
+
+.price-car-btn {
+  border: 1px solid #FF4605;
+  background: #fff;
+  color: #FF4605;
+  padding: 8px 18px;
+  border-radius: 999px;
+  font-family: "Display-Medium", sans-serif;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.price-car-btn.active,
+.price-car-btn:hover {
+  background: #FF4605;
+  color: #fff;
+}
+
+.price-routes-box {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+}
+
+.price-route-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-bottom: 2px solid #eee;
+  background: #fafafa;
+}
+
+.price-route-tabs li {
+  list-style: none;
+}
+
+.price-route-tab {
+  border: 0;
+  background: transparent;
+  padding: 14px 22px;
+  font-family: "Display-Bold", sans-serif;
+  color: #555;
+  cursor: pointer;
+  border-bottom: 3px solid transparent;
+  margin-bottom: -2px;
+  transition: all 0.2s ease;
+}
+
+.price-route-tab.active,
+.price-route-tab:hover {
+  color: #FF4605;
+  border-bottom-color: #FF4605;
+}
+
+.price-route-panel {
+  display: none;
+  padding: 8px 0;
+}
+
+.price-route-panel.active {
+  display: block;
+}
+
+.price-route-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.price-route-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px 24px;
+  border-bottom: 1px solid #f0f0f0;
+  transition: background 0.2s ease;
+}
+
+.price-route-item:hover {
+  background: #fff8f5;
+}
+
+.price-route-item.is-hot {
+  background: #fffaf0;
+}
+
+.price-route-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+  min-width: 0;
+}
+
+.price-route-info h3 {
+  margin: 0;
+  font-family: "Display-Medium", sans-serif;
+  font-size: 1rem;
+  color: #222;
+  font-weight: 600;
+}
+
+.price-route-info h3 i {
+  color: #FF4605;
+  margin: 0 6px;
+  font-size: 0.85rem;
+}
+
+.price-route-return {
+  color: #888;
+  font-weight: 400;
+  font-size: 0.9rem;
+  margin-left: 4px;
+}
+
+.price-route-value {
+  flex-shrink: 0;
+}
+
+.price-route-price {
+  font-family: "Display-Bold", sans-serif;
+  color: #FF4605;
+  font-size: 1.05rem;
+  white-space: nowrap;
+}
+
+.price-route-empty {
+  padding: 30px 24px;
+  color: #888;
+  text-align: center;
+  margin: 0;
+}
+
+.price-routes-cta {
+  margin-top: 28px;
+}
+
+@media (max-width: 768px) {
+  .price-route-item {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 14px 16px;
+  }
+
+  .price-route-tab {
+    padding: 12px 14px;
+    font-size: 0.9rem;
+  }
+
+  .price-car-filter {
+    gap: 8px;
+  }
+
+  .price-car-btn {
+    padding: 7px 12px;
+    font-size: 0.8rem;
+  }
+}

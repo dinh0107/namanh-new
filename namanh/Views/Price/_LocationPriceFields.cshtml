@@ -1,0 +1,60 @@
+@model namanh.Models.PriceLangding
+@{
+    var locations = Model.Locations != null && Model.Locations.Any()
+        ? Model.Locations.OrderBy(x => x.Sort).ToList()
+        : new List<namanh.Models.Location> { new namanh.Models.Location { Sort = 1, Active = true } };
+    var locationIndex = 0;
+}
+
+<div class="table-responsive">
+    <table class="list_table tablecenter table-striped location-price-table">
+        <thead>
+            <tr>
+                <th>Điểm đến</th>
+                <th>4 chỗ</th>
+                <th>7 chỗ</th>
+                <th>16 chỗ</th>
+                <th>29 chỗ</th>
+                <th>45 chỗ</th>
+                <th>Limousine</th>
+                <th>STT</th>
+                <th>Hot</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody id="location-wrapper">
+            @foreach (var item in locations)
+            {
+                <tr class="location-item">
+                    <td>
+                        <input type="hidden" name="Locations[@locationIndex].Id" value="@item.Id" />
+                        <input type="text" name="Locations[@locationIndex].Name" value="@item.Name" class="form_control" placeholder="VD: Lào Cai" />
+                    </td>
+                    <td><input type="text" name="Locations[@locationIndex].Price4" value="@item.Price4" class="form_control" placeholder="1.000.000 đ" /></td>
+                    <td><input type="text" name="Locations[@locationIndex].Price7" value="@item.Price7" class="form_control" /></td>
+                    <td><input type="text" name="Locations[@locationIndex].Price16" value="@item.Price16" class="form_control" /></td>
+                    <td><input type="text" name="Locations[@locationIndex].Price29" value="@item.Price29" class="form_control" /></td>
+                    <td><input type="text" name="Locations[@locationIndex].Price45" value="@item.Price45" class="form_control" /></td>
+                    <td><input type="text" name="Locations[@locationIndex].PriceLim" value="@item.PriceLim" class="form_control" /></td>
+                    <td><input type="number" name="Locations[@locationIndex].Sort" value="@(item.Sort > 0 ? item.Sort : locationIndex + 1)" class="form_control" style="width:70px" /></td>
+                    <td class="text-center">
+                        <input type="hidden" name="Locations[@locationIndex].Hot" value="false" />
+                        <input type="checkbox" name="Locations[@locationIndex].Hot" value="true" @(item.Hot ? "checked" : "") />
+                    </td>
+                    <td class="text-center">
+                        <input type="hidden" name="Locations[@locationIndex].Active" value="true" />
+                        @if (locationIndex == 0)
+                        {
+                            <button type="button" class="btn btn-success btn-sm add-location"><i class="fa-solid fa-plus"></i></button>
+                        }
+                        else
+                        {
+                            <button type="button" class="btn btn-danger btn-sm remove-location"><i class="fa-solid fa-minus"></i></button>
+                        }
+                    </td>
+                </tr>
+                locationIndex++;
+            }
+        </tbody>
+    </table>
+</div>

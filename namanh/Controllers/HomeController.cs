@@ -232,11 +232,71 @@ namespace namanh.Controllers
 
         public PartialViewResult PriceTable()
         {
+            var langdings = _unitOfWork.PriceLangdingRepository
+                .GetQuery(a => a.Active, orderBy: a => a.OrderBy(b => b.Sort))
+                .ToList();
+
+            foreach (var langding in langdings)
+            {
+                langding.Locations = _unitOfWork.LocationRepository
+                    .Get(x => x.PriceLangdingId == langding.Id && x.Active, orderBy: q => q.OrderBy(l => l.Sort))
+                    .ToList();
+            }
+
             var model = new HomeViewModel
             {
-                PriceLangdings = _unitOfWork.PriceLangdingRepository.GetQuery(orderBy: a => a.OrderBy(b => b.Sort))
+                PriceLangdings = langdings
             };
             return PartialView(model);
+        }
+
+        public JsonResult GetRoutePrices(int langdingId, string carType = "_4_cho")
+        {
+            var locations = _unitOfWork.LocationRepository
+                .Get(x => x.PriceLangdingId == langdingId && x.Active, orderBy: q => q.OrderBy(l => l.Sort))
+                .ToList();
+
+            var langding = _unitOfWork.PriceLangdingRepository.GetById(langdingId);
+            var fromCity = langding?.Name ?? "";
+
+            var result = locations.Select(x => new
+            {
+                id = x.Id,
+                from = fromCity,
+                to = x.Name,
+                hot = x.Hot,
+                price = GetLocationPrice(x, carType)
+            });
+
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
+
+        private static string GetLocationPrice(Location location, string carType)
+        {
+            string price;
+            switch (carType)
+            {
+                case "_7_cho":
+                    price = location.Price7;
+                    break;
+                case "_16_cho":
+                    price = location.Price16;
+                    break;
+                case "_29_cho":
+                    price = location.Price29;
+                    break;
+                case "_45_cho":
+                    price = location.Price45;
+                    break;
+                case "limousine":
+                    price = location.PriceLim;
+                    break;
+                default:
+                    price = location.Price4;
+                    break;
+            }
+
+            return string.IsNullOrWhiteSpace(price) ? "Liên hệ" : price;
         }
 
         public ActionResult ErrorPage()

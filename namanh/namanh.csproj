@@ -177,6 +177,10 @@
     <Compile Include="Migrations\202605100352323_add-table-price.Designer.cs">
       <DependentUpon>202605100352323_add-table-price.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202606141500000_add-location-price-fields.cs" />
+    <Compile Include="Migrations\202606141500000_add-location-price-fields.Designer.cs">
+      <DependentUpon>202606141500000_add-location-price-fields.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Admin.cs" />
     <Compile Include="Models\Article.cs" />
@@ -2086,6 +2090,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202605100352323_add-table-price.resx">
       <DependentUpon>202605100352323_add-table-price.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202606141500000_add-location-price-fields.resx">
+      <DependentUpon>202606141500000_add-location-price-fields.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

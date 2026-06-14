@@ -1,14 +1,14 @@
 ﻿@model namanh.Models.PriceLangding
 @{
-    ViewBag.Title = "Thêm giá";
+    ViewBag.Title = "Sửa tuyến bảng giá";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 <div class="page-header">
     <div class="page-title">
         <i class="fa-solid fa-align-right fa-rotate-180 fa-sm"></i>
-        <span>Thêm giá</span>
+        <span>Sửa tuyến bảng giá</span>
     </div>
-    <a href="#" onclick="history.go(-1)" class="btn-main btn-labeled bg-brown">
+    <a href="@Url.Action("List")" class="btn-main btn-labeled bg-brown">
         <span class="icon">
             <i class="fa-solid fa-left"></i>
         </span>
@@ -16,20 +16,12 @@
     </a>
 </div>
 <div class="content">
-    @if (ViewBag.ArticleCat == "success")
-    {
-        <div id="AlertBox" class="alert alert-success"><strong>Thêm mới thành công</strong></div>
-    }
-    @if (ViewBag.ArticleCat == "update")
-    {
-        <div id="AlertBox" class="alert alert-success"><strong>Cập nhật thành công</strong></div>
-    }
     <div class="accordion">
         <div class="accordion-item border-left-slate">
             <div class="accordion-header">
                 <div class="card-title">
-                    <i class="fa-light fa-octagon-plus fa-lg"></i>
-                    Thêm giá
+                    <i class="fa-light fa-pen-to-square fa-lg"></i>
+                    Cập nhật tuyến
                 </div>
                 <button type="button" data-bs-toggle="collapse" data-bs-target="#createForm" aria-expanded="true">
                     <i class="fa-solid fa-angle-down"></i>
@@ -37,110 +29,38 @@
             </div>
             <div id="createForm" class="accordion-collapse collapse show">
                 <div class="accordion-body">
-                    @using (Html.BeginForm("Edit", "Price", FormMethod.Post, new { @id = "data-insert-form", enctype = "multipart/form-data" }))
+                    @using (Html.BeginForm("Edit", "Price", FormMethod.Post, new { @id = "data-insert-form" }))
                     {
+                        @Html.HiddenFor(a => a.Id)
                         @Html.ValidationSummary(true)
                         <div class="mb-3 row">
-                            <label class="col-form-label col-lg-3" for="CategoryName">Lộ trình <span class="text-danger">*</span></label>
-                            <div class="col-lg-9">
-                                @Html.EditorFor(a => a.Name)
-                            </div>
+                            <label class="col-form-label col-lg-3">Tên tuyến / điểm đi <span class="text-danger">*</span></label>
+                            <div class="col-lg-9">@Html.EditorFor(a => a.Name)</div>
                         </div>
                         <div class="mb-3 row">
-                            <label class="col-form-label col-lg-3" for="CategoryName">Mô tả<span class="text-danger">*</span></label>
-                            <div class="col-lg-9">
-                                @Html.EditorFor(a => a.Description)
-                            </div>
+                            <label class="col-form-label col-lg-3">Mô tả</label>
+                            <div class="col-lg-9">@Html.EditorFor(a => a.Description)</div>
                         </div>
                         <div class="mb-3 row">
-                            <label class="col-form-label col-lg-3">
-                                Địa điểm
-                            </label>
-
+                            <label class="col-form-label col-lg-3">Danh sách điểm đến &amp; giá</label>
                             <div class="col-lg-9">
-
-                                <div id="location-wrapper">
-
-                                    @if (Model.Locations != null && Model.Locations.Any())
-                                    {
-                                        int index = 0;
-
-                                        foreach (var item in Model.Locations)
-                                        {
-                                            <div class="location-item d-flex mb-2">
-
-                                                <input type="hidden"
-                                                       name="Locations[@index].Id"
-                                                       value="@item.Id" />
-
-                                                <input type="text"
-                                                       name="Locations[@index].Name"
-                                                       value="@item.Name"
-                                                       class="form_control"
-                                                       placeholder="Nhập địa điểm" />
-
-                                                @if (index == 0)
-                                                {
-                                                    <button type="button"
-                                                            class="btn btn-success ms-2 add-location">
-                                                        <i class="fa-solid fa-plus"></i>
-                                                    </button>
-                                                }
-                                                else
-                                                {
-                                                    <button type="button"
-                                                            class="btn btn-danger ms-2 remove-location">
-                                                        <i class="fa-solid fa-minus"></i>
-                                                    </button>
-                                                }
-
-                                            </div>
-
-                                            index++;
-                                        }
-                                    }
-                                    else
-                                    {
-                                        <div class="location-item d-flex mb-2">
-
-                                            <input type="text"
-                                                   name="Locations[0].Name"
-                                                   class="form-control"
-                                                   placeholder="Nhập địa điểm" />
-
-                                            <button type="button"
-                                                    class="btn btn-success ms-2 add-location">
-                                                <i class="fa-solid fa-plus"></i>
-                                            </button>
-
-                                        </div>
-                                    }
-
-                                </div>
-
+                                @Html.Partial("_LocationPriceFields", Model)
                             </div>
                         </div>
                         <div class="mb-3 row">
                             @Html.LabelFor(a => a.Sort, new { @class = "col-form-label col-lg-3" })
-                            <div class="col-lg-9">
-                                @Html.EditorFor(a => a.Sort)
-                            </div>
+                            <div class="col-lg-9">@Html.EditorFor(a => a.Sort)</div>
                         </div>
                         <div class="mb-3 row">
                             @Html.LabelFor(a => a.Active, new { @class = "col-form-label col-lg-3" })
                             <div class="col-lg-9">
                                 <label class="form-check-label">
-                                    <input type="checkbox" name="Active" @if (Model.Active) { @Html.Raw("value='true' checked")  } else { @Html.Raw("value='false'") } />
-                                    <span class="checkmark"></span>
+                                    @Html.CheckBoxFor(a => a.Active)
                                 </label>
                             </div>
                         </div>
                         <div class="btn-group">
-                            <button type="reset" onclick="resetAnyFormById('data-insert-form');" class="btn-main btn-white" id="reset">
-                                <span>Đặt lại</span>
-                                <i class="fa-solid fa-rotate-right ms-2"></i>
-                            </button>
-                            <button type="submit" class="btn-main btn-primary text-white ms-3">
+                            <button type="submit" class="btn-main btn-primary text-white">
                                 <span>Lưu</span>
                                 <i class="fa-solid fa-floppy-disk ms-2"></i>
                             </button>
@@ -152,46 +72,35 @@
     </div>
 </div>
 @section scripts {
-
     <script>
+        var locationIndex = @(Model.Locations != null && Model.Locations.Any() ? Model.Locations.Count() : 1);
 
-    var locationIndex = @(Model.Locations != null
-        ? Model.Locations.Count()
-        : 1);
+        function locationRowHtml(index, withAdd) {
+            var actionBtn = withAdd
+                ? '<button type="button" class="btn btn-success btn-sm add-location"><i class="fa-solid fa-plus"></i></button>'
+                : '<button type="button" class="btn btn-danger btn-sm remove-location"><i class="fa-solid fa-minus"></i></button>';
 
-    $(document).ready(function () {
+            return '<tr class="location-item">' +
+                '<td><input type="text" name="Locations[' + index + '].Name" class="form_control" placeholder="VD: Lào Cai" /></td>' +
+                '<td><input type="text" name="Locations[' + index + '].Price4" class="form_control" placeholder="1.000.000 đ" /></td>' +
+                '<td><input type="text" name="Locations[' + index + '].Price7" class="form_control" /></td>' +
+                '<td><input type="text" name="Locations[' + index + '].Price16" class="form_control" /></td>' +
+                '<td><input type="text" name="Locations[' + index + '].Price29" class="form_control" /></td>' +
+                '<td><input type="text" name="Locations[' + index + '].Price45" class="form_control" /></td>' +
+                '<td><input type="text" name="Locations[' + index + '].PriceLim" class="form_control" /></td>' +
+                '<td><input type="number" name="Locations[' + index + '].Sort" value="' + (index + 1) + '" class="form_control" style="width:70px" /></td>' +
+                '<td class="text-center"><input type="hidden" name="Locations[' + index + '].Hot" value="false" /><input type="checkbox" name="Locations[' + index + '].Hot" value="true" /></td>' +
+                '<td class="text-center"><input type="hidden" name="Locations[' + index + '].Active" value="true" />' + actionBtn + '</td>' +
+                '</tr>';
+        }
 
-        // thêm
         $(document).on('click', '.add-location', function () {
-
-            var html = `
-                <div class="location-item d-flex mb-2">
-
-                    <input type="text"
-                           name="Locations[${locationIndex}].Name"
-                           class="form_control"
-                           placeholder="Nhập địa điểm" />
-
-                    <button type="button"
-                            class="btn btn-danger ms-2 remove-location">
-                        <i class="fa-solid fa-minus"></i>
-                    </button>
-
-                </div>
-            `;
-
-            $('#location-wrapper').append(html);
-
+            $('#location-wrapper').append(locationRowHtml(locationIndex, false));
             locationIndex++;
         });
 
-        // xóa
         $(document).on('click', '.remove-location', function () {
             $(this).closest('.location-item').remove();
         });
-
-    });
-
     </script>
-
 }

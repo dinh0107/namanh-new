@@ -15,12 +15,6 @@
 }
 <section class="banner">
     <img src="~/Content/images/desktop_1920.jpg" alt="Banner" />
-    <div class="banner-content">
-        <h2>Đáp ứng mọi nhu cầu thuê xe</h2>
-        <span class="mb-4">Cung cấp dịch vụ thuê xe tự lái và có tài xế, phục vụ mọi nhu cầu di chuyển của bạn</span>
-        <a href="@config.Zalo">Liên hệ ngay</a>
-    </div>
-
 </section>
 @*<div class="container py-3">
     <div class="d-lg-none d-block align-items-center justify-content-center">
@@ -304,16 +298,7 @@
 
 @section scripts{
     <script>
-        homeJs()
-        var rows = $("#myTable tbody tr");
-        var showCount = 5;
-        rows.slice(showCount).hide();
-        $("#show-call-table").removeClass("active");
-        $("#show-more-table").click(function () {
-            rows.show();
-            $(this).hide();
-            $("#show-call-table").addClass("active");
-        });
+        homeJs();
 
         function loadArticlesById(id) {
             $.ajax({
@@ -330,6 +315,7 @@
 
         $(document).ready(function () {
             var firstBtn = $('.filter-btn').first();
+            if (!firstBtn.length) return;
             var firstId = firstBtn.data('id');
             loadArticlesById(firstId);
             firstBtn.addClass('active');

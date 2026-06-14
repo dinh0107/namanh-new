@@ -2,74 +2,100 @@
 @using namanh.Models
 @{
     var config = (ConfigSite)HttpContext.Current.Application["ConfigSite"];
+    var tabs = Model.PriceLangdings?.Where(a => a.Active).OrderBy(a => a.Sort).ToList() ?? new List<PriceLangding>();
 }
-<section class="page-section price-section">
-    <img src="~/Content/images/bg-price.jpg" alt="Anh" class="price-bg" />
-    <h2 class="title">bảng giá dịch vụ minh bạch </h2>
-    @*<p class="sub-title  mb-4">
-            Bảng giá mang tính tham khảo — vui lòng liên hệ để nhận báo giá tốt nhất theo lộ trình của bạn.
-        </p>*@
-    <div class="container">
-        <div class="d-flex justify-content-center">
-            <div class="btn-group filer-btn row" role="group" aria-label="Basic example">
-                <div class="col-4">
-                    <button type="button" id="btn-4cho" class="btn active col-4">4 chỗ</button>
-                </div>
-                <div class="col-4">
-                    <button type="button" id="btn-7cho" class="btn  col-4">7 chỗ</button>
-                </div>
-                <div class="col-4">
-                    <button type="button" id="btn-16cho" class="btn col-4">16 chỗ</button>
-                </div>
-                <div class="col-4">
-                    <button type="button" id="btn-29cho" class="btn col-4">29 chỗ</button>
-                </div>
-                <div class="col-4">
-                    <button type="button" id="btn-45cho" class="btn col-4">45 chỗ</button>
-                </div>
-                <div class="col-4">
-                    <button type="button" id="btn-Limousine" class="btn col-4">Limousine</button>
-                </div>
+
+@if (tabs.Any())
+{
+    <section class="page-section price-routes-section">
+        <div class="container">
+            <div class="price-routes-head">
+                <h2 class="price-routes-title">Các tuyến đường phổ biến</h2>
+                <p class="price-routes-sub">Bảng giá tham khảo theo loại xe — liên hệ hotline để nhận báo giá tốt nhất</p>
             </div>
-        </div>
-        <div class="box-price">
-            <div class="price-slick">
-                @foreach (var item in Model.PriceLangdings)
+
+            <div class="price-car-filter" role="group" aria-label="Loại xe">
+                <button type="button" class="price-car-btn active" data-car="_4_cho">4 chỗ</button>
+                <button type="button" class="price-car-btn" data-car="_7_cho">7 chỗ</button>
+                <button type="button" class="price-car-btn" data-car="_16_cho">16 chỗ</button>
+                <button type="button" class="price-car-btn" data-car="_29_cho">29 chỗ</button>
+                <button type="button" class="price-car-btn" data-car="_45_cho">45 chỗ</button>
+                <button type="button" class="price-car-btn" data-car="limousine">Limousine</button>
+            </div>
+
+            <div class="price-routes-box">
+                <ul class="price-route-tabs">
+                    @{
+                        var tabIndex = 0;
+                    }
+                    @foreach (var tab in tabs)
+                    {
+                        <li>
+                            <button type="button"
+                                    class="price-route-tab @(tabIndex == 0 ? "active" : "")"
+                                    data-tab="@tab.Id">
+                                @tab.Name
+                            </button>
+                        </li>
+                        tabIndex++;
+                    }
+                </ul>
+
+                @{
+                    tabIndex = 0;
+                }
+                @foreach (var tab in tabs)
                 {
-                    <div class="car-card">
-                        <div class="card-header">
-                            <div class="seat">
-                               @item.Name
-                            </div>
-                        </div>
-
-                        <div class="card-body">
-                            <div class="title-card">
-                                Tuyến đường phổ biến
-                            </div>
-
-                            <div class="location-list">
-                                @foreach (var loc in item.Locations.Take(5))
+                    var routes = tab.Locations?.Where(l => l.Active).OrderBy(l => l.Sort).ToList() ?? new List<Location>();
+                    <div class="price-route-panel @(tabIndex == 0 ? "active" : "")" data-panel="@tab.Id">
+                        @if (routes.Any())
+                        {
+                            <ul class="price-route-list">
+                                @foreach (var route in routes)
                                 {
-                                    <div class="location-item">@loc.Name</div>
+                                    <li class="price-route-item @(route.Hot ? "is-hot" : "")"
+                                        data-p4="@(route.Price4 ?? "")"
+                                        data-p7="@(route.Price7 ?? "")"
+                                        data-p16="@(route.Price16 ?? "")"
+                                        data-p29="@(route.Price29 ?? "")"
+                                        data-p45="@(route.Price45 ?? "")"
+                                        data-plim="@(route.PriceLim ?? "")">
+                                        <div class="price-route-info">
+                                            <h3>
+                                                @tab.Name
+                                                <i class="fa-regular fa-arrow-right-long"></i>
+                                                @route.Name
+                                                <span class="price-route-return">| Ngược lại</span>
+                                            </h3>
+                                            @if (route.Hot)
+                                            {
+                                                <img src="~/Content/images/hot-gif.gif" width="28" height="28" alt="Hot" class="price-route-hot" />
+                                            }
+                                        </div>
+                                        <div class="price-route-value">
+                                            <span class="price-route-price">@(string.IsNullOrWhiteSpace(route.Price4) ? "Liên hệ" : route.Price4)</span>
+                                        </div>
+                                    </li>
                                 }
-                            </div>
-
-                            <ul class="feature-list">
-                                <li><i class="fa fa-check"></i> Xe sạch sẽ đời mới</li>
-                                <li><i class="fa fa-check"></i> Tài xế chuyên nghiệp</li>
-                                <li><i class="fa fa-check"></i> Đưa đón tận nơi</li>
-                                <li><i class="fa fa-check"></i> Hỗ trợ 24/7</li>
                             </ul>
-
-                            <a href="@config.Zalo" class="btn-book">
-                                Đặt xe ngay
-                            </a>
-
-                        </div>
+                        }
+                        else
+                        {
+                            <p class="price-route-empty">Chưa có tuyến đường cho khu vực này.</p>
+                        }
                     </div>
+                    tabIndex++;
                 }
             </div>
+
+            @if (!string.IsNullOrWhiteSpace(config?.Hotline))
+            {
+                <div class="price-routes-cta text-center">
+                    <a href="tel:@config.Hotline" class="btn-color">
+                        Liên hệ báo giá: @config.Hotline
+                    </a>
+                </div>
+            }
         </div>
-    </div>
-</section>
+    </section>
+}

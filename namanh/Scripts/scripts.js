@@ -342,136 +342,51 @@ function homeJs() {
     
  
 
-    const routes = [
-        {
-            "hanh_trinh": "Hà Nội <i class='fa-thin fa-arrows-left-right'></i> Sơn La",
-            "gia": { "4_cho": "3.600.000 đ", "7_cho": "4.200.000 đ", "16_cho": "5.400.000 đ", "29_cho": "Liên hệ", "45_cho": "Liên hệ", "limousine" : "Liên hệ" }
-        },
-        {
-            "hanh_trinh": "Hà Nội <i class='fa-thin fa-arrows-left-right'></i> Điện Biên",
-            "gia": { "4_cho": "5.232.000 đ", "7_cho": "6.104.000 đ", "16_cho": "10.464.000 đ", "29_cho": "Liên hệ", "45_cho": "Liên hệ", "limousine": "Liên hệ" }
-        },
-        {
-            "hanh_trinh": "Hà Nội <i class='fa-thin fa-arrows-left-right'></i> Lai Châu",
-            "gia": { "4_cho": "5.364.000 đ", "7_cho": "6.258.000 đ", "16_cho": "10.728.000 đ", "29_cho": "Liên hệ", "45_cho": "Liên hệ", "limousine": "Liên hệ" }
-        },
-        {
-            "hanh_trinh": "Hà Nội <i class='fa-thin fa-arrows-left-right'></i> Lào Cai",
-            "hot": true,
-            "gia": { "4_cho": "3.492.000 đ", "7_cho": "4.074.000 đ", "16_cho": "6.984.000 đ", "29_cho": "Liên hệ", "45_cho": "Liên hệ", "limousine": "Liên hệ" }
-        },
-        {
-            "hanh_trinh": "Hà Nội <i class='fa-thin fa-arrows-left-right'></i> Yên Bái",
-            "gia": { "4_cho": "1.920.000 đ", "7_cho": "2.240.000 đ  ", "16_cho": "3.840.000 đ", "29_cho": "Liên hệ", "45_cho": "Liên hệ", "limousine": "Liên hệ" }
-        },
-        {
-            "hanh_trinh": "Hà Nội <i class='fa-thin fa-arrows-left-right'></i> Phú Thọ",
-            "gia": { "4_cho": "1.224.000 đ", "7_cho": "1.428.000 đ", "16_cho": "2.448.000 đ", "29_cho": "Liên hệ", "45_cho": "Liên hệ", "limousine": "Liên hệ" }
-        },
-        {
-            "hanh_trinh": "Hà Nội <i class='fa-thin fa-arrows-left-right'></i> Hà Giang",
-            "hot": true,
-            "gia": { "4_cho": "3.564.000 đ", "7_cho": "4.158.000 đ", "16_cho": "7.128.000 đ", "29_cho": "Liên hệ", "45_cho": "Liên hệ", "limousine": "Liên hệ" }
-        },
-        {
-            "hanh_trinh": "Hà Nội <i class='fa-thin fa-arrows-left-right'></i> Tuyên Quang",
-            "gia": { "4_cho": "1.752.000 đ", "7_cho": "2.044.000 đ", "16_cho": "3.504.000 đ", "29_cho": "Liên hệ", "45_cho": "Liên hệ", "limousine": "Liên hệ" }
-        },
-        {
-            "hanh_trinh": "Hà Nội <i class='fa-thin fa-arrows-left-right'></i> Cao Bằng",
-            "gia": { "4_cho": "3.420.000 đ", "7_cho": "3.990.000 đ", "16_cho": "6.840.000 đ", "29_cho": "Liên hệ", "45_cho": "Liên hệ", "limousine": "Liên hệ" }
-        },
-        {
-            "hanh_trinh": "Hà Nội <i class='fa-thin fa-arrows-left-right'></i> Thái Nguyên",
-            "gia": { "4_cho": "1.080.000 đ", "7_cho": "1.260.000 đ", "16_cho": "2.160.000 đ", "29_cho": "Liên hệ", "45_cho": "Liên hệ", "limousine": "Liên hệ" }
-        },
-        {
-            "hanh_trinh": "Hà Nội <i class='fa-thin fa-arrows-left-right'></i> Lạng Sơn",
-            "gia": { "4_cho": "1.932.000 đ", "7_cho": "2.254.000 đ", "16_cho": "3.864.000 đ", "29_cho": "Liên hệ", "45_cho": "Liên hệ", "limousine": "Liên hệ" }
-        },
-        {
-            "hanh_trinh": "Hà Nội <i class='fa-thin fa-arrows-left-right'></i> Quảng Ninh",
-            "hot": true,
-            "gia": { "4_cho": "1.884.000 đ", "7_cho": "2.198.000 đ", "16_cho": "3.768.000 đ", "29_cho": "Liên hệ", "45_cho": "Liên hệ", "limousine": "Liên hệ" }
-        },
-        {
-            "hanh_trinh": "Hà Nội <i class='fa-thin fa-arrows-left-right'></i> Hải Phòng",
-            "gia": { "4_cho": "1.500.000 đ", "7_cho": "1.750.000 đ", "16_cho": "3.000.000 đ", "29_cho": "Liên hệ", "45_cho": "Liên hệ", "limousine": "Liên hệ" }
-        },
-        {
-            "hanh_trinh": "Hà Nội <i class='fa-thin fa-arrows-left-right'></i> Nam Định",
-            "gia": { "4_cho": "1.020.000 đ", "7_cho": "1.190.000 đ", "16_cho": "2.040.000 đ", "29_cho": "Liên hệ", "45_cho": "Liên hệ", "limousine": "Liên hệ" }
-        },
-        {
-            "hanh_trinh": "Hà Nội <i class='fa-thin fa-arrows-left-right'></i> Thái Bình",
-            "gia": { "4_cho": "1.260.000 đ", "7_cho": "1.470.000 đ", "16_cho": "2.520.000 đ", "29_cho": "Liên hệ", "45_cho": "Liên hệ", "limousine": "Liên hệ" }
-        },
-        {
-            "hanh_trinh": "Hà Nội <i class='fa-thin fa-arrows-left-right'></i> Ninh Bình",
-            "gia": { "4_cho": "1.140.000 đ", "7_cho": "1.330.000 đ", "16_cho": "2.280.000 đ", "29_cho": "Liên hệ", "45_cho": "Liên hệ", "limousine": "Liên hệ" }
-        },
-        {
-            "hanh_trinh": "Hà Nội <i class='fa-thin fa-arrows-left-right'></i> Thanh Hóa",
-            "hot": true,
-            "gia": { "4_cho": "2.016.000 đ", "7_cho": "2.352.000 đ", "16_cho": "4.032.000 đ", "29_cho": "Liên hệ", "45_cho": "Liên hệ", "limousine": "Liên hệ" }
-        },
-        {
-            "hanh_trinh": "Hà Nội <i class='fa-thin fa-arrows-left-right'></i> Nghệ An",
-            "gia": { "4_cho": "4.140.000 đ", "7_cho": "4.830.000 đ", "16_cho": "8.280.000 đ", "29_cho": "Liên hệ", "45_cho": "Liên hệ", "limousine": "Liên hệ" }
-        },
-        {
-            "hanh_trinh": "Hà Nội <i class='fa-thin fa-arrows-left-right'></i> Hà Tĩnh",
-            "gia": { "4_cho": "4.128.000 đ", "7_cho": "4.816.000 đ", "16_cho": "8.256.000 đ", "29_cho": "Liên hệ", "45_cho": "Liên hệ", "limousine": "Liên hệ" }
-        }
-    ]
-    function renderTable(type) {
-        $.getJSON("/Home/GetPrices", function (routes) {
-            let rows = "";
-            routes.forEach(r => {
-                const isHot = r.hot === true ? 'hot' : '';
-                const hotIcon = r.hot === true ? '<img src="/Content/images/hot-gif.gif" width="30" height="30" alt="Hot" />' : '';
-                rows += `
-        <tr class="${isHot}">
-          <td>${r.hanh_trinh} ${hotIcon}</td>
-          <td><strong>${r.gia[type]}</strong></td>
-        </tr>
-      `;
-            });
-            $("#priceTable tbody").html(rows);
+    initPriceRoutes();
+}
+
+function initPriceRoutes() {
+    var $section = $('.price-routes-section');
+    if (!$section.length) {
+        return;
+    }
+
+    var carMap = {
+        '_4_cho': 'p4',
+        '_7_cho': 'p7',
+        '_16_cho': 'p16',
+        '_29_cho': 'p29',
+        '_45_cho': 'p45',
+        'limousine': 'plim'
+    };
+
+    function formatPrice(value) {
+        return value && $.trim(value) ? value : 'Liên hệ';
+    }
+
+    function applyCarType(carType) {
+        var key = carMap[carType] || 'p4';
+        $section.find('.price-route-item').each(function () {
+            var price = formatPrice($(this).data(key));
+            $(this).find('.price-route-price').text(price);
         });
     }
 
-
-    $(document).ready(function () {
-        // Mặc định hiển thị 4 chỗ
-        renderTable("_4_cho");
-
-        // Bắt sự kiện click
-        $("#btn-4cho").click(function () {
-            $("button").removeClass("active"); $(this).addClass("active");
-            renderTable("_4_cho");
-        });
-        $("#btn-7cho").click(function () {
-            $("button").removeClass("active"); $(this).addClass("active");
-            renderTable("_7_cho");
-        });
-        $("#btn-16cho").click(function () {
-            $("button").removeClass("active"); $(this).addClass("active");
-            renderTable("_16_cho");
-        });
-        $("#btn-29cho").click(function () {
-            $("button").removeClass("active"); $(this).addClass("active");
-            renderTable("_29_cho");
-        });
-        $("#btn-45cho").click(function () {
-            $("button").removeClass("active"); $(this).addClass("active");
-            renderTable("_45_cho");
-        });
-        $("#btn-Limousine").click(function () {
-            $("button").removeClass("active"); $(this).addClass("active");
-            renderTable("limousine");
-        });
+    $section.on('click', '.price-route-tab', function () {
+        var tabId = $(this).data('tab');
+        $section.find('.price-route-tab').removeClass('active');
+        $(this).addClass('active');
+        $section.find('.price-route-panel').removeClass('active');
+        $section.find('.price-route-panel[data-panel="' + tabId + '"]').addClass('active');
     });
+
+    $section.on('click', '.price-car-btn', function () {
+        $section.find('.price-car-btn').removeClass('active');
+        $(this).addClass('active');
+        applyCarType($(this).data('car'));
+    });
+
+    applyCarType('_4_cho');
 }
 function show() {
     $(".menu-drawer").addClass("open");
