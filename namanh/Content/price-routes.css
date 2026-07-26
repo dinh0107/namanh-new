@@ -272,15 +272,17 @@
 
 @media (max-width: 480px) {
   .price-routes-section .price-route-link {
-    flex-direction: column;
+    flex-direction: row;
     align-items: flex-start;
     gap: 8px;
   }
-
-  .price-routes-section .price-route-price {
-    align-self: flex-end;
-    min-width: 0;
-  }
+   .price-route-link
+{
+       flex-direction:row;
+   }    .price-routes-section .price-route-price {
+        align-self: flex-end;
+        min-width: 0;
+    }
 
   .price-route-table-head {
     display: none;
