@@ -1,4 +1,4 @@
-﻿@using namanh.Models
+@using namanh.Models
 @{
     var config = (ConfigSite)HttpContext.Current.Application["ConfigSite"];
     var role = User.IsInRole;
@@ -70,12 +70,26 @@
                             <span>Tổng quan website</span>
                         </a>
                     </li>
-                    @*<li class="nav-item" data-id="1">
-                        <a href="@Url.Action("CarService","CarService")" class="nav-link">
-                            <i class="fas fa-home-lg-alt"></i>
-                            <span>Trang dịch vụ</span>
+                    <li class="nav-item nav-item-submenu" data-id="carservice">
+                        <a href="javascript:;" class="nav-link">
+                            <i class="fa-solid fa-car-side"></i>
+                            <span>Quản lý Dòng xe & Dịch vụ</span>
                         </a>
-                    </li>*@
+                        <ul class="nav-group-sub">
+                            <li class="nav-item">
+                                <a href="@Url.Action("CarService", "CarService")" class="nav-link">
+                                    <i class="fa-light fa-list"></i>
+                                    <span>Danh sách dòng xe</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="@Url.Action("CarService", "CarService")" class="nav-link">
+                                    <i class="fa-light fa-square-plus"></i>
+                                    <span>Thêm mới dòng xe</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
                     <li class="nav-item nav-item-submenu" data-id="2">
                         <a href="javascript:;" class="nav-link">
                             <i class="fas fa-user-cog"></i>
@@ -116,8 +130,8 @@
                     </li>
                     <li class="nav-item" data-id="1">
                         <a href="@Url.Action("List","Price")" class="nav-link">
-                            <i class="fa-thin fa-grid"></i>
-                            <span>Bảng giá tuyến</span>
+                            <i class="fa-solid fa-table-list"></i>
+                            <span>Bảng giá tuyến đường</span>
                         </a>
                     </li>
                     <li class="nav-item" data-id="1b">
@@ -126,10 +140,10 @@
                             <span>Bảng giá chi tiết</span>
                         </a>
                     </li>
-                    @*<li class="nav-item nav-item-submenu" data-id="5">
+                    <li class="nav-item nav-item-submenu" data-id="5">
                         <a href="javascript:;" class="nav-link">
                             <i class="fa-light fa-newspaper"></i>
-                            <span>Quản lý Bài viết</span>
+                            <span>Quản lý Bài viết & Tin tức</span>
                         </a>
                         <ul class="nav-group-sub">
                             <li class="nav-item">
@@ -151,7 +165,7 @@
                                 </a>
                             </li>
                         </ul>
-                    </li>*@
+                    </li>
                     <li class="nav-item nav-item-submenu" data-id="7">
                         <a href="javascript:;" class="nav-link">
                             <i class="fa-solid fa-image"></i>
@@ -195,7 +209,7 @@
             </div>
             <div class="content-footer">
                 <div class="copyright">
-                    © 2023 - Design by <a href="https://namanh.com/" target="_blank">Thuê xe Nam Anh</a>
+                    © @DateTime.Now.Year - Thuê xe Hà Linh (hailinh-thuexe)
                 </div>
                 <a href="https://namanh.com/" target="_blank" class="support">
                     <i class="fas fa-user-headset mr-1"></i>

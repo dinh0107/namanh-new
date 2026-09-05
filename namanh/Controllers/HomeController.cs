@@ -1,4 +1,4 @@
-﻿using Helpers;
+using Helpers;
 using namanh.DAL;
 using namanh.Models;
 using namanh.ViewModel;
@@ -48,12 +48,25 @@ namespace namanh.Controllers
             var banner = _unitOfWork.BannerRepository.GetQuery(a => a.Active, o => o.OrderBy(a => a.Sort));
             var service = _unitOfWork.CarServiceRepository.GetQuery(a => a.Active && a.Home, o => o.OrderBy(a => a.Sort));
             var articles = _unitOfWork.ArticleRepository.GetQuery(a => a.Active && (a.ArticleCategory.TypePost == TypePost.Article && a.Home && !a.Draft), o => o.OrderByDescending(a => a.CreateDate));
+            
+            var langdings = _unitOfWork.PriceLangdingRepository
+                .GetQuery(a => a.Active, orderBy: a => a.OrderBy(b => b.Sort))
+                .ToList();
+
+            foreach (var langding in langdings)
+            {
+                langding.Locations = _unitOfWork.LocationRepository
+                    .Get(x => x.PriceLangdingId == langding.Id && x.Active, orderBy: q => q.OrderBy(l => l.Sort))
+                    .ToList();
+            }
+
             var model = new HomeViewModel
             {
                 Banners = banner,
                 Services = service,
                 Articles = articles.Take(6),
                 ArticleCategories = ArticleCategories().Where(a => a.TypePost == TypePost.Article && a.Home),
+                PriceLangdings = langdings,
                 PriceTables = _unitOfWork.PriceTableRepository.GetQuery(orderBy: a => a.OrderBy(b => b.Sort))
             };
             return View(model);
@@ -164,6 +177,10 @@ namespace namanh.Controllers
         }
         public PartialViewResult Form()
         {
+            var services = _unitOfWork.CarServiceRepository.GetQuery(a => a.Active && a.Home, o => o.OrderBy(a => a.Sort)).ToList();
+            var locations = _unitOfWork.LocationRepository.GetQuery(a => a.Active, o => o.OrderByDescending(a => a.Hot).ThenBy(a => a.Sort)).Select(a => a.Name).Distinct().Take(8).ToList();
+            ViewBag.Services = services;
+            ViewBag.Locations = locations;
             return PartialView();
         }
 
@@ -185,18 +202,29 @@ namespace namanh.Controllers
                 model.ToDate = Convert.ToDateTime(model.ToDate);
             }
 
-            _unitOfWork.ContactRepository.Insert(model);
-            _unitOfWork.Save();
+            using (var uow = new UnitOfWork())
+            {
+                uow.ContactRepository.Insert(model);
+                uow.Save();
+            }
 
-            var subject = "Email liên hệ từ website: " + Request.Url?.Host;
-            var body = $"<p>Điểm đi: {model.From},</p>" +
-                       $"<p>Điểm đến: {model.To},</p>" +
-                       $"<p>Ngày đi: {model.FromDate.ToString("dd/MM/yyyy HH:mm")},</p>" +
-                       $"<p>Ngày về: {model.ToDate?.ToString("dd/MM/yyyy HH:mm")},</p>" +
-                       $"<p>Loại xe: {model.TypeCar},</p>" +
-                       $"<p>Số điện thoại: {model.Mobile},</p>" +
-                       $"<p>Đây là hệ thống gửi email tự động, vui lòng không phản hồi lại email này.</p>";
-            Task.Run(() => HtmlHelpers.SendEmail("gmail", subject, body, ConfigSite.Email, Email, Email, Password, "Thuê xe Nam Anh"));
+            var toEmail = ConfigSite?.Email;
+            var fromEmail = Email;
+            var password = Password;
+            if (!string.IsNullOrWhiteSpace(toEmail) && !string.IsNullOrWhiteSpace(fromEmail) && !string.IsNullOrWhiteSpace(password))
+            {
+                Task.Run(() =>
+                {
+                    try
+                    {
+                        HtmlHelpers.SendEmail("gmail", subject, body, toEmail, fromEmail, fromEmail, password, "Thuê xe Nam Anh");
+                    }
+                    catch
+                    {
+                        // Background email fail-safe
+                    }
+                });
+            }
 
             return Json(new { status = true, msg = "Gửi liên hệ thành công.\nChúng tôi sẽ liên lạc với bạn sớm nhất có thể." });
         }

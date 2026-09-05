@@ -1,4 +1,4 @@
-﻿@using namanh.Models
+@using namanh.Models
 @{
     var config = (ConfigSite)HttpContext.Current.Application["ConfigSite"];
     var siteTitle = ViewBag.Title ?? config?.Title ?? "Trang chủ";
@@ -30,17 +30,25 @@
     <meta property="og:url" content="@canonicalUrl" />
     <meta property="og:site_name" content="@siteTitle" />
     <meta property="og:image" content="@imageShare" />
+    <!-- Google Fonts: Be Vietnam Pro for optimal Vietnamese typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome 6 Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+    <!-- Bootstrap Theme Stylesheet (No Tailwind) -->
     @Styles.Render("~/Content/css")
+    <link rel="stylesheet" href="@Url.Content("~/Content/namanh-theme.css")?v=3" />
     <link rel="stylesheet" href="@Url.Content("~/Content/site-header.css")?v=7" />
     <link rel="stylesheet" href="@Url.Content("~/Content/price-routes.css")?v=4" />
-    @*<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.css" />*@
     @if (!string.IsNullOrWhiteSpace(config?.GoogleAnalytics))
     {
         @Html.Raw(config.GoogleAnalytics)
     }
-    
 </head>
-<body id="scrollbar">
+<body id="scrollbar" class="d-flex flex-column min-vh-100 justify-content-between">
     @Html.Action("Header", "Home")
     @RenderBody()
     @Html.Action("Footer", "Home")

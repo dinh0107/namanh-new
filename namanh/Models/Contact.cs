@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace namanh.Models
@@ -19,7 +19,7 @@ namespace namanh.Models
         public DateTime CreateDate { get; set; } = DateTime.Now;
         [Display(Name = "Tình trạng")]
         public StatusContact StatusContact { get; set; }
-        [Display(Name = "Loại xe"), StringLength(10)]
+        [Display(Name = "Loại xe"), StringLength(100)]
         public string TypeCar { get; set; }
 
         public Contact()

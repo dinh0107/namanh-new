@@ -1,35 +1,27 @@
-﻿@model namanh.ViewModel.HeaderViewModel
+@model namanh.ViewModel.HeaderViewModel
 @using namanh.Models
 @using System.Configuration
 @{
     var config = (ConfigSite)HttpContext.Current.Application["ConfigSite"];
     var logoUrl = config?.Image != null ? Path.Combine("/images/configs/", config.Image) : null;
-    var siteTitle = config?.Title ?? "Trang chủ";
-    var hotline = config?.Hotline;
-    var email = !string.IsNullOrWhiteSpace(config?.Email)
-        ? config.Email.Trim()
-        : ConfigurationManager.AppSettings["email"];
-    var articleParents = Model.ArticleCategories
+    var siteTitle = config?.Title ?? "Hà Linh - Cho thuê xe có lái";
+    var hotline = config?.Hotline ?? "1900 8866";
+    var articleParents = Model?.ArticleCategories?
         .Where(a => a.TypePost == TypePost.Article && a.ParentId == null)
-        .ToList();
-    var serviceUrl = Model.Services.Any()
-        ? Url.Action("ServiceCar", "Home", new { url = Model.Services.First().Slug })
-        : "javascript:void(0);";
+        .ToList() ?? new List<ArticleCategory>();
+    var services = Model?.Services?.ToList() ?? new List<CarService>();
+    var serviceUrl = services.Any()
+        ? Url.Action("ServiceCar", "Home", new { url = services.First().Slug })
+        : "#tuyen-xe";
     var newsUrl = articleParents.Any()
         ? GetCategoryUrl(articleParents.First())
-        : "javascript:void(0);";
-    var newsChildren = articleParents
-        .SelectMany(p => Model.ArticleCategories.Where(c => c.ParentId == p.Id))
-        .ToList();
-    if (!newsChildren.Any())
-    {
-        newsChildren = articleParents;
-    }
+        : "#tin-tuc";
 }
 
 @functions {
     string GetCategoryUrl(ArticleCategory category)
     {
+        if (category == null) return "#";
         if (category.Redirect)
         {
             return category.Url;
@@ -38,131 +30,116 @@
     }
 }
 
-<section class="masthead" id="masthead">
-    <div class="container">
-        <div class="d-flex align-items-center justify-content-between">
-            <a href="/" class="logo">
+<!-- BEGIN: MainHeader (Bootstrap 5) -->
+<header class="main-header shadow-sm">
+    <nav class="navbar navbar-expand-lg navbar-light py-2">
+        <div class="container">
+            <!-- Brand / Logo -->
+            <a class="navbar-brand py-1" href="/">
                 @if (logoUrl != null)
                 {
-                    <img class="img-fluid" src="@logoUrl" alt="@siteTitle" />
+                    <img src="@logoUrl" alt="@siteTitle" height="42" class="d-inline-block align-text-top object-fit-contain" />
                 }
-            </a>
-            <div class="icon-boxs d-flex align-items-center">
-                <div class="icon-box">
-                    <div class="icon-img">
-                        <i class="fa-solid fa-phone-volume"></i>
-                    </div>
-                    <div class="icon-text">
-                        <p>Gọi cho chúng tôi ngay</p>
-                        @if (!string.IsNullOrWhiteSpace(hotline))
-                        {
-                            <a href="tel:@hotline">@hotline</a>
-                        }
-                    </div>
-                </div>
-                <div class="icon-box">
-                    <div class="icon-img">
-                        <i class="fa-solid fa-envelope"></i>
-                    </div>
-                    <div class="icon-text">
-                        <p>Gửi email ngay bây giờ</p>
-                        @if (!string.IsNullOrWhiteSpace(email))
-                        {
-                            <a href="mailto:@email">@email</a>
-                        }
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="wide-nav">
-            <div class="container">
-                <div class="row">
-                    <div class="col-4"></div>
-                    <div class="col-8">
-                        @Html.Partial("_HeaderNav", Model)
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<section class="header-mb">
-    <a href="/" class="logo">
-        @if (logoUrl != null)
-        {
-            <img src="@logoUrl" alt="@siteTitle" />
-        }
-    </a>
-    <div class="menu-btn">
-        <i class="fa-solid fa-bars fa-lg"></i>
-    </div>
-</section>
-
-<section class="menu-drawer">
-    <div class="menu-header">
-        @if (logoUrl != null)
-        {
-            <img src="@logoUrl" alt="@siteTitle" />
-        }
-        <div onclick="toggleMenu()" style="padding: 10px; color: #999; cursor: pointer;">
-            <i class="fa-solid fa-times fa-lg"></i>
-        </div>
-    </div>
-    <a href="/" class="menu-link">
-        <i class="fa-solid fa-home"></i>
-        Trang chủ
-    </a>
-    <a href="@Url.Action("Introduct")" class="menu-link">
-        <i class="fa-solid fa-user-group"></i>
-        Về chúng tôi
-    </a>
-    <div class="menu-item has-children">
-        <a href="@serviceUrl" class="menu-link">
-            <i class="fa-solid fa-car"></i>
-            Dịch vụ
-        </a>
-        @if (Model.Services.Any())
-        {
-            <span class="expand-bar"></span>
-            <div class="menu-children">
-                @foreach (var service in Model.Services)
+                else
                 {
-                    <a href="@Url.Action("ServiceCar", "Home", new { url = service.Slug })" class="menu-child-link">@service.Title</a>
+                    <span class="fw-bold fst-italic" style="color: var(--brand-dark-blue);">@siteTitle</span>
+                    <i class="fa-solid fa-car-side text-primary ms-1"></i>
                 }
-            </div>
-        }
-    </div>
-    @if (articleParents.Any())
-    {
-        <div class="menu-item has-children">
-            <a href="@newsUrl" class="menu-link">
-                <i class="fa-solid fa-newspaper"></i>
-                Tin tức
             </a>
-            @if (newsChildren.Any())
-            {
-                <span class="expand-bar"></span>
-                <div class="menu-children">
-                    @foreach (var child in newsChildren)
-                    {
-                        <a href="@GetCategoryUrl(child)" class="menu-child-link">@child.CategoryName</a>
-                    }
-                </div>
-            }
-        </div>
-    }
-    <a href="@Url.Action("Contact")" class="menu-link">
-        <i class="fa-solid fa-phone"></i>
-        Liên hệ
-    </a>
-    @if (!string.IsNullOrWhiteSpace(hotline))
-    {
-        <div class="menu-hotline-box">
-            <div class="menu-hotline-title">Hotline</div>
-            <a href="tel:@hotline" class="menu-hotline-number">@hotline</a>
-        </div>
-    }
-</section>
 
-<div class="menu-overlay"></div>
+            <!-- Right CTA for mobile & toggle button -->
+            <div class="d-flex align-items-center d-lg-none gap-2">
+                <a class="btn btn-brand-orange btn-sm px-3 py-1 fw-bold" href="#booking-form">
+                    <i class="fa-regular fa-file-lines me-1"></i> Báo giá
+                </a>
+                <button class="navbar-toggler border-0 shadow-none p-2" type="button" data-bs-toggle="collapse" data-bs-target="#headerNavbarNav" aria-controls="headerNavbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+            </div>
+
+            <!-- Desktop / Collapsible Navigation Links -->
+            <div class="collapse navbar-collapse" id="headerNavbarNav">
+                <ul class="navbar-nav mx-auto mb-2 mb-lg-0 align-items-lg-center">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="/">Trang chủ</a>
+                    </li>
+
+                    <!-- Dropdown: Thuê xe (Dynamic Data from CarServices) -->
+                    @if (services.Any())
+                    {
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#tuyen-xe" id="servicesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Thuê xe
+                            </a>
+                            <ul class="dropdown-menu shadow border-0" aria-labelledby="servicesDropdown">
+                                @foreach (var s in services)
+                                {
+                                    <li>
+                                        <a class="dropdown-item py-2" href="@Url.Action("ServiceCar", "Home", new { url = s.Slug })">
+                                            <i class="fa-solid fa-chevron-right text-primary me-2" style="font-size: 0.75rem;"></i>@s.Title
+                                        </a>
+                                    </li>
+                                }
+                            </ul>
+                        </li>
+                    }
+                    else
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link" href="#tuyen-xe">Các dòng xe</a>
+                        </li>
+                    }
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="#bang-gia">Bảng giá</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#tuyen-xe">Tuyến xe</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="@Url.Action("Introduct", "Home")">Giới thiệu</a>
+                    </li>
+
+                    <!-- Dropdown: Tin tức (Dynamic Data from ArticleCategories) -->
+                    @if (articleParents.Any())
+                    {
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="@newsUrl" id="newsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Tin tức
+                            </a>
+                            <ul class="dropdown-menu shadow border-0" aria-labelledby="newsDropdown">
+                                @foreach (var cat in articleParents)
+                                {
+                                    <li>
+                                        <a class="dropdown-item py-2" href="@GetCategoryUrl(cat)">
+                                            <i class="fa-regular fa-newspaper text-primary me-2" style="font-size: 0.75rem;"></i>@cat.CategoryName
+                                        </a>
+                                    </li>
+                                }
+                            </ul>
+                        </li>
+                    }
+                    else
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link" href="#tin-tuc">Tin tức</a>
+                        </li>
+                    }
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="@Url.Action("Contact", "Home")">Liên hệ</a>
+                    </li>
+                </ul>
+
+                <!-- Header CTA Button on Desktop -->
+                <div class="d-none d-lg-flex align-items-center gap-2">
+                    <a class="btn btn-brand-orange px-4 py-2" href="#booking-form">
+                        <i class="fa-regular fa-file-lines me-1.5"></i>
+                        <span>Nhận báo giá</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+</header>
+<!-- END: MainHeader -->

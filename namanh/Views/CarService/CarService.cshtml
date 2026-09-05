@@ -1,12 +1,12 @@
-﻿@model namanh.Models.CarService
+@model namanh.Models.CarService
 @{
-    ViewBag.Title = "Thêm dịch vụ";
+    ViewBag.Title = "Quản lý Dòng xe cho thuê";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 <div class="page-header">
     <div class="page-title">
-        <i class="fa-solid fa-align-right fa-rotate-180 fa-sm"></i>
-        <span>Thêm mới</span>
+        <i class="fa-solid fa-car-side fa-sm"></i>
+        <span>Quản lý Dòng xe cho thuê - Thêm mới</span>
     </div>
     <a href="#" onclick="history.go(-1)" class="btn-main btn-labeled bg-brown">
         <span class="icon">
@@ -42,21 +42,21 @@
                         @Html.ValidationSummary(true)
 
                         <div class="mb-3 row">
-                            <label class="col-form-label col-lg-3" for="CategoryName">Tên<span class="text-danger">*</span></label>
+                            <label class="col-form-label col-lg-3" for="Title">Tên dòng xe (Tiêu đề thẻ)<span class="text-danger">*</span></label>
                             <div class="col-lg-9">
-                                @Html.TextBoxFor(a => a.Title, new { @class = "form_control w300" })
+                                @Html.TextBoxFor(a => a.Title, new { @class = "form_control w300", placeholder = "VD: Thuê xe 29 chỗ" })
                             </div>
                         </div>
                         <div class="mb-3 row">
-                            <label class="col-form-label col-lg-3" for="CategoryName">Slogan<span class="text-danger">*</span></label>
+                            <label class="col-form-label col-lg-3" for="Slogan">Tag nhãn nổi bật (Badge góc phải)</label>
                             <div class="col-lg-9">
-                                @Html.TextBoxFor(a => a.Slogan, new { @class = "form_control w300" })
+                                @Html.TextBoxFor(a => a.Slogan, new { @class = "form_control w300", placeholder = "VD: Đời mới 2024 hoặc VIP Luxury" })
                             </div>
                         </div>
                         <div class="mb-3 row">
-                            <label class="col-form-label col-lg-3" for="CategoryName">Số ghế<span class="text-danger">*</span></label>
+                            <label class="col-form-label col-lg-3" for="Car">Danh sách mẫu xe</label>
                             <div class="col-lg-9">
-                                @Html.TextBoxFor(a => a.Car, new { @class = "form_control w300" })
+                                @Html.TextBoxFor(a => a.Car, new { @class = "form_control w300", placeholder = "VD: Hyundai County, Thaco Town" })
                             </div>
                         </div>
                         <div class="mb-3 row">
@@ -67,7 +67,7 @@
                             </div>
                         </div>
                         <div class="mb-3 row">
-                            @Html.LabelFor(a => a.Image, new { @class = "col-form-label col-lg-3" })
+                            <label class="col-form-label col-lg-3" for="Image">Ảnh đại diện thẻ xe (Full màn hình thẻ)</label>
                             <div class="col-lg-9">
                                 @Html.TextBoxFor(a => a.Image, new { type = "file" })
                                 <div class="text-danger mt-2">Chấp nhận ảnh jpg, png, gif, jpeg < 4MB</div>
@@ -113,38 +113,38 @@
                         </div>
                         <div class="mb-3 row">
                             <div class="col-lg-3">
-                                <label>Thông tin</label>
+                                <label>Thông số hiển thị thẻ xe</label>
                             </div>
                             <div class="col-lg-9 row">
                                 <div class="col-6">
                                     <div class="row mb-3">
-                                        @Html.LabelFor(a => a.Firm, new { @class = "col-form-label col-lg-3" })
-                                        <div class="col-lg-9">
-                                            @Html.TextBoxFor(a => a.Firm, new { @class = "form_control w300" })
+                                        <label class="col-form-label col-lg-4" for="Capacity">Số ghế ngồi (Badge)</label>
+                                        <div class="col-lg-8">
+                                            @Html.TextBoxFor(a => a.Capacity, new { @class = "form_control w300", placeholder = "VD: 29 chỗ ngồi" })
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-6">
                                     <div class="row mb-3">
-                                        @Html.LabelFor(a => a.Capacity, new { @class = "col-form-label col-lg-3" })
-                                        <div class="col-lg-9">
-                                            @Html.TextBoxFor(a => a.Capacity, new { @class = "form_control w300" })
+                                        <label class="col-form-label col-lg-4" for="Speed">Tiện nghi trang bị</label>
+                                        <div class="col-lg-8">
+                                            @Html.TextBoxFor(a => a.Speed, new { @class = "form_control w300", placeholder = "VD: Điều hòa 2 vùng mát lạnh" })
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-6">
                                     <div class="row mb-3">
-                                        @Html.LabelFor(a => a.Type, new { @class = "col-form-label col-lg-3" })
-                                        <div class="col-lg-9">
-                                            @Html.TextBoxFor(a => a.Type, new { @class = "form_control w300" })
+                                        <label class="col-form-label col-lg-4" for="Type">Mục đích phục vụ</label>
+                                        <div class="col-lg-8">
+                                            @Html.TextBoxFor(a => a.Type, new { @class = "form_control w300", placeholder = "VD: Đoàn thể, sự kiện, du lịch" })
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-6">
                                     <div class="row mb-3">
-                                        @Html.LabelFor(a => a.Speed, new { @class = "col-form-label col-lg-3" })
-                                        <div class="col-lg-9">
-                                            @Html.TextBoxFor(a => a.Speed, new { @class = "form_control w300" })
+                                        <label class="col-form-label col-lg-4" for="Firm">Hãng xe</label>
+                                        <div class="col-lg-8">
+                                            @Html.TextBoxFor(a => a.Firm, new { @class = "form_control w300", placeholder = "VD: Hyundai / Toyota" })
                                         </div>
                                     </div>
                                 </div>

@@ -1,341 +1,594 @@
-﻿@using namanh.Models
+@using namanh.Models
 @model namanh.ViewModel.HomeViewModel
 @{
     var config = (ConfigSite)HttpContext.Current.Application["ConfigSite"];
-    ViewBag.Title = config?.Title;
+    var siteTitle = config?.Title ?? "Hà Linh - Cho thuê xe có lái";
+    ViewBag.Title = siteTitle;
     ViewBag.Description = config?.Description;
     ViewBag.Canonical = Request.Url?.GetLeftPart(UriPartial.Authority) + Url.Action("Index");
-    var share = config.ImageShare ?? config.Image;
+    var share = config?.ImageShare ?? config?.Image;
     if (share != null)
     {
         ViewBag.ImageShare = Request.Url?.GetLeftPart(UriPartial.Authority) + Path.Combine("/images/configs/", share);
     }
-    int count = 1;
-    //var banner = Model.Banners.Where(a => a.GroupId == 6).FirstOrDefault();
+    var hotline = config?.Hotline ?? "1900 8866";
+    var zaloUrl = !string.IsNullOrWhiteSpace(config?.Zalo) ? "https://zalo.me/" + config.Zalo.Trim() : ("tel:" + hotline);
+
+    // Editable Hero Banner (GroupId = 1)
+    var heroBanner = Model?.Banners?.FirstOrDefault(b => b.GroupId == 1 && b.Active);
+    var heroBadge = !string.IsNullOrWhiteSpace(heroBanner?.Content) ? heroBanner.Content : "Uy tín – An toàn – Tận tâm";
+    var heroTitle = !string.IsNullOrWhiteSpace(heroBanner?.BannerName) ? heroBanner.BannerName : "Cho thuê xe có lái – Xe đẹp, tài xế chuyên nghiệp, báo giá nhanh";
+    var heroDesc = !string.IsNullOrWhiteSpace(heroBanner?.Slogan) ? heroBanner.Slogan : (config?.Description ?? "Cung cấp dịch vụ thuê xe du lịch, đưa đón sân bay, công tác, cưới hỏi, đi tỉnh... với đội xe đời mới, sạch đẹp và tài xế giàu kinh nghiệm.");
+    var heroImg = !string.IsNullOrWhiteSpace(heroBanner?.Image)
+        ? (heroBanner.Image.StartsWith("http") ? heroBanner.Image : Url.Content("~/images/banners/" + heroBanner.Image))
+        : (!string.IsNullOrWhiteSpace(config?.AboutImage) ? Url.Content("~/images/configs/" + config.AboutImage) : "https://lh3.googleusercontent.com/aida-public/AB6AXuC__i21Wh1UkG1m7MvdXP_pp07pp56ss_ADvcowbOIM5uBngiWjp2yCBAjQxxwoc88U82Tpc7mqMbpr0-BYa0Z1f0yahWSlMkWBeJ2WpqCdlmBAmtQ-Mj3LjmhFPh145BGFWTtYQQx66YTiZ7G8IvXYoKRQCGp_Z740f8bwVDo3Zx511_jAN5KFer0kpRBEdO2GtZ04LVoLG0M9V1MlnYNxOcMjRJTWzeptgQEsPa31fVrkh6vGNqy34g");
+
+    // Editable Vehicle Fleet
+    var services = Model?.Services?.ToList() ?? new List<CarService>();
+
+    // Editable Routes & Prices
+    var priceLangdings = Model?.PriceLangdings?.ToList() ?? new List<PriceLangding>();
+
+    // Editable Testimonials / Reviews (GroupId = 2)
+    var reviews = Model?.Banners?.Where(b => b.GroupId == 2 && b.Active).OrderBy(b => b.Sort).ToList() ?? new List<Banner>();
+
+    // Editable Articles
+    var articles = Model?.Articles?.ToList() ?? new List<Article>();
+
+    // Editable FAQs (GroupId = 4)
+    var faqs = Model?.Banners?.Where(b => b.GroupId == 4 && b.Active).OrderBy(b => b.Sort).ToList() ?? new List<Banner>();
 }
-<section class="banner">
-    <img src="~/Content/images/desktop_1920.jpg" alt="Banner" />
-</section>
-@*<div class="container py-3">
-    <div class="d-lg-none d-block align-items-center justify-content-center">
-        @Html.Action("Form")
-    </div>
-</div>*@
-<section class="page-section ">
-    <div class="container border-bottom pb-lg-4">
-        <div class="row">
-            @foreach (var item in Model.Banners.Where(a => a.GroupId == 2))
-            {
-                <div class="col-lg-3 col-6">
-                    <div class="d-flex intro">
-                        @if (item.Image != null)
-                        {
-                            <img src="@Path.Combine("/images/banners/", item.Image)" alt="@item.BannerName" />
-                        }
-                        <h2>@Html.Raw(item.BannerName)</h2>
+
+<!-- BEGIN: HeroSection (Dynamic from Banners GroupId = 1 & ConfigSite) -->
+<section class="hero-section">
+    <div class="container">
+        <div class="row align-items-center g-5">
+            <!-- Left Hero Content -->
+            <div class="col-lg-6">
+                <!-- Trust Badge -->
+                <div class="hero-badge">
+                    <i class="fa-solid fa-shield-halved text-primary"></i>
+                    <span>@heroBadge</span>
+                </div>
+
+                <!-- Headline -->
+                <h1 class="hero-title">
+                    @Html.Raw(heroTitle)
+                </h1>
+
+                <!-- Description -->
+                <p class="hero-desc">
+                    @heroDesc
+                </p>
+
+                <!-- Action CTAs -->
+                <div class="d-flex flex-wrap align-items-center gap-3 mb-4">
+                    <button type="button" onclick="window.selectCarAndBook()" class="btn btn-brand-orange px-4 py-3 fw-bold fs-6">
+                        <i class="fa-regular fa-file-lines me-2"></i>
+                        <span>Nhận báo giá ngay</span>
+                    </button>
+                    <a class="btn btn-brand-outline px-4 py-3 fw-bold fs-6 d-inline-flex align-items-center gap-2" href="@zaloUrl" target="_blank" rel="noopener">
+                        <i class="fa-solid fa-phone-volume text-primary"></i>
+                        <span>Gọi / Zalo ngay</span>
+                    </a>
+                </div>
+
+                <!-- Feature Bullets -->
+                <div class="hero-features">
+                    <div class="item">
+                        <i class="fa-solid fa-car text-primary"></i>
+                        <span>Xe đời mới 100%</span>
+                    </div>
+                    <div class="item">
+                        <i class="fa-solid fa-user-tie text-primary"></i>
+                        <span>Tài xế chuẩn mực</span>
+                    </div>
+                    <div class="item">
+                        <i class="fa-solid fa-shield-check text-primary"></i>
+                        <span>Giá trọn gói minh bạch</span>
                     </div>
                 </div>
-            }
-        </div>
-    </div>
-</section>
-
-
-<section class="page-section">
-    <h2 class="title">Dịch vụ của chúng tôi</h2>
-    <p class="sub-title">Dịch vụ thuê xe có lái chuyên nghiệp – linh hoạt theo ngày / tháng / năm đáp ứng mọi nhu cầu di chuyển cá nhân.</p>
-    <div class="container">
-        <div class="service-slide">
-            @foreach (var item in Model.Services)
-            {
-                var galleryId = "gallery-" + item.Id;
-                var listImgs = (item.ListImage ?? "")
-                .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
-                .Select(x => x.Trim())
-                .Where(x => !string.IsNullOrWhiteSpace(x))
-                .Distinct(StringComparer.OrdinalIgnoreCase)
-                .ToList();
-
-
-                var cat = Url.Action("ServiceCar", "Home", new { url = item.Slug });
-                <article class="card-card">
-                    <div class="tag">
-                        <i class="fas fa-user"></i> @item.Car
-                    </div>
-                    <h3>@item.Title</h3>
-                    <div class="info-car row">
-                        @if (item.Firm != null)
-                        {
-                            <div class="col-6 d-flex align-items-center gap-2 mt-3">
-                                <img src="~/Content/images/svg/icon-2.svg" alt="Icon 1" width="19" height="19" />
-                                <small>@item.Firm</small>
-                            </div>
-                        }
-                        @if (item.Capacity != null)
-                        {
-                            <div class="col-6 d-flex align-items-center gap-2 mt-3">
-                                <img src="~/Content/images/svg/icon-2.svg" alt="Icon 1" width="19" height="19" />
-                                <small>@item.Capacity</small>
-                            </div>
-                        }
-                        @if (item.Type != null)
-                        {
-                            <div class="col-6 d-flex align-items-center gap-2 mt-3">
-                                <img src="~/Content/images/svg/icon-2.svg" alt="Icon 1" width="19" height="19" />
-                                <small>@item.Type</small>
-                            </div>
-                        }
-                        @if (item.Speed != null)
-                        {
-                            <div class="col-6 d-flex align-items-center gap-2 mt-3">
-                                <img src="~/Content/images/svg/icon-2.svg" alt="Icon 1" width="19" height="19" />
-                                <small>@item.Speed</small>
-                            </div>
-                        }
-                    </div>
-                    @if (item.Image != null)
-                    {
-                        <img src="@Path.Combine("/images/carService/", item.Image)" alt="@item.Title" class="car-img" />
-                    }
-                </article>
-            }
-        </div>
-    </div>
-</section>
-@Html.Action("PriceTable")
-<section class="page-section">
-    <div class="container">
-        <h2 class="title text-left">quy trình thuê xe đơn giản</h2>
-        <div class="row mt-4">
-            <div class="col-lg-6 position-relative QA">
-                @if (config.AboutImage != null)
-                {
-                    <img src="~/Content/images/img-main/base64.gif" data-src="@Path.Combine("/images/configs/", config.AboutImage)" alt="@config.Title" class="lazyload step-img" />
-                }
-                @*<h2 class="title">Câu hỏi thường gặp</h2>
-                    <p class="sub-title">Câu hỏi thường gặp</p>
-
-                    </div>*@
-
             </div>
+
+            <!-- Right Hero Image -->
             <div class="col-lg-6">
-                <div class="step pb-1">
-                    @foreach (var item in Model.Banners.Where(a => a.GroupId == 3))
+                <div class="hero-img-wrap">
+                    <img src="@heroImg" alt="@siteTitle" />
+                    <div class="hero-img-overlay-badge">
+                        @siteTitle
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- END: HeroSection -->
+
+<!-- BEGIN: BookingCardForm Section -->
+<section class="container booking-section-wrap" id="booking-form">
+    @Html.Action("Form", "Home")
+</section>
+<!-- END: BookingCardForm Section -->
+
+<!-- BEGIN: VehicleFleet Slider (Dynamic from CarServices table) -->
+<section class="fleet-section-wrap" id="tuyen-xe">
+    <div class="container">
+        <div class="text-center mb-4">
+            <h2 class="section-title mb-2">Các dòng xe đang cho thuê</h2>
+            <div class="title-line text-primary mb-2">
+                <i class="fa-solid fa-car-side fs-5"></i>
+            </div>
+            <p class="section-subtitle">Đa dạng lựa chọn từ 4 chỗ đến 45 chỗ và Limousine cao cấp đời mới</p>
+        </div>
+
+        <!-- Fleet Slider Container -->
+        <div class="fleet-slider-container">
+            <!-- Custom Prev/Next Navigation Buttons (Slender Minimalist Arrows) -->
+            <button type="button" class="fleet-nav-btn fleet-nav-prev" id="fleetPrevBtn" aria-label="Xe trước">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+            </button>
+            <button type="button" class="fleet-nav-btn fleet-nav-next" id="fleetNextBtn" aria-label="Xe kế tiếp">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+            </button>
+
+            <!-- Slick Slider Track -->
+            <div class="fleet-slider" id="fleetSlickSlider">
+                @if (services.Any())
+                {
+                    foreach (var car in services)
                     {
-                        <div class="d-flex step-item align-items-center gap-2">
-                            <div class="step-count">
-                                @count
+                        var capacity = !string.IsNullOrWhiteSpace(car.Capacity) ? car.Capacity : (car.Title ?? "Xe du lịch");
+                        var img = !string.IsNullOrWhiteSpace(car.Image)
+                            ? (car.Image.StartsWith("http") ? car.Image : Url.Content("~/images/services/" + car.Image))
+                            : "https://lh3.googleusercontent.com/aida-public/AB6AXuBxH9mM3TTqypemJmIspSjhh78iSk2e6dFPMa1Baap857mWAR3BixkGaeQR7BLOZIzmUj6HNeVGraRNBpwZADIY3TOcrn6XVDQmpZFG3pPbLB1hT8pYHhP4WHSJNzu91LrOx5nHAMd7x9tfqNfp47_A1r5UuZdEMw2USWeoL29vZPEaqgreInmmpsFtGc1bXAquR1WSd9ZR0S_IhZG5o_nopXLNvq4AnnOoujRrCfcreM7EPnGLNdCYAw";
+                        var carUrl = Url.Action("ServiceCar", "Home", new { url = car.Slug });
+                        
+                        <div>
+                            <div class="fleet-card-luxury">
+                                <!-- Full-bleed Car Stage -->
+                                <div class="fleet-stage">
+                                    <img src="@img" alt="@car.Title" />
+                                    <!-- Floating Badges Overlay (Dynamic from Capacity & Slogan) -->
+                                    <div class="fleet-card-header">
+                                        <span class="fleet-pill-badge">@capacity</span>
+                                        @if (!string.IsNullOrWhiteSpace(car.Slogan))
+                                        {
+                                            <span class="fleet-tag-pill">
+                                                <i class="fa-solid fa-sparkles"></i> @car.Slogan
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="fleet-tag-pill">
+                                                <i class="fa-solid fa-sparkles"></i> Đời mới 2024
+                                            </span>
+                                        }
+                                    </div>
+                                </div>
+
+                                <!-- Card Content -->
+                                <div class="fleet-card-body">
+                                    <div>
+                                        <h3 class="fleet-car-title">@car.Title</h3>
+                                        <div class="fleet-car-models" title="@(car.Car ?? car.Title)">
+                                            <i class="fa-solid fa-car-side text-primary me-1"></i>
+                                            <span>@(car.Car ?? car.Title)</span>
+                                        </div>
+
+                                        <!-- Specifications Box (100% Dynamic from CarServices fields) -->
+                                        <div class="fleet-spec-list">
+                                            <div class="spec-item">
+                                                <i class="fa-solid fa-couch text-primary"></i>
+                                                <span><strong>Ghế ngồi:</strong> @(!string.IsNullOrWhiteSpace(car.Capacity) ? car.Capacity : (car.Car ?? car.Title)) êm ái</span>
+                                            </div>
+                                            <div class="spec-item">
+                                                <i class="fa-solid fa-snowflake text-info"></i>
+                                                <span><strong>Tiện nghi:</strong> @(!string.IsNullOrWhiteSpace(car.Speed) ? car.Speed : "Điều hòa 2 vùng mát lạnh")</span>
+                                            </div>
+                                            <div class="spec-item">
+                                                <i class="fa-regular fa-calendar-check text-success"></i>
+                                                <span><strong>Mục đích:</strong> @(!string.IsNullOrWhiteSpace(car.Type) ? car.Type : "Đoàn thể, sự kiện, du lịch")</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Action Buttons (Refined Dual Pills) -->
+                                    <div class="fleet-card-actions">
+                                        <button type="button" onclick="window.selectCarAndBook('@capacity')" class="btn-fleet-book">
+                                            <span>Đặt xe</span>
+                                        </button>
+                                        <a href="@carUrl" class="btn-fleet-detail">
+                                            <span>Chi tiết</span>
+                                            <i class="fa-solid fa-arrow-right small"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+    </div>
+</section>
+<!-- END: VehicleFleet Slider -->
+
+<!-- BEGIN: PricingTableSection (Dynamic from PriceLangdings & Locations table) -->
+<section class="py-5 bg-white border-top" id="bang-gia">
+    <div class="container">
+        <!-- Trust Badges Header -->
+        <div class="d-flex flex-wrap justify-content-center align-items-center gap-3 mb-3">
+            <span class="badge bg-primary bg-opacity-10 text-primary px-3 py-2 rounded-pill fw-semibold">
+                <i class="fa-solid fa-shield-check me-1"></i> Giá minh bạch
+            </span>
+            <span class="badge bg-success bg-opacity-10 text-success px-3 py-2 rounded-pill fw-semibold">
+                <i class="fa-solid fa-comments me-1"></i> Tư vấn nhanh
+            </span>
+            <span class="badge bg-warning bg-opacity-10 text-dark px-3 py-2 rounded-pill fw-semibold">
+                <i class="fa-solid fa-headset me-1"></i> Hỗ trợ 24/7
+            </span>
+        </div>
+
+        <!-- Section Title -->
+        <div class="text-center mb-4">
+            <h2 class="section-title text-uppercase mb-2">Bảng giá tham khảo tuyến đường phổ biến</h2>
+            <div class="title-line text-primary mb-2"></div>
+            <p class="section-subtitle">Bấm vào bất kỳ tuyến đường hoặc mức giá nào để tự động điền form và nhận báo giá chi tiết!</p>
+        </div>
+
+        <!-- Pricing Matrix Table -->
+        <div class="pricing-matrix-wrap">
+            <table class="table pricing-table align-middle">
+                <thead>
+                    <tr>
+                        <th class="route-th" style="min-width: 200px;">
+                            <div class="d-flex align-items-center gap-2">
+                                <i class="fa-solid fa-location-dot fs-5 text-info"></i>
+                                <div>
+                                    <div class="fw-bold">HÀNH TRÌNH</div>
+                                    <div class="small fw-normal text-white-50">2 CHIỀU</div>
+                                </div>
+                            </div>
+                        </th>
+                        <th style="min-width: 110px;">
+                            <i class="fa-solid fa-car text-primary d-block mb-1"></i>
+                            <span>4 CHỖ</span>
+                        </th>
+                        <th style="min-width: 110px;">
+                            <i class="fa-solid fa-van-shuttle text-primary d-block mb-1"></i>
+                            <span>7 CHỖ</span>
+                        </th>
+                        <th style="min-width: 110px;">
+                            <i class="fa-solid fa-bus-simple text-primary d-block mb-1"></i>
+                            <span>16 CHỖ</span>
+                        </th>
+                        <th style="min-width: 110px;">
+                            <i class="fa-solid fa-bus text-primary d-block mb-1"></i>
+                            <span>29 CHỖ</span>
+                        </th>
+                        <th style="min-width: 110px;">
+                            <i class="fa-solid fa-bus text-primary d-block mb-1"></i>
+                            <span>45 CHỖ</span>
+                        </th>
+                        <th style="min-width: 110px;">
+                            <i class="fa-solid fa-star text-warning d-block mb-1"></i>
+                            <span>LIMOUSINE</span>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                        var allLocations = priceLangdings
+                            .SelectMany(p => p.Locations ?? new List<Location>())
+                            .Where(l => l.Active)
+                            .OrderBy(l => l.Sort)
+                            .ToList();
+
+                        var displayRoutes = allLocations.GroupBy(l => l.Name).Select(g => g.First()).Take(10).ToList();
+                    }
+
+                    @if (displayRoutes.Any())
+                    {
+                        foreach (var loc in displayRoutes)
+                        {
+                            var isHot = loc.Hot;
+                            var p4 = !string.IsNullOrWhiteSpace(loc.Price4) ? loc.Price4 : "Liên hệ";
+                            var p7 = !string.IsNullOrWhiteSpace(loc.Price7) ? loc.Price7 : "Liên hệ";
+                            var p16 = !string.IsNullOrWhiteSpace(loc.Price16) ? loc.Price16 : "Liên hệ";
+                            var p29 = !string.IsNullOrWhiteSpace(loc.Price29) ? loc.Price29 : "Liên hệ";
+                            var p45 = !string.IsNullOrWhiteSpace(loc.Price45) ? loc.Price45 : "Liên hệ";
+                            var pLim = !string.IsNullOrWhiteSpace(loc.PriceLim) ? loc.PriceLim : "Liên hệ";
+
+                            <tr class="@(isHot ? "is-hot-row" : "")" onclick="window.selectRouteAndBook('Hà Nội', '@loc.Name', '7 chỗ')">
+                                <td class="route-td">
+                                    <div class="d-flex align-items-center">
+                                        @if (isHot)
+                                        {
+                                            <span class="price-hot-tag"><i class="fa-solid fa-fire"></i> HOT</span>
+                                        }
+                                        else
+                                        {
+                                            <i class="fa-solid fa-location-dot text-primary me-2 small"></i>
+                                        }
+                                        <span>Hà Nội ↔ @loc.Name</span>
+                                    </div>
+                                </td>
+                                <td><span class="price-val @(isHot ? "hot-price" : "") @(p4 == "Liên hệ" ? "contact-price" : "")">@p4</span></td>
+                                <td><span class="price-val @(isHot ? "hot-price" : "") @(p7 == "Liên hệ" ? "contact-price" : "")">@p7</span></td>
+                                <td><span class="price-val @(isHot ? "hot-price" : "") @(p16 == "Liên hệ" ? "contact-price" : "")">@p16</span></td>
+                                <td><span class="price-val @(p29 == "Liên hệ" ? "contact-price" : "")">@p29</span></td>
+                                <td><span class="price-val @(p45 == "Liên hệ" ? "contact-price" : "")">@p45</span></td>
+                                <td><span class="price-val @(pLim == "Liên hệ" ? "contact-price" : "")">@pLim</span></td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Notes and Fast Prompt Card -->
+        <div class="row g-4 align-items-stretch">
+            <!-- Left: Notes (ConfigSite or Standard) -->
+            <div class="col-md-6">
+                <div class="bg-light p-4 rounded-3 border h-100 d-flex gap-3 align-items-start">
+                    <div class="p-3 bg-primary bg-opacity-10 rounded-circle text-primary flex-shrink-0">
+                        <i class="fa-solid fa-clipboard-check fs-4"></i>
+                    </div>
+                    <div class="small text-secondary">
+                        <h4 class="h6 fw-bold text-dark text-uppercase mb-2">Ghi chú bảng giá</h4>
+                        @if (!string.IsNullOrWhiteSpace(config?.Price))
+                        {
+                            @Html.Raw(config.Price)
+                        }
+                        else
+                        {
+                            <p class="mb-1"><i class="fa-solid fa-check text-success me-1"></i> Giá trên đã bao gồm xăng dầu, lương lái xe</p>
+                            <p class="mb-1"><i class="fa-solid fa-check text-success me-1"></i> Giá chưa gồm phí cầu đường cao tốc và VAT 8% (nếu có)</p>
+                            <p class="mb-1"><i class="fa-solid fa-check text-success me-1"></i> Giá thay đổi linh hoạt theo thời điểm hoặc hành trình thực tế</p>
+                            <p class="mb-0"><i class="fa-solid fa-check text-success me-1"></i> Giá chưa bao gồm phí lưu đêm của xe (nếu đi nhiều ngày)</p>
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right: Prompt Fast Booking -->
+            <div class="col-md-6">
+                <div class="p-4 rounded-3 border h-100 d-flex flex-column justify-content-between" style="background-color: var(--brand-sky); border-color: var(--brand-sky-border) !important;">
+                    <button type="button" onclick="window.selectCarAndBook()" class="btn btn-primary p-3 rounded-3 d-flex align-items-center justify-content-between text-start mb-3 shadow-sm" style="background-color: var(--brand-dark-blue); border: none;">
+                        <div class="d-flex align-items-center gap-3">
+                            <div class="p-2 bg-white bg-opacity-10 rounded-circle text-white">
+                                <i class="fa-solid fa-phone-volume fs-5"></i>
                             </div>
                             <div>
-                                <div class="step-title">
-                                    Bước @count :
-                                </div>
-                                <div class="step-name h-auto">
-                                    @item.BannerName
-                                </div>
+                                <div class="fw-bold fs-6">NHẬN BÁO GIÁ TỐT NHẤT NGAY</div>
+                                <div class="small text-white-50">Bấm để điền thông tin và nhận ưu đãi giảm giá hôm nay</div>
                             </div>
                         </div>
-                        count += 1;
-                    }
-                </div>
-                <a href="tel:@config.Hotline" class="btn-color">
-                    đặt xe ngay
-                    <div class="box-icon">
-                        <i class="far fa-long-arrow-right"></i>
-                    </div>
-                </a>
-            </div>
-        </div>
-    </div>
-</section>
-<section class="page-section fb-bg">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-6">
-                <h2 class="title">feedback</h2>
-                <div class="p-4">
-                    <div class="fb-slider">
-                        @foreach (var item in Model.Banners.Where(a => a.GroupId == 5))
-                        {
-                            <div class="fb-item">
-                                <div>@Html.Raw(item.Content)</div>
-                                <div class="fb-name">
-                                    @item.BannerName
-                                </div>
-                                <small class="fb-position">
-                                    @item.Slogan
-                                </small>
-                            </div>
-                        }
+                        <i class="fa-solid fa-arrow-right fs-5 text-white"></i>
+                    </button>
+
+                    <!-- 3 Service Commitments -->
+                    <div class="row text-center pt-2 border-top border-primary border-opacity-10">
+                        <div class="col-4">
+                            <i class="fa-solid fa-shield-check text-primary fs-5 mb-1 d-block"></i>
+                            <div class="fw-bold small text-dark">An toàn</div>
+                            <div class="text-muted" style="font-size: 0.75rem;">Tài xế chuẩn mực</div>
+                        </div>
+                        <div class="col-4">
+                            <i class="fa-regular fa-clock text-primary fs-5 mb-1 d-block"></i>
+                            <div class="fw-bold small text-dark">Đúng giờ</div>
+                            <div class="text-muted" style="font-size: 0.75rem;">Cam kết đón đúng hẹn</div>
+                        </div>
+                        <div class="col-4">
+                            <i class="fa-solid fa-hand-holding-heart text-danger fs-5 mb-1 d-block"></i>
+                            <div class="fw-bold small text-dark">Tận tâm</div>
+                            <div class="text-muted" style="font-size: 0.75rem;">Phục vụ chu đáo</div>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="col-lg-6">
-                <div class="slider-thuml">
-                    @foreach (var item in Model.Banners.Where(a => a.GroupId == 7))
-                    {
-                        <div class="slider-thuml-item">
-                            @if (item.Image != null)
-                            {
-                                <img src="@Path.Combine("/images/banners/", item.Image)" alt="@config.Title" class="w-100" />
-                            }
-                        </div>
-                    }
-                </div>
-                <div class="slider-nav">
-                    @foreach (var item in Model.Banners.Where(a => a.GroupId == 7))
-                    {
-                        <div class="slider-nav-item">
-                            @if (item.Image != null)
-                            {
-                                <img src="~/Content/images/img-main/base64.gif" data-src="@Path.Combine("/images/banners/", item.Image)" alt="@config.Title" class="lazyload w-100" />
-                            }
-                        </div>
-                    }
-                </div>
-            </div>
         </div>
     </div>
 </section>
-<!--<section class="page-section">
-    <div class="container">
-        <h2 class="title ">tin tức -  sự kiện</h2>-->
-        @*<p class="sub-title  mb-4">
-                Dịch vụ thuê xe có lái chuyên nghiệp – linh hoạt theo ngày / tháng / năm đáp ứng mọi nhu cầu di chuyển cá nhân.
-            </p>*@
-        <!--<div class=" row filter-ar gap-2">
-            foreach (var item in Model.ArticleCategories)
-            {
-                <button type="button" data-id="item.Id" class="btn filter-btn">item.CategoryName</button>
-            }
-        </div>
-        <div class="row article-row mt-3" id="body-ar">
+<!-- END: PricingTableSection -->
 
-        </div>
-    </div>
-</section>-->
-
-<section class="page-section">
-    <div class="container">
-        <div class="row mt-3">
-            <div class="col-lg-6">
-                @if (config.AboutMission != null)
-                {
-                    <img src="~/Content/images/img-main/base64.gif" data-src="@Path.Combine("/images/configs/", config.AboutMission)" alt="@config.Title" class="lazyload step-img" />
-                }
-            </div>
-            <div class="col-lg-6">
-                <h2 class="title text-black text-ques">
-                    Hỏi bất cứ điều gì về chúng tôi,
-                    <span style="color: #004596">Câu hỏi thường gặp</span>
-                </h2>
-                @{
-                    var banners = Model.Banners.Where(a => a.GroupId == 4).ToList();
-                    int index = 0;
-                }
-
-                <div class="accordion" id="accordionExample">
-                    @foreach (var item in banners)
-                    {
-                        var headingId = $"heading{index}";
-                        var collapseId = $"collapse{index}";
-                        bool isFirst = index == 0;
-                        int delay = 200;
-                        <div class="accordion-item" data-aos-duration="700" data-aos-delay="@delay" data-aos="fade-right">
-                            <h2 class="accordion-header" id="@headingId">
-                                <button onclick="toggleAccordion(this)" class="accordion-button @(isFirst ? "" : "collapsed")"
-                                        type="button"
-                                        data-bs-toggle="collapse"
-                                        data-bs-target="#@collapseId"
-                                        aria-expanded="@(isFirst.ToString().ToLower())"
-                                        aria-controls="@collapseId">
-                                    @item.BannerName
-                                    <i class="fa-regular fa-angle-down accordion-icon"></i>
-                                </button>
-                            </h2>
-                            <div id="@collapseId"
-                                 class="accordion-collapse collapse @(isFirst ? "show" : "")"
-                                 aria-labelledby="@headingId"
-                                 data-bs-parent="#accordionExample">
-                                <div class="accordion-body">
-                                    @Html.Raw(item.Content)
-                                </div>
-                            </div>
-                        </div>
-
-                        index++; delay += 200;
-                    }
-                </div>
-            </div>
-        </div>
-</section>
-
-<section class="page-section">
-    <div class="container">
-        <h2 class="title">nhận tư vấn từ chúng tôi</h2>
-        <p class="sub-title">Dịch vụ thuê xe có lái chuyên nghiệp – linh hoạt theo ngày / tháng / năm đáp ứng mọi nhu cầu di chuyển cá nhân.</p>
-
-        <div class="container-form mt-3">
-            <div class="row">
-                <div class="col-lg-4">
-                    <img src="~/Content/images/Rectangle 63.jpg" alt="Liên hệ"  class="w-100"/>
-                </div>
-                <div class="col-lg-8">
-                    @Html.Action("ContactForm")
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-
-@if (config.FooterImage != null)
+<!-- BEGIN: TestimonialsSection (Dynamic from Banners GroupId = 2) -->
+@if (reviews.Any())
 {
-    <a href="@config.Zalo">
-        <img src="~/Content/images/img-main/base64.gif" data-src="@Path.Combine("/images/configs/", config.FooterImage)" alt="@config.Title" class="lazyload w-100" />
-    </a>
-}
+    <section class="py-5 bg-light" id="gioi-thieu">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="section-title mb-2">Khách hàng nói gì về chúng tôi?</h2>
+                <div class="title-line text-primary mb-2">
+                    <i class="fa-solid fa-car-side fs-5"></i>
+                </div>
+            </div>
 
-@section scripts{
-    <script>
-        homeJs();
-
-        function loadArticlesById(id) {
-            $.ajax({
-                url: '@Url.Action("GetArticle", "Home")',
-                type: 'GET',
-                data: { id: id },
-                success: function (result) {
-                    $('#body-ar').html(result);
-                },
-                error: function () {
+            <div class="row g-4">
+                @foreach (var rev in reviews)
+                {
+                    var revImg = !string.IsNullOrWhiteSpace(rev.Image)
+                        ? (rev.Image.StartsWith("http") ? rev.Image : Url.Content("~/images/banners/" + rev.Image))
+                        : "https://lh3.googleusercontent.com/aida-public/AB6AXuCj4JG-Zz12MYmlNAp-opswnskC-nsiHxoRR6Vvbaq4yM0x2AUTVNLPD6e4HDV_WRTi2IM8tSCQDLXFz4PRuXpMRTD8VTtnSN-gsAbVCpMyd0LitIGaHWCDrX4z3o9gRaO5vAwcXpCLdOwQ9k3VgGI_wz7cB4sFNYWh9Vdx8wBpYNWBvRqiSInWY0bpod1snIebpoK4EFE-rEaGYjUICeqNA8uO3RVhnw1B3QvR6NO35VNMd43Qgyf-Lg";
+                    <div class="col-lg-3 col-md-6">
+                        <div class="testimonial-card">
+                            <div>
+                                <div class="d-flex justify-content-between align-items-center text-warning mb-3">
+                                    <span class="fs-1 text-primary opacity-25 fw-bold font-monospace lh-1">“</span>
+                                    <div class="small">
+                                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                                    </div>
+                                </div>
+                                <p class="small text-secondary mb-4">
+                                    @rev.Slogan
+                                </p>
+                            </div>
+                            <div class="d-flex align-items-center gap-3 pt-3 border-top">
+                                <img src="@revImg" alt="@rev.BannerName" class="testimonial-avatar" />
+                                <div>
+                                    <div class="fw-bold small text-dark">@rev.BannerName</div>
+                                    <div class="text-muted" style="font-size: 0.75rem;">@rev.Content</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 }
-            });
-        }
+            </div>
+        </div>
+    </section>
+}
+<!-- END: TestimonialsSection -->
 
+<!-- BEGIN: News & Articles (Dynamic from Articles table) -->
+@if (articles.Any())
+{
+    <section class="py-5 bg-white border-top" id="tin-tuc">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="section-title mb-2">Tin tức & Cẩm nang du lịch</h2>
+                <div class="title-line text-primary mb-2">
+                    <i class="fa-solid fa-newspaper fs-5"></i>
+                </div>
+                <p class="section-subtitle">Kinh nghiệm thuê xe, thông tin các tuyến đường và cẩm nang du lịch hữu ích</p>
+            </div>
+
+            <div class="row g-4">
+                @foreach (var art in articles)
+                {
+                    var artImg = !string.IsNullOrWhiteSpace(art.Image)
+                        ? (art.Image.StartsWith("http") ? art.Image : Url.Content("~/images/articles/" + art.Image))
+                        : "https://lh3.googleusercontent.com/aida-public/AB6AXuC__i21Wh1UkG1m7MvdXP_pp07pp56ss_ADvcowbOIM5uBngiWjp2yCBAjQxxwoc88U82Tpc7mqMbpr0-BYa0Z1f0yahWSlMkWBeJ2WpqCdlmBAmtQ-Mj3LjmhFPh145BGFWTtYQQx66YTiZ7G8IvXYoKRQCGp_Z740f8bwVDo3Zx511_jAN5KFer0kpRBEdO2GtZ04LVoLG0M9V1MlnYNxOcMjRJTWzeptgQEsPa31fVrkh6vGNqy34g";
+                    var artUrl = Url.Action("ArticleDetail", "Home", new { url = art.Url });
+                    <div class="col-lg-4 col-md-6">
+                        <div class="article-card">
+                            <div class="article-thumb">
+                                <a href="@artUrl">
+                                    <img src="@artImg" alt="@art.Subject" />
+                                </a>
+                            </div>
+                            <div class="article-body">
+                                <div class="article-date">
+                                    <i class="fa-regular fa-clock text-primary"></i>
+                                    <span>@art.CreateDate.ToString("dd/MM/yyyy")</span>
+                                </div>
+                                <h3 class="article-title">
+                                    <a href="@artUrl" class="text-dark text-decoration-none">@art.Subject</a>
+                                </h3>
+                                <p class="article-desc">
+                                    @art.Description
+                                </p>
+                                <div>
+                                    <a href="@artUrl" class="article-link">
+                                        <span>Xem chi tiết</span>
+                                        <i class="fa-solid fa-arrow-right small"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </section>
+}
+<!-- END: News & Articles -->
+
+<!-- BEGIN: FAQSection (Dynamic from Banners GroupId = 4) -->
+@if (faqs.Any())
+{
+    <section class="py-5 bg-light border-top">
+        <div class="container" style="max-width: 850px;">
+            <div class="text-center mb-5">
+                <h2 class="section-title mb-2">Câu hỏi thường gặp</h2>
+                <div class="title-line text-primary mb-2">
+                    <i class="fa-solid fa-circle-question fs-5"></i>
+                </div>
+            </div>
+
+            <div class="accordion custom-faq" id="homeFaqAccordion">
+                @{
+                    var fIndex = 1;
+                }
+                @foreach (var faq in faqs)
+                {
+                    var isFirst = fIndex == 1;
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="faqHeading@(fIndex)">
+                            <button class="accordion-button @(isFirst ? "" : "collapsed")" type="button" data-bs-toggle="collapse" data-bs-target="#faqCollapse@(fIndex)" aria-expanded="@(isFirst ? "true" : "false")" aria-controls="faqCollapse@(fIndex)">
+                                <i class="fa-regular fa-file-lines text-primary me-2"></i>
+                                <span>@faq.BannerName</span>
+                            </button>
+                        </h2>
+                        <div id="faqCollapse@(fIndex)" class="accordion-collapse collapse @(isFirst ? "show" : "")" aria-labelledby="faqHeading@(fIndex)" data-bs-parent="#homeFaqAccordion">
+                            <div class="accordion-body">
+                                @Html.Raw(faq.Content ?? faq.Slogan)
+                            </div>
+                        </div>
+                    </div>
+                    fIndex++;
+                }
+            </div>
+
+            <!-- FAQ CTA Box -->
+            <div class="mt-4 p-4 rounded-3 text-center bg-white border shadow-sm">
+                <h4 class="h6 fw-bold text-dark mb-1">Bạn còn câu hỏi nào khác?</h4>
+                <p class="small text-muted mb-3">Đội ngũ chuyên viên của chúng tôi luôn sẵn sàng hỗ trợ và tư vấn 24/7</p>
+                <div class="d-flex justify-content-center gap-3">
+                    <a href="tel:@hotline" class="btn btn-primary btn-sm px-3 fw-bold" style="background-color: var(--brand-dark-blue); border: none;">
+                        <i class="fa-solid fa-phone me-1"></i> Hotline: @hotline
+                    </a>
+                    <a href="@zaloUrl" target="_blank" rel="noopener" class="btn btn-outline-primary btn-sm px-3 fw-bold">
+                        <i class="fa-solid fa-comments me-1"></i> Chat Zalo
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+}
+<!-- END: FAQSection -->
+
+@section scripts {
+    <script>
         $(document).ready(function () {
-            var firstBtn = $('.filter-btn').first();
-            if (!firstBtn.length) return;
-            var firstId = firstBtn.data('id');
-            loadArticlesById(firstId);
-            firstBtn.addClass('active');
+            if ($('#fleetSlickSlider').length && $.fn.slick) {
+                $('#fleetSlickSlider').slick({
+                    dots: true,
+                    dotsClass: 'fleet-slider-dots',
+                    infinite: true,
+                    speed: 500,
+                    slidesToShow: 3,
+                    slidesToScroll: 1,
+                    autoplay: true,
+                    autoplaySpeed: 3500,
+                    pauseOnHover: true,
+                    prevArrow: $('#fleetPrevBtn'),
+                    nextArrow: $('#fleetNextBtn'),
+                    responsive: [
+                        {
+                            breakpoint: 1200,
+                            settings: {
+                                slidesToShow: 3,
+                                slidesToScroll: 1
+                            }
+                        },
+                        {
+                            breakpoint: 992,
+                            settings: {
+                                slidesToShow: 2,
+                                slidesToScroll: 1
+                            }
+                        },
+                        {
+                            breakpoint: 576,
+                            settings: {
+                                slidesToShow: 1,
+                                slidesToScroll: 1,
+                                arrows: false
+                            }
+                        }
+                    ]
+                });
+            }
         });
-
-        $(document).on('click', '.filter-btn', function() {
-            var id = $(this).data('id');
-            $('.filter-btn').removeClass('active');
-            $(this).addClass('active');
-            loadArticlesById(id);
-        });
-    </script>
-    <script type="application/ld+json">
-        {
-          "@Html.Raw("@context")": "https://schema.org",
-          "@Html.Raw("@type")": "WebPage",
-          "name": "@Html.Raw(ViewBag.Title)",
-          "description": "@Html.Raw(ViewBag.Description)",
-          "url": "@ViewBag.Canonical",
-          "mainEntityOfPage": "@ViewBag.Canonical"
-        }
     </script>
 }
