@@ -1,0 +1,156 @@
+@model hailinh.ViewModel.ListCustomerTripViewModel
+@{
+    ViewBag.Title = "Danh sách chuyến đi của khách hàng" + Model.Customer.Code + "-" + Model.Customer.Name;
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+<div class="page-header">
+    <div class="page-title">
+        <i class="fa-solid fa-align-right fa-rotate-180 fa-sm"></i>
+        <span>Danh sách chuyến đi</span>
+    </div>
+    <div class="header-elements">
+        <a href="@Url.Action("CreateTrip", new { customerId = Model.Customer.Id })" class="btn-main btn-labeled btn-primary text-white">
+            <span class="icon">
+                <i class="fa-regular fa-plus fa-lg"></i>
+            </span>
+            Thêm chuyến đi
+        </a>
+        <a href="@Url.Action("ListTrip")" class="btn-main btn-labeled btn-primary text-white">
+            <span class="icon">
+                <i class="fa-regular fa-list"></i>
+            </span>
+            Danh sách
+        </a>
+        <a href="@Url.Action("ListCustomer")" class="btn-main btn-labeled btn-primary text-white">
+            <span class="icon">
+                <i class="fa-regular fa-list"></i>
+            </span>
+            Danh sách KH
+        </a>
+    </div>
+</div>
+<div class="content">
+    <div class="accordion">
+        <div class="accordion-item border-left-slate">
+            <div class="accordion-header">
+                <div class="card-title">
+                    <i class="fa-solid fa-list"></i>
+                    Danh sách chuyến đi của khách hàng @Model.Customer.Code-@Model.Customer.Name
+                </div>
+                <button type="button" data-bs-toggle="collapse" data-bs-target="#listArticle" aria-expanded="true">
+                    <i class="fa-solid fa-angle-down"></i>
+                </button>
+            </div>
+            <div id="listArticle" class="accordion-collapse collapse show">
+                <div class="accordion-body">
+                    <p>Có tổng số <strong>@Model.Trips.Count()</strong> chuyến</p>
+                    <table class="list_table tablecenter table-striped">
+                        <tbody>
+                            <tr>
+                                <th>Điểm đi</th>
+                                <th>Điểm đến</th>
+                                <th>Ngày đi</th>
+                                <th>Ngày về</th>
+                                <th>Lái xe</th>
+                                <th>Loại xe</th>
+                                <th>Nguồn</th>
+                                <th>Trạng thái</th>
+                                <th>Quãng đường</th>
+                                <th>Giá</th>
+                                <th>Giá khuyến mãi</th>
+                                <th>Phí cầu đường</th>
+                                <th>Phí khác</th>
+                                <th>Ghi chú</th>
+                                <th style="width: 100px"></th>
+                            </tr>
+                            @foreach (var trip in Model.Trips)
+                            {
+                                <tr data-id="@trip.Id">
+                                    <td>@trip.From</td>
+                                    <td>@trip.To</td>
+                                    <td>@Html.DisplayFor(a => trip.FromDate)</td>
+                                    <td>@Html.DisplayFor(a => trip.ToDate)</td>
+                                    <td>
+                                        @if (trip.Driver.Name != null)
+                                        {
+                                            @trip.Driver.Name
+                                        }
+                                    </td>
+                                    <td>@Html.DisplayFor(a => trip.TypeCar)</td>
+                                    <td>@Html.DisplayFor(a => trip.Source)</td>
+                                    <td>@Html.DisplayFor(a => trip.Status)</td>
+                                    <td>@trip.Distance km</td>
+                                    <td>@Convert.ToDecimal(trip.Price).ToString("N0")</td>
+                                    <td>@Convert.ToDecimal(trip.PriceSale).ToString("N0")</td>
+                                    <td>@Convert.ToDecimal(trip.Tolls).ToString("N0")</td>
+                                    <td>@Convert.ToDecimal(trip.Other).ToString("N0")</td>
+                                    <td>@trip.Note</td>
+                                    <td class="action-col">
+                                        @Html.ActionLink("Sửa", "UpdateTrip", new { tripId = trip.Id }) -
+                                        <a href="javascript:;" onclick="deleteTrip('@trip.Id')" style="color: red;">Xóa</a>
+                                    </td>
+                                </tr>
+                            }
+                            <tr>
+                                <td colspan="13">Doanh số</td>
+                                <td>@Convert.ToDecimal(Model.Sales).ToString("N0")<span>đ</span></td>
+                            </tr>
+                            <tr>
+                                <td colspan="13">Doanh thu</td>
+                                <td>@Convert.ToDecimal(Model.Revenue).ToString("N0")<span>đ</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts
+{
+    <script type="text/javascript">
+        function updateCustomer(id) {
+            var divId = $("tr[data-id='" + id + "']");
+            var active = divId.find("input#Active").prop("checked");
+
+            $.post("/Customer/QuickUpdateCustomer", { customerId: id, active }, function (data) {
+                if (data) {
+                    $.toast({
+                        text: 'Cập nhật thành công',
+                        position: 'bottom-right',
+                        icon: 'success',
+                    })
+                } else {
+                    $.toast({
+                        text: 'Quá trình thực hiện không thành công. Hãy thử lại',
+                        icon: 'error',
+                    })
+                }
+            });
+        }
+
+        function deleteTrip(id) {
+            if (confirm("Bạn có chắc chắn xóa chuyến đi này không?")) {
+                $.post("/Customer/DeleteTrip", { tripId: id }, function (data) {
+                    if (data) {
+                        $.toast({
+                            text: 'Xóa chuyến đi thành công',
+                            position: 'bottom-right',
+                            icon: 'success',
+                        })
+                        $("tr[data-id='" + id + "']").fadeOut();
+                    }
+                    else {
+                        $.toast({
+                            text: 'Quá trình thực hiện không thành công. Hãy thử lại',
+                            icon: 'error',
+                        })
+                    }
+                });
+            }
+        }
+    </script>
+}
+
+

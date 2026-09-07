@@ -1,0 +1,64 @@
+@model IEnumerable<hailinh.Models.Driver>
+<div class="accordion-item border-left-slate">
+    <div class="accordion-header">
+        <div class="card-title">
+            <i class="fa-solid fa-list"></i>
+            Danh sách lái xe
+        </div>
+        <button type="button" data-bs-toggle="collapse" data-bs-target="#driverList">
+            <i class="fa-solid fa-angle-down"></i>
+        </button>
+    </div>
+    <div id="driverList" class="accordion-collapse collapse show">
+        <div class="accordion-body">
+            <table class="list_table">
+                <thead>
+                    <tr>
+                        <th>Ngày tạo</th>
+                        <th>@Html.DisplayNameFor(a => a.Name)</th>
+                        <th>@Html.DisplayNameFor(a => a.Active)</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var driver in Model)
+                    {
+                        <tr data-id="@driver.Id">
+                            <td>@driver.CreateDate.ToString("dd/MM/yyyy HH:mm")</td>
+                            <td class="left">@driver.Name</td>
+                            <td>
+                                <label class="check-label-disable" @if (driver.Active) { @Html.Raw("data-check='true'") }>
+                                    <span class="checkmark"></span>
+                                </label>
+                            </td>
+                            <td class="action-col">
+                                @Html.ActionLink("Sửa", "EditDriver", new { driverId = driver.Id }) - <a href="javascript:;" class="red-warring" onclick="deleteDriver('@driver.Id')">Xóa</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    function deleteDriver(id) {
+        if (confirm("Bạn có chắc chắn xóa lái xe này không?")) {
+            $.post("/Mms/DeleteDriver", { driverId: id }, function (data) {
+                if (data) {
+                    $.toast({
+                        text: 'Xóa quản lái xe thành công',
+                        position: 'bottom-right',
+                        icon: 'success',
+                    })
+                    $("tr[data-id='" + id + "']").fadeOut();
+                } else {
+                    $.toast({
+                        text: 'Quá trình thực hiện không thành công. Hãy thử lại',
+                        icon: 'error',
+                    })
+                }
+            });
+        }
+    }</script>

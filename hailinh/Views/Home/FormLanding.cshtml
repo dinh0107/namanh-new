@@ -1,0 +1,80 @@
+@model hailinh.Models.Contact
+<form method="post" class="contact-part" id="bookingForm">
+    <h2 class="form-title">
+        Đặt xe trực tuyến
+    </h2>
+    <span class="sub-title">Chúng tôi sẽ liên hệ với bạn ngay trong <strong>3 phút</strong></span>
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+    <div class="form-group">
+        @Html.LabelFor(a => a.From)
+        <div class="input-group autocomplete-container">
+            <img src="~/Content/images/icons8-user-64.png" alt="Icon" />
+            @Html.TextBoxFor(a => a.From, new { @class = "form-control autocomplete-input", @placeholder = "Nhập điểm đón", @id = "diemDi" })
+            <div id="autocompleteList" class="autocomplete-list"></div>
+        </div>
+        <small class="text-danger">@Html.ValidationMessageFor(a => a.From)</small>
+    </div>
+    <div class="form-group ">
+        @Html.LabelFor(a => a.To)
+        <div class="input-group autocomplete-container">
+            <img src="~/Content/images/icons8-map-64.png" alt="Icon" />
+            @Html.TextBoxFor(a => a.To, new { @class = "form-control autocomplete-input", @placeholder = "Nhập điểm đến", @id = "diemDi" })
+            <div id="autocompleteList" class="autocomplete-list"></div>
+        </div>
+        <small class="text-danger">@Html.ValidationMessageFor(a => a.To)</small>
+    </div>
+    <div class="way">
+        <div class="button-wrap">
+            <div class="button-bg">
+                <div class="button-switch"></div>
+            </div>
+        </div>
+        <span>2 chiều</span>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(a => a.FromDate)
+        <div class="input-group">
+            <img src="~/Content/images/icons8-time-64.png" alt="Icon" />
+            @Html.TextBoxFor(a => a.FromDate, new { @class = "form-control", @type = "datetime-local" })
+        </div>
+        <small class="text-danger">@Html.ValidationMessageFor(a => a.FromDate)</small>
+    </div>
+    <div class="form-group toDate">
+        @Html.LabelFor(a => a.ToDate)
+        <div class="input-group">
+            <img src="~/Content/images/icons8-time-64.png" alt="Icon" />
+            @Html.TextBoxFor(a => a.ToDate, new { @class = "form-control", @type = "datetime-local" })
+        </div>
+        <small class="text-danger">@Html.ValidationMessageFor(a => a.ToDate)</small>
+    </div>
+    @*<div class="type-car">
+            <label class="filter-label">
+                <input type="radio" name="Contact.TypeCar" value="4 chỗ" checked />
+                <span class="checkmark"></span>
+                <span class="name">4 chỗ</span>
+            </label>
+            <label class="filter-label">
+                <input type="radio" name="Contact.TypeCar" value="7 chỗ" />
+                <span class="checkmark"></span>
+                <span class="name">7 chỗ</span>
+            </label>
+            <label class="filter-label">
+                <input type="radio" name="Contact.TypeCar" value="16 chỗ" />
+                <span class="checkmark"></span>
+                <span class="name">16 chỗ</span>
+            </label>
+        </div>*@
+    <input type="hidden" name="TypeCar" value="@ViewBag.TypeCar" />
+    <div class="form-group">
+        @Html.LabelFor(a => a.Mobile)
+        <div class="input-group">
+            <img src="~/Content/images/icons8-phone-64.png" alt="Icon" />
+            @Html.TextBoxFor(a => a.Mobile, new { @class = "form-control", @placeholder = "Số điện thoại" })
+        </div>
+        <small class="text-danger">@Html.ValidationMessageFor(a => a.Mobile)</small>
+    </div>
+    <button type="submit" class="mt-2">
+        Đặt xe
+    </button>
+</form>

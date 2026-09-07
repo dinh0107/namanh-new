@@ -1,0 +1,151 @@
+@model hailinh.ViewModel.ListViewModel
+@using PagedList.Mvc
+@{
+    ViewBag.Title = "Danh sách giá";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+<div class="page-header">
+    <div class="page-title">
+        <i class="fa-solid fa-align-right fa-rotate-180 fa-sm"></i>
+        <span>Danh sách bảng giá</span>
+    </div>
+    <div class="header-elements">
+        <a href="@Url.Action("Price")" class="btn-main btn-labeled btn-primary text-white">
+            <span class="icon">
+                <i class="fa-regular fa-plus fa-lg"></i>
+            </span>
+            Thêm mới
+        </a>
+        <a href="#" onclick="history.go(-1)" class="btn-main btn-labeled bg-brown ms-1">
+            <span class="icon">
+                <i class="fa-solid fa-left"></i>
+            </span>
+            Quay lại
+        </a>
+    </div>
+</div>
+<div class="content">
+    @if (ViewBag.Result == "success")
+    {
+        <div id="AlertBox" class="alert alert-success"><strong>Thêm mới thành công</strong></div>
+    }
+    @if (ViewBag.Result == "update")
+    {
+        <div id="AlertBox" class="alert alert-success"><strong>Cập nhật thành công</strong></div>
+    }
+    <div class="accordion">
+        <div class="accordion-item border-left-slate">
+            <div class="accordion-header">
+                <div class="card-title">
+                    <i class="fa-regular fa-magnifying-glass fa-lg"></i>
+                    Tìm kiếm
+                </div>
+                <button type="button" data-bs-toggle="collapse" data-bs-target="#searchForm" aria-expanded="true">
+                    <i class="fa-solid fa-angle-down"></i>
+                </button>
+            </div>
+            <div id="searchForm" class="accordion-collapse collapse show">
+                <div class="accordion-body">
+                    <form action="@Url.Action("List")" method="get" id="data-search-form">
+                        <div class="row">
+                            <div class="col-lg-3 mb-3">
+                                <label class="mb-1">Tiêu đề:</label>
+                                @Html.TextBoxFor(a => a.Name, new { @class = "form_control" })
+                            </div>
+                        </div>
+                        <div class="btn-group border-0 pt-0">
+                            <button type="reset" onclick="resetAnyFormById('data-search-form');" class="btn-main btn-white" id="reset">
+                                <span>Đặt lại</span>
+                                <i class="fa-solid fa-rotate-right ms-2"></i>
+                            </button>
+                            <button type="submit" class="btn-main btn-primary text-white ms-3">
+                                <span>Tìm kiếm</span>
+                                <i class="fa-sharp fa-solid fa-paper-plane ms-2"></i>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="accordion-item border-left-slate">
+            <div class="accordion-header">
+                <div class="card-title">
+                    <i class="fa-solid fa-list"></i>
+                    Danh sách giá
+                </div>
+                <button type="button" data-bs-toggle="collapse" data-bs-target="#listArticle" aria-expanded="true">
+                    <i class="fa-solid fa-angle-down"></i>
+                </button>
+            </div>
+            <div id="listArticle" class="accordion-collapse collapse show">
+                <div class="accordion-body">
+                    <table class="list_table tablecenter table-striped">
+                        <tbody>
+                            <tr>
+                                <th style="width: 100px">STT</th>
+                                <th>Tên</th>
+                                <th style="width: 130px"></th>
+                            </tr>
+                            @foreach (var article in Model.Price)
+                            {
+                                <tr data-id="@article.Id">
+                                    <td>@Html.DisplayFor(model => article.Sort)</td>
+                                    <td>
+                                        @article.Name
+                                    </td>
+                                    <td class="action-col">
+                                        @Html.ActionLink("Sửa", "Edit", new { id = article.Id }) -
+                                        <a href="javascript:;" onclick="deleteItem('@article.Id')" style="color: red;">Xóa</a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts
+{
+    <script type="text/javascript">
+        function deleteItem(id) {
+            if (confirm("Bạn có chắc chắn xóa không?")) {
+
+                $.post("/Price/Delete", { id: id }, function (data) {
+
+                    if (data.success) {
+
+                        $.toast({
+                            text: data.message,
+                            position: 'bottom-right',
+                            icon: 'success',
+                        });
+
+                        $("tr[data-id='" + id + "']").fadeOut();
+
+                    } else {
+
+                        $.toast({
+                            text: data.message,
+                            position: 'bottom-right',
+                            icon: 'error',
+                        });
+
+                    }
+                }).fail(function () {
+
+                    $.toast({
+                        text: 'Có lỗi xảy ra. Hãy thử lại',
+                        position: 'bottom-right',
+                        icon: 'error',
+                    });
+
+                });
+            }
+        }
+    </script>
+}
+
+

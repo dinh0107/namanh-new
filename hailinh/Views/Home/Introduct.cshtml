@@ -1,0 +1,72 @@
+@model hailinh.ViewModel.IntroduceViewModel
+@using hailinh.Models
+@{
+    var config = (ConfigSite)HttpContext.Current.Application["ConfigSite"];
+    ViewBag.Title = Model.Introduce?.TitleMeta;
+    ViewBag.Description = Model.Introduce?.DescriptionMeta;
+    ViewBag.Canonical = Request.Url?.GetLeftPart(UriPartial.Authority) + Url.Action("Introduce");
+    var share = config.ImageShare ?? config.Image;
+    if (share != null)
+    {
+        ViewBag.ImageShare = Request.Url?.GetLeftPart(UriPartial.Authority) + Path.Combine("/images/configs/", share);
+    }
+}
+
+<section class="banner-top">
+    <img src="~/Content/images/img-main/page-contact-home.png" alt="Banner" />
+</section>
+<section class="intro-content">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6 col-md-6">
+                <div class="content-detail">@Html.Raw(Model.Introduce.AboutText)</div>
+            </div>
+            <div class="col-lg-6 col-md-6">
+                @if (Model.Introduce.Image != null)
+                {
+                    <img src="@Path.Combine("/images/introduces/", Model.Introduce.Image)" alt="Ảnh giới thiệu" class="intro-img" />
+                }
+            </div>
+        </div>
+    </div>
+</section>
+@if (Model.Introduce.StaffText != null)
+{
+    <section class="section-content">
+        <div class="container">
+            <div class="title-section-in">Đội ngũ nhân sự của công ty</div>
+            <div class="desc-section">Để mang đến được dịch vụ tốt cho khách hàng cần có một đội ngũ nhân sự yêu nghề, có nhiều năm kinh nghiệm và có phong cách làm việc chuyên nghiệp.</div>
+            <div class="content-detail">@Html.Raw(Model.Introduce.StaffText)</div>
+        </div>
+    </section>
+}
+
+@if (Model.Introduce.FeedbackText != null)
+{
+    <section class="intro-feedback">
+        <div class="container">
+            <div class="title-section-in">Hàng ngàn khách hàng đã ủng hộ chúng tôi</div>
+            <div class="content-detail">@Html.Raw(Model.Introduce.FeedbackText)</div>
+        </div>
+    </section>
+}
+<section class="intro-contact">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6 col-md-6">
+                <h3>@config.Title</h3>
+                <ul>
+                    <li><b>Địa chỉ: </b>@config.Place</li>
+                    <li><b>Điện thoại: </b><a href="tel:@config.Hotline">@config.Hotline</a></li>
+                    <li><b>Mail: </b><a href="mailto:@config.Email">@config.Email</a></li>
+                </ul>
+            </div>
+            <div class="col-lg-6 col-md-6">
+                @if (Model.Banner != null)
+                {
+                    <img data-src="@Path.Combine("/images/banners/", Model.Banner.Image)" src="~/Content/images/img-main/base64.gif" alt="@Model.Banner.BannerName" class="img-fluid lazyload" />
+                }
+            </div>
+        </div>
+    </div>
+</section>

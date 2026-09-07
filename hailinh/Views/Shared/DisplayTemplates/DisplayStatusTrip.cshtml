@@ -1,0 +1,26 @@
+@using hailinh.Models
+
+@if (Model == StatusTrip.Latch)
+{
+    <span class="badge bg-success-subtle text-success-emphasis">Chốt</span>
+}
+else if (Model == StatusTrip.Deposited)
+{
+    <span class="badge bg-info-subtle text-info-emphasis">Cọc</span>
+}
+else if (Model == StatusTrip.Progress)
+{
+    <span class="badge bg-primary">Đang chạy</span>
+}
+else if (Model == StatusTrip.Complete)
+{
+    <span class="badge bg-success">Hoàn thành</span>
+}
+else if (Model == StatusTrip.Cancel)
+{
+    <span class="badge bg-danger">Hủy</span>
+}
+else if (Model == StatusTrip.Debt)
+{
+    <span class="badge bg-warning">Công nợ</span>
+}

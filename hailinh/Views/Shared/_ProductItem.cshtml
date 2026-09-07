@@ -1,0 +1,49 @@
+@model hailinh.Models.Product
+
+<div class="product-item">
+    @if (Model.PriceSale != null)
+    {
+        var percent = (decimal)Model.PriceSale / (decimal)Model.Price;
+        var discount = 100 - (percent * 100);
+        <div class="promotion-tag">-@Math.Truncate(discount)%</div>
+    }
+    <a href="@Url.Action("ProductDetail", new { url = Model.Url })" class="product-img">
+        @if (Model.ListImage != null)
+        {
+            <img data-src="@Path.Combine("/images/products/", Model.ListImage.Split(',')[0])" src="~/Content/images/img-main/base64.gif" alt="@Model.Name" class="lazyload" />
+        }
+    </a>
+    <div class="body">
+        <div class="body-top">
+            <div class="product-name">
+                <a href="@Url.Action("ProductDetail", new { url = Model.Url })">@Model.Name</a>
+            </div>
+            @if (Model.PriceSale != null)
+            {
+                <div class="price">
+                    <span>@Html.DisplayFor(a => a.PriceSale)</span>
+                    @if (Model.Unit != null)
+                    {
+                        @:  / @Model.Unit.Name
+                    }
+                </div>
+                <div class="price-old">@Html.DisplayFor(a => a.Price)</div>
+            }
+            else if (Model.Price != null)
+            {
+                <div class="price">
+                    <span>@Html.DisplayFor(a => a.Price)</span>
+                    @if (Model.Unit != null)
+                    {
+                        @:  / @Model.Unit.Name
+                    }
+                </div>
+            }
+            @if (Model.Packaged != null)
+            {
+                <div class="unit-detail">@Model.Packaged</div>
+            }
+        </div>
+        <a href="javascript:;" class="product-btn" onclick="addToCart('@Model.Id')">Chọn mua</a>
+    </div>
+</div>

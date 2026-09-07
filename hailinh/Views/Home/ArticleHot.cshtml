@@ -1,0 +1,25 @@
+@model hailinh.ViewModel.NavArticleViewModel
+
+<div class="box-right">
+    @if (Model?.Articles != null && Model.Articles.Any())
+    {
+        <div class="hot-block mt-3">
+            <div class="title-right">BÀI VIẾT MỚI NHẤT</div>
+            @foreach (var item in Model.Articles.Take(8))
+            {
+                <div class="item-right">
+                    <div class="info">
+                        <a href="@Url.Action("ArticleCategory", "Home", new { url = item.ArticleCategory?.Url })">
+                            @item.ArticleCategory.CategoryName
+                        </a>
+                        <span>@item.CreateDate.ToString("dd.MM.yyyy")</span>
+                    </div>
+                    <a href="@Url.Action("ArticleDetail", "Home", new { url = item.Url })" class="item-subject">
+                        @item.Subject
+                    </a>
+                </div>
+            }
+        </div>
+    }
+
+</div>

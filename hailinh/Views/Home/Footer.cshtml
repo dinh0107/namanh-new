@@ -1,0 +1,149 @@
+@model hailinh.ViewModel.FooterViewModel
+@using hailinh.Models
+@{
+    var config = (ConfigSite)HttpContext.Current.Application["ConfigSite"];
+    var siteTitle = config?.Title ?? "Hà Linh - Cho thuê xe có lái";
+    var hotline = config?.Hotline ?? "1900 8866";
+    var email = config?.Email ?? "contact@hailinh-thuexe.vn";
+    var place = config?.Place ?? "Hà Nội, Việt Nam";
+    var zalo = config?.Zalo;
+    var zaloUrl = !string.IsNullOrWhiteSpace(zalo) ? ("https://zalo.me/" + zalo.Trim()) : ("tel:" + hotline);
+    var facebook = config?.Facebook;
+    var messenger = config?.Messenger;
+    var messengerUrl = !string.IsNullOrWhiteSpace(messenger) ? ("https://" + messenger.Trim().Replace("https://", "")) : "#";
+}
+
+<!-- BEGIN: MainFooter (Bootstrap 5) -->
+<footer class="main-footer" id="lien-he">
+    <div class="container">
+        <div class="row g-4 pb-4 border-bottom border-white border-opacity-10">
+            <!-- Col 1: Brand Info -->
+            <div class="col-lg-4 col-md-6">
+                <div class="d-flex align-items-center gap-2 mb-3">
+                    <span class="h4 fw-bold fst-italic text-white mb-0">@siteTitle</span>
+                    <i class="fa-solid fa-car-side text-primary fs-5"></i>
+                </div>
+                <p class="small text-white-50 pe-lg-4 mb-3">
+                    @(config?.Description ?? "Cung cấp dịch vụ thuê xe du lịch, đưa đón sân bay, xe cưới, công tác, hội nghị... với đội xe đời mới, sạch đẹp và tài xế giàu kinh nghiệm.")
+                </p>
+                <div class="small text-white-50 mb-3">
+                    <p class="mb-1 d-flex align-items-center gap-2">
+                        <i class="fa-solid fa-phone text-primary"></i>
+                        <span><strong>Hotline:</strong> <a href="tel:@hotline" class="text-white text-decoration-none">@hotline</a></span>
+                    </p>
+                    <p class="mb-1 d-flex align-items-center gap-2">
+                        <i class="fa-solid fa-envelope text-primary"></i>
+                        <span><strong>Email:</strong> <a href="mailto:@email" class="text-white text-decoration-none">@email</a></span>
+                    </p>
+                    <p class="mb-0 d-flex align-items-start gap-2">
+                        <i class="fa-solid fa-location-dot text-primary mt-1"></i>
+                        <span><strong>Địa chỉ:</strong> @place</span>
+                    </p>
+                </div>
+                <!-- Socials -->
+                <div class="d-flex align-items-center mt-2">
+                    @if (!string.IsNullOrWhiteSpace(facebook))
+                    {
+                        <a class="footer-social-link" href="@facebook" target="_blank" rel="noopener" title="Facebook">
+                            <i class="fa-brands fa-facebook-f"></i>
+                        </a>
+                    }
+                    @if (!string.IsNullOrWhiteSpace(zalo))
+                    {
+                        <a class="footer-social-link fw-bold" href="@zaloUrl" target="_blank" rel="noopener" title="Zalo" style="font-size: 0.75rem;">
+                            Zalo
+                        </a>
+                    }
+                    @if (!string.IsNullOrWhiteSpace(config?.Youtube))
+                    {
+                        <a class="footer-social-link" href="@config.Youtube" target="_blank" rel="noopener" title="YouTube">
+                            <i class="fa-brands fa-youtube"></i>
+                        </a>
+                    }
+                </div>
+            </div>
+
+            <!-- Col 2: Về Chúng Tôi -->
+            <div class="col-lg-2 col-md-6 col-6">
+                <h5>Về Chúng Tôi</h5>
+                <ul>
+                    <li><a href="@Url.Action("Introduct", "Home")">Giới thiệu</a></li>
+                    <li><a href="#gioi-thieu">Tại sao chọn chúng tôi</a></li>
+                    <li><a href="#tuyen-xe">Đội xe đời mới</a></li>
+                    <li><a href="#tuyen-xe">Tài xế chuyên nghiệp</a></li>
+                    <li><a href="#tin-tuc">Tin tức & Sự kiện</a></li>
+                </ul>
+            </div>
+
+            <!-- Col 3: Dịch vụ -->
+            <div class="col-lg-2 col-md-6 col-6">
+                <h5>Dịch vụ</h5>
+                <ul>
+                    <li><a href="#tuyen-xe">Thuê xe 4 - 5 chỗ</a></li>
+                    <li><a href="#tuyen-xe">Thuê xe 7 chỗ</a></li>
+                    <li><a href="#tuyen-xe">Thuê xe 16 chỗ</a></li>
+                    <li><a href="#tuyen-xe">Thuê xe 29 chỗ</a></li>
+                    <li><a href="#tuyen-xe">Thuê xe 45 chỗ</a></li>
+                    <li><a href="#tuyen-xe">Thuê xe Limousine</a></li>
+                </ul>
+            </div>
+
+            <!-- Col 4: Hỗ trợ -->
+            <div class="col-lg-2 col-md-6 col-6">
+                <h5>Hỗ trợ</h5>
+                <ul>
+                    <li><a href="#bang-gia">Bảng giá tham khảo</a></li>
+                    <li><a href="#booking-form">Câu hỏi thường gặp</a></li>
+                    <li><a href="@Url.Action("Contact", "Home")">Quy trình đặt xe</a></li>
+                    <li><a href="@Url.Action("Contact", "Home")">Chính sách hủy / đổi</a></li>
+                    <li><a href="@Url.Action("Contact", "Home")">Liên hệ hỗ trợ</a></li>
+                </ul>
+            </div>
+
+            <!-- Col 5: Liên hệ 24/7 -->
+            <div class="col-lg-2 col-md-6 col-6">
+                <h5>Liên hệ 24/7</h5>
+                <div class="h5 fw-bold text-warning mb-2">
+                    <i class="fa-solid fa-phone me-1"></i>
+                    <a href="tel:@hotline" class="text-warning text-decoration-none">@hotline</a>
+                </div>
+                <p class="small text-white-50 mb-3">
+                    Sẵn sàng phục vụ mọi lúc, mọi nơi
+                </p>
+                <a class="btn btn-outline-light btn-sm w-100 py-2 fw-semibold" href="#booking-form">
+                    <span>Nhận báo giá nhanh</span>
+                    <i class="fa-solid fa-arrow-right ms-1"></i>
+                </a>
+            </div>
+        </div>
+
+        <!-- Copyright Bottom Bar -->
+        <div class="pt-3 d-flex flex-column flex-sm-row align-items-center justify-content-between small text-white-50">
+            <span>© @DateTime.Now.Year @siteTitle. All rights reserved.</span>
+            <span>Thiết kế hiện đại & Tối ưu trải nghiệm</span>
+        </div>
+    </div>
+</footer>
+<!-- END: MainFooter -->
+
+<!-- Floating Contact Buttons (Mobile & Desktop) -->
+<div class="floating-actions">
+    @if (!string.IsNullOrWhiteSpace(zalo))
+    {
+        <a href="@zaloUrl" target="_blank" rel="noopener" class="floating-btn zalo-btn" title="Chat Zalo">
+            Zalo
+        </a>
+    }
+    @if (!string.IsNullOrWhiteSpace(messenger))
+    {
+        <a href="@messengerUrl" target="_blank" rel="noopener" class="floating-btn" style="background: linear-gradient(135deg, #00B2FE 0%, #006AFF 50%, #9900FF 100%);" title="Chat Messenger">
+            <i class="fa-brands fa-facebook-messenger"></i>
+        </a>
+    }
+    @if (!string.IsNullOrWhiteSpace(hotline))
+    {
+        <a href="tel:@hotline" class="floating-btn hotline-btn" title="Gọi Hotline: @hotline">
+            <i class="fa-solid fa-phone-volume"></i>
+        </a>
+    }
+</div>
