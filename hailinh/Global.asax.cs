@@ -25,6 +25,29 @@ namespace hailinh
             ControllerBuilder.Current.DefaultNamespaces.Clear();
             ControllerBuilder.Current.DefaultNamespaces.Add("hailinh.Controllers");
 
+            // Đồng bộ ContextKey migration sau khi đổi namespace — tránh EF chạy lại CreateTable.
+            Database.SetInitializer<DataEntities>(null);
+            try
+            {
+                using (var db = new DataEntities())
+                {
+                    if (db.Database.Exists())
+                    {
+                        db.Database.ExecuteSqlCommand(@"
+IF OBJECT_ID(N'dbo.__MigrationHistory', N'U') IS NOT NULL
+BEGIN
+    UPDATE dbo.__MigrationHistory
+    SET ContextKey = N'hailinh.Migrations.Configuration'
+    WHERE ContextKey <> N'hailinh.Migrations.Configuration';
+END");
+                    }
+                }
+            }
+            catch
+            {
+                // DB chưa sẵn sàng — để MigrateDatabaseToLatestVersion xử lý.
+            }
+
             Database.SetInitializer(new MigrateDatabaseToLatestVersion<DataEntities, Configuration>());
             AreaRegistration.RegisterAllAreas();
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
