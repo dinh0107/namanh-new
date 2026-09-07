@@ -208,25 +208,13 @@ namespace namanh.Controllers
                 uow.Save();
             }
 
-            var toEmail = ConfigSite?.Email;
-            var fromEmail = Email;
-            var password = Password;
-            if (!string.IsNullOrWhiteSpace(toEmail) && !string.IsNullOrWhiteSpace(fromEmail) && !string.IsNullOrWhiteSpace(password))
+            var websiteUrl = Request?.Url?.GetLeftPart(UriPartial.Authority) ?? "http://localhost:5000";
+            Task.Run(async () =>
             {
-                Task.Run(() =>
-                {
-                    try
-                    {
-                        HtmlHelpers.SendEmail("gmail", subject, body, toEmail, fromEmail, fromEmail, password, "Thuê xe Nam Anh");
-                    }
-                    catch
-                    {
-                        // Background email fail-safe
-                    }
-                });
-            }
+                await namanh.Utils.EmailService.SendBookingNotificationAsync(model, ConfigSite, websiteUrl);
+            });
 
-            return Json(new { status = true, msg = "Gửi liên hệ thành công.\nChúng tôi sẽ liên lạc với bạn sớm nhất có thể." });
+            return Json(new { status = true, msg = "Gửi yêu cầu thành công!\nChúng tôi sẽ liên hệ báo giá tới bạn trong 3 - 5 phút." });
         }
         public ActionResult About()
         {

@@ -1,4 +1,4 @@
-﻿namespace namanh.Migrations
+namespace namanh.Migrations
 {
     using System;
     using System.Data.Entity;
@@ -9,16 +9,13 @@
     {
         public Configuration()
         {
-            AutomaticMigrationsEnabled = false;
-            AutomaticMigrationDataLossAllowed = false;
+            AutomaticMigrationsEnabled = true;
+            AutomaticMigrationDataLossAllowed = true;
         }
 
         protected override void Seed(namanh.DAL.DataEntities context)
         {
             //  This method will be called after migrating to the latest version.
-
-            //  You can use the DbSet<T>.AddOrUpdate() helper extension method
-            //  to avoid creating duplicate seed data.
         }
     }
 }

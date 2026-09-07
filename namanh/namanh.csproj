@@ -13,7 +13,7 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>namanh</RootNamespace>
-    <AssemblyName>hailinh-thuexe</AssemblyName>
+    <AssemblyName>namanh</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
     <UseIISExpress>true</UseIISExpress>
@@ -211,6 +211,7 @@
     <Compile Include="Models\Trip.cs" />
     <Compile Include="Models\Voucher.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utils\EmailService.cs" />
     <Compile Include="Utils\StatusTripExtensions.cs" />
     <Compile Include="Utils\UserUtils.cs" />
     <Compile Include="ViewModel\AdminViewModel.cs" />
@@ -224,6 +225,7 @@
     <Compile Include="ViewModel\ServiceViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="EmailTemplates\BookingNotification.html" />
     <Content Include="Content\admin.css" />
     <Content Include="Content\admin.min.css" />
     <Content Include="Content\adminSite.css" />
