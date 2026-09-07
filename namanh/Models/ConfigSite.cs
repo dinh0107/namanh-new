@@ -62,8 +62,35 @@ namespace namanh.Models
         [Display(Name = "Bảng giá"), UIHint("EditorBox")]
         public string Price { get; set; }
 
-
         [Display(Name = "Ảnh cuối trang"), UIHint("ImageAbout")]
         public string FooterImage { get; set; }
+
+        // Tiêu đề các mục trang chủ
+        [Display(Name = "Tiêu đề mục Xe"), StringLength(200, ErrorMessage = "Tối đa 200 ký tự"), UIHint("TextBox")]
+        public string HomeFleetTitle { get; set; }
+        [Display(Name = "Mô tả mục Xe"), StringLength(500, ErrorMessage = "Tối đa 500 ký tự"), UIHint("TextArea")]
+        public string HomeFleetDesc { get; set; }
+        [Display(Name = "Tiêu đề mục Bảng giá"), StringLength(200, ErrorMessage = "Tối đa 200 ký tự"), UIHint("TextBox")]
+        public string HomePriceTitle { get; set; }
+        [Display(Name = "Mô tả mục Bảng giá"), StringLength(500, ErrorMessage = "Tối đa 500 ký tự"), UIHint("TextArea")]
+        public string HomePriceDesc { get; set; }
+        [Display(Name = "Tiêu đề ghi chú bảng giá"), StringLength(200, ErrorMessage = "Tối đa 200 ký tự"), UIHint("TextBox")]
+        public string HomePriceNoteTitle { get; set; }
+        [Display(Name = "Tiêu đề CTA báo giá"), StringLength(200, ErrorMessage = "Tối đa 200 ký tự"), UIHint("TextBox")]
+        public string HomeCtaTitle { get; set; }
+        [Display(Name = "Mô tả CTA báo giá"), StringLength(500, ErrorMessage = "Tối đa 500 ký tự"), UIHint("TextArea")]
+        public string HomeCtaDesc { get; set; }
+        [Display(Name = "Tiêu đề mục Đánh giá"), StringLength(200, ErrorMessage = "Tối đa 200 ký tự"), UIHint("TextBox")]
+        public string HomeReviewTitle { get; set; }
+        [Display(Name = "Tiêu đề mục Tin tức"), StringLength(200, ErrorMessage = "Tối đa 200 ký tự"), UIHint("TextBox")]
+        public string HomeNewsTitle { get; set; }
+        [Display(Name = "Mô tả mục Tin tức"), StringLength(500, ErrorMessage = "Tối đa 500 ký tự"), UIHint("TextArea")]
+        public string HomeNewsDesc { get; set; }
+        [Display(Name = "Tiêu đề mục FAQ"), StringLength(200, ErrorMessage = "Tối đa 200 ký tự"), UIHint("TextBox")]
+        public string HomeFaqTitle { get; set; }
+        [Display(Name = "Tiêu đề CTA FAQ"), StringLength(200, ErrorMessage = "Tối đa 200 ký tự"), UIHint("TextBox")]
+        public string HomeFaqCtaTitle { get; set; }
+        [Display(Name = "Mô tả CTA FAQ"), StringLength(500, ErrorMessage = "Tối đa 500 ký tự"), UIHint("TextArea")]
+        public string HomeFaqCtaDesc { get; set; }
     }
 }

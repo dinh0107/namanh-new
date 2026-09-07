@@ -37,6 +37,32 @@
 
     // Editable FAQs (GroupId = 4)
     var faqs = Model?.Banners?.Where(b => b.GroupId == 4 && b.Active).OrderBy(b => b.Sort).ToList() ?? new List<Banner>();
+
+    // Section titles (ConfigSite)
+    var fleetTitle = !string.IsNullOrWhiteSpace(config?.HomeFleetTitle) ? config.HomeFleetTitle : "Các dòng xe đang cho thuê";
+    var fleetDesc = !string.IsNullOrWhiteSpace(config?.HomeFleetDesc) ? config.HomeFleetDesc : "Đa dạng lựa chọn từ 4 chỗ đến 45 chỗ và Limousine cao cấp đời mới";
+    var priceTitle = !string.IsNullOrWhiteSpace(config?.HomePriceTitle) ? config.HomePriceTitle : "Bảng giá tham khảo tuyến đường phổ biến";
+    var priceDesc = !string.IsNullOrWhiteSpace(config?.HomePriceDesc) ? config.HomePriceDesc : "Bấm vào bất kỳ tuyến đường hoặc mức giá nào để tự động điền form và nhận báo giá chi tiết!";
+    var priceNoteTitle = !string.IsNullOrWhiteSpace(config?.HomePriceNoteTitle) ? config.HomePriceNoteTitle : "Ghi chú bảng giá";
+    var ctaTitle = !string.IsNullOrWhiteSpace(config?.HomeCtaTitle) ? config.HomeCtaTitle : "NHẬN BÁO GIÁ TỐT NHẤT NGAY";
+    var ctaDesc = !string.IsNullOrWhiteSpace(config?.HomeCtaDesc) ? config.HomeCtaDesc : "Bấm để điền thông tin và nhận ưu đãi giảm giá hôm nay";
+    var reviewTitle = !string.IsNullOrWhiteSpace(config?.HomeReviewTitle) ? config.HomeReviewTitle : "Khách hàng nói gì về chúng tôi?";
+    var newsTitle = !string.IsNullOrWhiteSpace(config?.HomeNewsTitle) ? config.HomeNewsTitle : "Tin tức & Cẩm nang du lịch";
+    var newsDesc = !string.IsNullOrWhiteSpace(config?.HomeNewsDesc) ? config.HomeNewsDesc : "Kinh nghiệm thuê xe, thông tin các tuyến đường và cẩm nang du lịch hữu ích";
+    var faqTitle = !string.IsNullOrWhiteSpace(config?.HomeFaqTitle) ? config.HomeFaqTitle : "Câu hỏi thường gặp";
+    var faqCtaTitle = !string.IsNullOrWhiteSpace(config?.HomeFaqCtaTitle) ? config.HomeFaqCtaTitle : "Bạn còn câu hỏi nào khác?";
+    var faqCtaDesc = !string.IsNullOrWhiteSpace(config?.HomeFaqCtaDesc) ? config.HomeFaqCtaDesc : "Đội ngũ chuyên viên của chúng tôi luôn sẵn sàng hỗ trợ và tư vấn 24/7";
+
+    var isAdmin = Request.IsAuthenticated;
+    Func<string, string, int?, string> EditAttrs = (field, source, id) =>
+    {
+        if (!isAdmin) return "";
+        if (source == "banner" && !id.HasValue) return "";
+        var attrs = " contenteditable=\"true\" data-source=\"" + source + "\" data-field=\"" + field + "\" title=\"Click để sửa — click ra ngoài để lưu\"";
+        if (id.HasValue) attrs += " data-id=\"" + id.Value + "\"";
+        return attrs;
+    };
+    var editClass = isAdmin ? "js-inline-edit" : null;
 }
 
 <!-- BEGIN: HeroSection (Dynamic from Banners GroupId = 1 & ConfigSite) -->
@@ -48,16 +74,16 @@
                 <!-- Trust Badge -->
                 <div class="hero-badge">
                     <i class="fa-solid fa-shield-halved text-primary"></i>
-                    <span>@heroBadge</span>
+                    <span class="@(isAdmin && heroBanner != null ? "js-inline-edit" : null)"@Html.Raw(EditAttrs("Content", "banner", heroBanner?.Id))>@heroBadge</span>
                 </div>
 
                 <!-- Headline -->
-                <h1 class="hero-title">
+                <h1 class="hero-title @(isAdmin && heroBanner != null ? "js-inline-edit" : null)"@Html.Raw(EditAttrs("BannerName", "banner", heroBanner?.Id))>
                     @Html.Raw(heroTitle)
                 </h1>
 
                 <!-- Description -->
-                <p class="hero-desc">
+                <p class="hero-desc @(isAdmin && heroBanner != null ? "js-inline-edit" : null)"@Html.Raw(EditAttrs("Slogan", "banner", heroBanner?.Id))>
                     @heroDesc
                 </p>
 
@@ -114,11 +140,11 @@
 <section class="fleet-section-wrap" id="tuyen-xe">
     <div class="container">
         <div class="text-center mb-4">
-            <h2 class="section-title mb-2">Các dòng xe đang cho thuê</h2>
+            <h2 class="section-title mb-2 @editClass"@Html.Raw(EditAttrs("HomeFleetTitle", "config", null))>@fleetTitle</h2>
             <div class="title-line text-primary mb-2">
                 <i class="fa-solid fa-car-side fs-5"></i>
             </div>
-            <p class="section-subtitle">Đa dạng lựa chọn từ 4 chỗ đến 45 chỗ và Limousine cao cấp đời mới</p>
+            <p class="section-subtitle @editClass"@Html.Raw(EditAttrs("HomeFleetDesc", "config", null))>@fleetDesc</p>
         </div>
 
         <!-- Fleet Slider Container -->
@@ -231,9 +257,9 @@
 
         <!-- Section Title -->
         <div class="text-center mb-4">
-            <h2 class="section-title text-uppercase mb-2">Bảng giá tham khảo tuyến đường phổ biến</h2>
+            <h2 class="section-title text-uppercase mb-2 @editClass"@Html.Raw(EditAttrs("HomePriceTitle", "config", null))>@priceTitle</h2>
             <div class="title-line text-primary mb-2"></div>
-            <p class="section-subtitle">Bấm vào bất kỳ tuyến đường hoặc mức giá nào để tự động điền form và nhận báo giá chi tiết!</p>
+            <p class="section-subtitle @editClass"@Html.Raw(EditAttrs("HomePriceDesc", "config", null))>@priceDesc</p>
         </div>
 
         <!-- Pricing Matrix Table -->
@@ -334,8 +360,8 @@
                     <div class="p-3 bg-primary bg-opacity-10 rounded-circle text-primary flex-shrink-0">
                         <i class="fa-solid fa-clipboard-check fs-4"></i>
                     </div>
-                    <div class="small text-secondary">
-                        <h4 class="h6 fw-bold text-dark text-uppercase mb-2">Ghi chú bảng giá</h4>
+                    <div class="small text-secondary">  
+                        <h4 class="h6 fw-bold text-dark text-uppercase mb-2 @editClass"@Html.Raw(EditAttrs("HomePriceNoteTitle", "config", null))>@priceNoteTitle</h4>
                         @if (!string.IsNullOrWhiteSpace(config?.Price))
                         {
                             @Html.Raw(config.Price)
@@ -360,8 +386,8 @@
                                 <i class="fa-solid fa-phone-volume fs-5"></i>
                             </div>
                             <div>
-                                <div class="fw-bold fs-6">NHẬN BÁO GIÁ TỐT NHẤT NGAY</div>
-                                <div class="small text-white-50">Bấm để điền thông tin và nhận ưu đãi giảm giá hôm nay</div>
+                                <div class="fw-bold fs-6 @editClass"@Html.Raw(EditAttrs("HomeCtaTitle", "config", null))>@ctaTitle</div>
+                                <div class="small text-white-50 @editClass"@Html.Raw(EditAttrs("HomeCtaDesc", "config", null))>@ctaDesc</div>
                             </div>
                         </div>
                         <i class="fa-solid fa-arrow-right fs-5 text-white"></i>
@@ -398,7 +424,7 @@
     <section class="py-5 bg-light" id="gioi-thieu">
         <div class="container">
             <div class="text-center mb-5">
-                <h2 class="section-title mb-2">Khách hàng nói gì về chúng tôi?</h2>
+                <h2 class="section-title mb-2 @editClass"@Html.Raw(EditAttrs("HomeReviewTitle", "config", null))>@reviewTitle</h2>
                 <div class="title-line text-primary mb-2">
                     <i class="fa-solid fa-car-side fs-5"></i>
                 </div>
@@ -445,11 +471,11 @@
     <section class="py-5 bg-white border-top" id="tin-tuc">
         <div class="container">
             <div class="text-center mb-5">
-                <h2 class="section-title mb-2">Tin tức & Cẩm nang du lịch</h2>
+                <h2 class="section-title mb-2 @editClass"@Html.Raw(EditAttrs("HomeNewsTitle", "config", null))>@newsTitle</h2>
                 <div class="title-line text-primary mb-2">
                     <i class="fa-solid fa-newspaper fs-5"></i>
                 </div>
-                <p class="section-subtitle">Kinh nghiệm thuê xe, thông tin các tuyến đường và cẩm nang du lịch hữu ích</p>
+                <p class="section-subtitle @editClass"@Html.Raw(EditAttrs("HomeNewsDesc", "config", null))>@newsDesc</p>
             </div>
 
             <div class="row g-4">
@@ -499,7 +525,7 @@
     <section class="py-5 bg-light border-top">
         <div class="container" style="max-width: 850px;">
             <div class="text-center mb-5">
-                <h2 class="section-title mb-2">Câu hỏi thường gặp</h2>
+                <h2 class="section-title mb-2 @editClass"@Html.Raw(EditAttrs("HomeFaqTitle", "config", null))>@faqTitle</h2>
                 <div class="title-line text-primary mb-2">
                     <i class="fa-solid fa-circle-question fs-5"></i>
                 </div>
@@ -531,8 +557,8 @@
 
             <!-- FAQ CTA Box -->
             <div class="mt-4 p-4 rounded-3 text-center bg-white border shadow-sm">
-                <h4 class="h6 fw-bold text-dark mb-1">Bạn còn câu hỏi nào khác?</h4>
-                <p class="small text-muted mb-3">Đội ngũ chuyên viên của chúng tôi luôn sẵn sàng hỗ trợ và tư vấn 24/7</p>
+                <h4 class="h6 fw-bold text-dark mb-1 @editClass"@Html.Raw(EditAttrs("HomeFaqCtaTitle", "config", null))>@faqCtaTitle</h4>
+                <p class="small text-muted mb-3 @editClass"@Html.Raw(EditAttrs("HomeFaqCtaDesc", "config", null))>@faqCtaDesc</p>
                 <div class="d-flex justify-content-center gap-3">
                     <a href="tel:@hotline" class="btn btn-primary btn-sm px-3 fw-bold" style="background-color: var(--brand-dark-blue); border: none;">
                         <i class="fa-solid fa-phone me-1"></i> Hotline: @hotline
@@ -548,6 +574,41 @@
 <!-- END: FAQSection -->
 
 @section scripts {
+    @if (isAdmin)
+    {
+        <link rel="stylesheet" href="@Url.Content("~/Content/jquery.toast.css")" />
+        <script src="@Url.Content("~/Scripts/jquery.toast.js")"></script>
+        <style>
+            .js-inline-edit {
+                cursor: text;
+                outline: 1px dashed transparent;
+                outline-offset: 4px;
+                border-radius: 4px;
+                transition: outline-color .15s, background-color .15s;
+            }
+            .js-inline-edit:hover,
+            .js-inline-edit:focus {
+                outline-color: #0d6efd;
+                background-color: rgba(13, 110, 253, .06);
+            }
+            .js-inline-edit.is-saving { outline-color: #ffc107; }
+            .js-inline-edit.is-saved { outline-color: #198754; background-color: rgba(25, 135, 84, .08); }
+            .js-inline-edit.is-error { outline-color: #dc3545; }
+            .admin-inline-hint {
+                position: fixed;
+                bottom: 16px;
+                left: 16px;
+                z-index: 1050;
+                background: #212529;
+                color: #fff;
+                font-size: 13px;
+                padding: 8px 14px;
+                border-radius: 8px;
+                box-shadow: 0 4px 16px rgba(0,0,0,.2);
+            }
+        </style>
+        <div class="admin-inline-hint"><i class="fa-solid fa-pen me-1"></i> Admin: click tiêu đề để sửa, click ra ngoài để lưu</div>
+    }
     <script>
         $(document).ready(function () {
             if ($('#fleetSlickSlider').length && $.fn.slick) {
@@ -588,6 +649,78 @@
                         }
                     ]
                 });
+            }
+
+            @if (isAdmin)
+            {
+                <text>
+            function notifyInline(ok, msg) {
+                if (typeof $.toast !== 'function') {
+                    alert(msg);
+                    return;
+                }
+                $.toast({
+                    heading: ok ? 'Thành công' : 'Thất bại',
+                    text: msg,
+                    icon: ok ? 'success' : 'error',
+                    position: 'bottom-right',
+                    hideAfter: 2500,
+                    stack: 4
+                });
+            }
+
+            $(document).on('click mousedown', '.js-inline-edit', function (e) {
+                e.stopPropagation();
+            });
+
+            $(document).on('focus', '.js-inline-edit', function () {
+                $(this).data('orig', $(this).text());
+            });
+
+            $(document).on('keydown', '.js-inline-edit', function (e) {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    $(this).blur();
+                }
+                if (e.key === 'Escape') {
+                    $(this).text($(this).data('orig') || '');
+                    $(this).blur();
+                }
+            });
+
+            $(document).on('blur', '.js-inline-edit', function () {
+                var $el = $(this);
+                var field = $el.data('field');
+                var source = $el.data('source') || 'config';
+                var id = $el.data('id');
+                var value = $.trim($el.text());
+                var orig = $el.data('orig');
+
+                if (!field || value === orig) return;
+
+                $el.removeClass('is-saved is-error').addClass('is-saving');
+                $.ajax({
+                    url: '/mms/sua-nhanh-trang-chu',
+                    type: 'POST',
+                    data: { source: source, field: field, value: value, id: id },
+                    success: function (res) {
+                        $el.removeClass('is-saving');
+                        if (res && res.status) {
+                            $el.data('orig', value).addClass('is-saved');
+                            notifyInline(true, 'Đã lưu thay đổi');
+                            setTimeout(function () { $el.removeClass('is-saved'); }, 1200);
+                        } else {
+                            $el.addClass('is-error');
+                            notifyInline(false, 'Lưu không thành công. Hãy thử lại');
+                        }
+                    },
+                    error: function () {
+                        $el.removeClass('is-saving').addClass('is-error');
+                        notifyInline(false, 'Có lỗi kết nối. Hãy thử lại');
+                    }
+                });
+            });
+                </text>
             }
         });
     </script>

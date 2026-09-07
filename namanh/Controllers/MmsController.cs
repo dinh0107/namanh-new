@@ -293,6 +293,19 @@ namespace namanh.Controllers
                 config.InfoContact = model.InfoContact;
                 config.AboutUrl = model.AboutUrl;
                 config.Price = model.Price;
+                config.HomeFleetTitle = model.HomeFleetTitle;
+                config.HomeFleetDesc = model.HomeFleetDesc;
+                config.HomePriceTitle = model.HomePriceTitle;
+                config.HomePriceDesc = model.HomePriceDesc;
+                config.HomePriceNoteTitle = model.HomePriceNoteTitle;
+                config.HomeCtaTitle = model.HomeCtaTitle;
+                config.HomeCtaDesc = model.HomeCtaDesc;
+                config.HomeReviewTitle = model.HomeReviewTitle;
+                config.HomeNewsTitle = model.HomeNewsTitle;
+                config.HomeNewsDesc = model.HomeNewsDesc;
+                config.HomeFaqTitle = model.HomeFaqTitle;
+                config.HomeFaqCtaTitle = model.HomeFaqCtaTitle;
+                config.HomeFaqCtaDesc = model.HomeFaqCtaDesc;
 
                 if (model.Zalo != null)
                 {
@@ -304,6 +317,70 @@ namespace namanh.Controllers
                 return RedirectToAction("ConfigSite", "Mms", new { result = "success" });
             }
             return View("ConfigSite", model);
+        }
+
+        [HttpPost, Route("sua-nhanh-trang-chu"), ValidateInput(false)]
+        public JsonResult InlineHomeEdit(string source, string field, string value, int? id = null)
+        {
+            if (string.IsNullOrWhiteSpace(field))
+            {
+                return Json(new { status = false });
+            }
+
+            value = (value ?? string.Empty).Trim();
+
+            if (string.Equals(source, "config", StringComparison.OrdinalIgnoreCase))
+            {
+                var config = _unitOfWork.ConfigSiteRepository.Get().FirstOrDefault();
+                if (config == null)
+                {
+                    return Json(new { status = false });
+                }
+
+                switch (field)
+                {
+                    case "HomeFleetTitle": config.HomeFleetTitle = value; break;
+                    case "HomeFleetDesc": config.HomeFleetDesc = value; break;
+                    case "HomePriceTitle": config.HomePriceTitle = value; break;
+                    case "HomePriceDesc": config.HomePriceDesc = value; break;
+                    case "HomePriceNoteTitle": config.HomePriceNoteTitle = value; break;
+                    case "HomeCtaTitle": config.HomeCtaTitle = value; break;
+                    case "HomeCtaDesc": config.HomeCtaDesc = value; break;
+                    case "HomeReviewTitle": config.HomeReviewTitle = value; break;
+                    case "HomeNewsTitle": config.HomeNewsTitle = value; break;
+                    case "HomeNewsDesc": config.HomeNewsDesc = value; break;
+                    case "HomeFaqTitle": config.HomeFaqTitle = value; break;
+                    case "HomeFaqCtaTitle": config.HomeFaqCtaTitle = value; break;
+                    case "HomeFaqCtaDesc": config.HomeFaqCtaDesc = value; break;
+                    default: return Json(new { status = false });
+                }
+
+                _unitOfWork.Save();
+                HttpContext.Application["ConfigSite"] = config;
+                return Json(new { status = true });
+            }
+
+            if (string.Equals(source, "banner", StringComparison.OrdinalIgnoreCase) && id.HasValue)
+            {
+                var banner = _unitOfWork.BannerRepository.GetById(id.Value);
+                if (banner == null)
+                {
+                    return Json(new { status = false });
+                }
+
+                switch (field)
+                {
+                    case "BannerName": banner.BannerName = value; break;
+                    case "Content": banner.Content = value; break;
+                    case "Slogan": banner.Slogan = value; break;
+                    default: return Json(new { status = false });
+                }
+
+                _unitOfWork.Save();
+                return Json(new { status = true });
+            }
+
+            return Json(new { status = false });
         }
         #endregion
 

@@ -193,6 +193,10 @@
     <Compile Include="Migrations\202606141800000_add-location-single-price.Designer.cs">
       <DependentUpon>202606141800000_add-location-single-price.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202609070855449_add_home_config_titles.cs" />
+    <Compile Include="Migrations\202609070855449_add_home_config_titles.Designer.cs">
+      <DependentUpon>202609070855449_add_home_config_titles.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Admin.cs" />
     <Compile Include="Models\Article.cs" />
@@ -2116,6 +2120,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202606141700000_sync-price-routes-model.resx">
       <DependentUpon>202606141700000_sync-price-routes-model.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202609070855449_add_home_config_titles.resx">
+      <DependentUpon>202609070855449_add_home_config_titles.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202606141800000_add-location-single-price.resx">
       <DependentUpon>202606141800000_add-location-single-price.cs</DependentUpon>
