@@ -15,29 +15,23 @@
         <div class="booking-top-bar">
             <!-- Trip Type Toggle -->
             <div class="segmented-trip-toggle">
-                <button type="button" class="trip-btn" id="btnTripOneWay">
+                <button type="button" class="trip-btn active" id="btnTripOneWay">
                     <span>1 Chiều</span>
                 </button>
-                <button type="button" class="trip-btn active" id="btnTripRoundTrip">
+                <button type="button" class="trip-btn" id="btnTripRoundTrip">
                     <i class="fa-solid fa-arrow-right-arrow-left" style="font-size: 0.75rem;"></i>
                     <span>Khứ hồi (2 Chiều)</span>
                 </button>
-                <input type="hidden" name="trip_type" id="tripTypeValue" value="2_way" />
+                <input type="hidden" name="trip_type" id="tripTypeValue" value="1_way" />
             </div>
 
-            <!-- Quick Date Presets -->
-            <div class="quick-date-pills">
-                <span class="pill-label d-none d-sm-inline">Chọn nhanh:</span>
-                <button type="button" class="date-pill" data-days="0">Hôm nay</button>
-                <button type="button" class="date-pill" data-days="1">Ngày mai</button>
-                <button type="button" class="date-pill" data-days="2">Cuối tuần</button>
-            </div>
+            
         </div>
 
         <!-- Inputs Grid -->
-        <div class="row g-3 align-items-end">
+        <div class="row g-3 align-items-end" id="bookingInputsRow">
             <!-- Điểm đón -->
-            <div class="col-lg-3 col-md-5 col-10">
+            <div class="col-lg-4 col-md-5 col-10" id="pickupCol">
                 <div class="booking-input-unit">
                     <label class="unit-label" for="pickupLoc">
                         <i class="fa-solid fa-location-dot text-primary"></i>
@@ -52,14 +46,14 @@
             </div>
 
             <!-- Nút Hoán đổi (Swap) -->
-            <div class="col-lg-1 col-md-2 col-2 location-swap-col">
+            <div class="col-lg-1 col-md-2 col-2 location-swap-col" id="swapCol">
                 <button id="switchLocationsBtn" class="btn-location-swap" type="button" title="Đổi chiều điểm đón và điểm đến">
                     <i class="fa-solid fa-arrow-right-arrow-left"></i>
                 </button>
             </div>
 
             <!-- Điểm đến -->
-            <div class="col-lg-3 col-md-5 col-12">
+            <div class="col-lg-4 col-md-5 col-12" id="dropoffCol">
                 <div class="booking-input-unit">
                     <label class="unit-label" for="dropoffLoc">
                         <i class="fa-solid fa-location-dot text-danger"></i>
@@ -74,31 +68,34 @@
             </div>
 
             <!-- Ngày & Giờ đi -->
-            <div class="col-lg-2 col-md-6 col-sm-6">
+            <div class="col-lg col-md-6 col-sm-12" id="fromDateCol">
                 <div class="booking-input-unit">
-                    <label class="unit-label" for="fromDateInput">
-                        <i class="fa-regular fa-calendar-check text-primary"></i>
-                        <span>Ngày đi</span>
-                        <span class="req">*</span>
-                    </label>
+                    <div class="d-flex justify-content-between align-items-center mb-1">
+                        <label class="unit-label mb-0" for="fromDateInput">
+                            <i class="fa-regular fa-calendar-check text-primary"></i>
+                            <span>Ngày đi</span>
+                            <span class="req">*</span>
+                        </label>
+                    </div>
                     <div class="booking-input-wrap">
                         <input id="fromDateInput" name="FromDate" required class="form-control font-monospace" type="datetime-local">
                     </div>
                 </div>
             </div>
 
-            <!-- Ngày & Giờ về -->
-            <div class="col-lg-3 col-md-6 col-sm-6" id="toDateContainer">
+            <!-- Ngày & Giờ về (Chỉ hiện khi chọn 2 Chiều / Khứ hồi) -->
+            <div class="col-lg col-md-6 col-sm-6 d-none" id="toDateContainer" style="display: none;">
                 <div class="booking-input-unit">
                     <div class="d-flex justify-content-between align-items-center mb-1">
                         <label class="unit-label mb-0" for="toDateInput">
                             <i class="fa-regular fa-calendar-plus text-primary"></i>
                             <span>Ngày về</span>
+                            <span class="req">*</span>
                         </label>
                         <span class="badge bg-primary bg-opacity-10 text-primary fw-bold" style="font-size: 0.65rem;" id="badgeReturn">Khứ hồi</span>
                     </div>
                     <div class="booking-input-wrap" id="toDateWrap">
-                        <input id="toDateInput" name="ToDate" class="form-control font-monospace" type="datetime-local">
+                        <input id="toDateInput" name="ToDate" class="form-control font-monospace" type="datetime-local" disabled>
                     </div>
                 </div>
             </div>
@@ -127,12 +124,12 @@
                             }
                             else
                             {
-                                <option value="4 chỗ">Xe 4 - 5 chỗ (Vios, City, Accent...)</option>
-                                <option value="7 chỗ" selected>Xe 7 chỗ (Innova, Fortuner, Xpander...)</option>
-                                <option value="16 chỗ">Xe 16 chỗ (Transit, Solati...)</option>
-                                <option value="29 chỗ">Xe 29 chỗ (County, Samco...)</option>
-                                <option value="45 chỗ">Xe 45 chỗ (Universe, Hi-Class...)</option>
-                                <option value="Limousine">Xe Limousine VIP 9 - 19 chỗ</option>
+                                <option value="4 chỗ">Xe 4 - 5 chỗ </option>
+                                <option value="7 chỗ" selected>Xe 7 chỗ </option>
+                                <option value="16 chỗ">Xe 16 chỗ</option>
+                                <option value="29 chỗ">Xe 29 chỗ </option>
+                                <option value="45 chỗ">Xe 45 chỗ</option>
+                                <option value="Limousine">Xe Limousine </option>
                             }
                         </select>
                     </div>
@@ -161,28 +158,6 @@
                     <i class="fa-solid fa-paper-plane"></i>
                 </button>
             </div>
-        </div>
-
-        <!-- Suggestion Chips Bar (Dynamic from Locations) -->
-        <div class="dest-suggestions-bar">
-            <span class="suggest-title"><i class="fa-solid fa-fire text-warning"></i> Gợi ý tuyến HOT:</span>
-            @if (hotLocations.Any())
-            {
-                foreach (var loc in hotLocations)
-                {
-                    <button type="button" class="dest-pill" data-loc="@loc">@loc</button>
-                }
-            }
-            else
-            {
-                <button type="button" class="dest-pill" data-loc="Sân bay Nội Bài">Sân bay Nội Bài</button>
-                <button type="button" class="dest-pill" data-loc="Lào Cai / Sapa">Lào Cai - Sapa</button>
-                <button type="button" class="dest-pill" data-loc="Hạ Long">Hạ Long</button>
-                <button type="button" class="dest-pill" data-loc="Hải Phòng">Hải Phòng</button>
-                <button type="button" class="dest-pill" data-loc="Ninh Bình">Ninh Bình</button>
-                <button type="button" class="dest-pill" data-loc="Sơn La - Mộc Châu">Sơn La - Mộc Châu</button>
-                <button type="button" class="dest-pill" data-loc="Thanh Hóa">Thanh Hóa</button>
-            }
         </div>
 
         <!-- Alert Message Container -->
@@ -272,27 +247,49 @@
         var toDateContainer = document.getElementById("toDateContainer");
         var toDateWrap = document.getElementById("toDateWrap");
         var badgeReturn = document.getElementById("badgeReturn");
+        var pickupCol = document.getElementById("pickupCol");
+        var dropoffCol = document.getElementById("dropoffCol");
+        var fromDateCol = document.getElementById("fromDateCol");
+        var swapCol = document.getElementById("swapCol");
 
         function setTripType(isRoundTrip) {
             if (isRoundTrip) {
                 btnRoundTrip.classList.add("active");
                 btnOneWay.classList.remove("active");
                 tripTypeValue.value = "2_way";
-                if (toDateContainer) toDateContainer.style.opacity = "1";
-                if (toDateWrap) toDateWrap.style.pointerEvents = "auto";
-                if (toDateInput) toDateInput.disabled = false;
-                if (badgeReturn) badgeReturn.style.display = "inline-block";
+                if (toDateContainer) {
+                    toDateContainer.classList.remove("d-none");
+                    toDateContainer.style.display = "";
+                }
+                if (toDateInput) {
+                    toDateInput.disabled = false;
+                    if (!toDateInput.value) {
+                        var baseDate = fromInput && fromInput.value ? new Date(fromInput.value) : new Date();
+                        var returnD = new Date(baseDate.getTime() + 24 * 60 * 60 * 1000);
+                        returnD.setHours(18, 0, 0, 0);
+                        toDateInput.value = (new Date(returnD - offset)).toISOString().slice(0, 16);
+                    }
+                }
+                if (pickupCol) pickupCol.className = "col-lg-3 col-md-5 col-10";
+                if (dropoffCol) dropoffCol.className = "col-lg-3 col-md-5 col-12";
+                if (fromDateCol) fromDateCol.className = "col-lg col-md-6 col-sm-6";
+                if (swapCol) swapCol.className = "col-lg-auto col-md-2 col-2 location-swap-col";
             } else {
                 btnOneWay.classList.add("active");
                 btnRoundTrip.classList.remove("active");
                 tripTypeValue.value = "1_way";
-                if (toDateContainer) toDateContainer.style.opacity = "0.4";
-                if (toDateWrap) toDateWrap.style.pointerEvents = "none";
+                if (toDateContainer) {
+                    toDateContainer.classList.add("d-none");
+                    toDateContainer.style.display = "none";
+                }
                 if (toDateInput) {
                     toDateInput.disabled = true;
                     toDateInput.value = "";
                 }
-                if (badgeReturn) badgeReturn.style.display = "none";
+                if (pickupCol) pickupCol.className = "col-lg-4 col-md-5 col-10";
+                if (dropoffCol) dropoffCol.className = "col-lg-4 col-md-5 col-12";
+                if (fromDateCol) fromDateCol.className = "col-lg col-md-6 col-sm-12";
+                if (swapCol) swapCol.className = "col-lg-auto col-md-2 col-2 location-swap-col";
             }
         }
 
