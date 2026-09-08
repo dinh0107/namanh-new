@@ -30,11 +30,9 @@
     }
 }
 
-<!-- BEGIN: MainHeader (Bootstrap 5) -->
 <header class="main-header shadow-sm">
     <nav class="navbar navbar-expand-lg navbar-light py-2">
         <div class="container">
-            <!-- Brand / Logo -->
             <a class="navbar-brand py-1" href="/">
                 @if (logoUrl != null)
                 {
@@ -47,7 +45,6 @@
                 }
             </a>
 
-            <!-- Right CTA for mobile & toggle button -->
             <div class="d-flex align-items-center d-lg-none gap-2">
                 <a class="btn btn-brand-orange btn-sm px-3 py-1 fw-bold" href="#booking-form">
                     <i class="fa-regular fa-file-lines me-1"></i> Báo giá
@@ -57,14 +54,12 @@
                 </button>
             </div>
 
-            <!-- Desktop / Collapsible Navigation Links -->
             <div class="collapse navbar-collapse" id="headerNavbarNav">
                 <ul class="navbar-nav mx-auto mb-2 mb-lg-0 align-items-lg-center">
                     <li class="nav-item">
                         <a class="nav-link active" aria-current="page" href="/">Trang chủ</a>
                     </li>
 
-                    <!-- Dropdown: Thuê xe (Dynamic Data from CarServices) -->
                     @if (services.Any())
                     {
                         <li class="nav-item dropdown">
@@ -100,7 +95,6 @@
                         <a class="nav-link" href="@Url.Action("Introduct", "Home")">Giới thiệu</a>
                     </li>
 
-                    <!-- Dropdown: Tin tức (Dynamic Data from ArticleCategories) -->
                     @if (articleParents.Any())
                     {
                         <li class="nav-item dropdown">
@@ -131,7 +125,6 @@
                     </li>
                 </ul>
 
-                <!-- Header CTA Button on Desktop -->
                 <div class="d-none d-lg-flex align-items-center gap-2">
                     <a class="btn btn-brand-orange px-4 py-2" href="#booking-form">
                         <i class="fa-regular fa-file-lines me-1.5"></i>
@@ -142,4 +135,3 @@
         </div>
     </nav>
 </header>
-<!-- END: MainHeader -->

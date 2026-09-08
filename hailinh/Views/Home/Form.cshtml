@@ -6,14 +6,11 @@
     var hotLocations = ViewBag.Locations as IEnumerable<string> ?? new List<string>();
 }
 
-<!-- BEGIN: Premium BookingCardForm (Bootstrap 5) -->
 <div class="premium-booking-card" id="booking-form-card">
     <form id="heroBookingForm" method="post" action="@Url.Action("ContactForm", "Home")">
         @Html.AntiForgeryToken()
 
-        <!-- Top Bar: Segmented Trip Type Toggle & Quick Date Presets -->
         <div class="booking-top-bar">
-            <!-- Trip Type Toggle -->
             <div class="segmented-trip-toggle">
                 <button type="button" class="trip-btn active" id="btnTripOneWay">
                     <span>1 Chiều</span>
@@ -28,9 +25,7 @@
             
         </div>
 
-        <!-- Inputs Grid -->
         <div class="row g-3 align-items-end" id="bookingInputsRow">
-            <!-- Điểm đón -->
             <div class="col-lg-4 col-md-5 col-10" id="pickupCol">
                 <div class="booking-input-unit">
                     <label class="unit-label" for="pickupLoc">
@@ -45,14 +40,12 @@
                 </div>
             </div>
 
-            <!-- Nút Hoán đổi (Swap) -->
             <div class="col-lg-1 col-md-2 col-2 location-swap-col" id="swapCol">
                 <button id="switchLocationsBtn" class="btn-location-swap" type="button" title="Đổi chiều điểm đón và điểm đến">
                     <i class="fa-solid fa-arrow-right-arrow-left"></i>
                 </button>
             </div>
 
-            <!-- Điểm đến -->
             <div class="col-lg-4 col-md-5 col-12" id="dropoffCol">
                 <div class="booking-input-unit">
                     <label class="unit-label" for="dropoffLoc">
@@ -67,7 +60,6 @@
                 </div>
             </div>
 
-            <!-- Ngày & Giờ đi -->
             <div class="col-lg col-md-6 col-sm-12" id="fromDateCol">
                 <div class="booking-input-unit">
                     <div class="d-flex justify-content-between align-items-center mb-1">
@@ -83,7 +75,6 @@
                 </div>
             </div>
 
-            <!-- Ngày & Giờ về (Chỉ hiện khi chọn 2 Chiều / Khứ hồi) -->
             <div class="col-lg col-md-6 col-sm-6 d-none" id="toDateContainer" style="display: none;">
                 <div class="booking-input-unit">
                     <div class="d-flex justify-content-between align-items-center mb-1">
@@ -101,9 +92,7 @@
             </div>
         </div>
 
-        <!-- Row 2: Loại xe, Điện thoại, Nút Submit -->
         <div class="row g-3 align-items-end mt-1">
-            <!-- Loại xe (Dynamic from CarServices) -->
             <div class="col-lg-4 col-md-6">
                 <div class="booking-input-unit">
                     <label class="unit-label" for="carTypeSelect">
@@ -122,21 +111,11 @@
                                     <option value="@cap" @(cap.Contains("7") ? "selected" : "")>@s.Title (@(s.Car ?? cap))</option>
                                 }
                             }
-                            else
-                            {
-                                <option value="4 chỗ">Xe 4 - 5 chỗ </option>
-                                <option value="7 chỗ" selected>Xe 7 chỗ </option>
-                                <option value="16 chỗ">Xe 16 chỗ</option>
-                                <option value="29 chỗ">Xe 29 chỗ </option>
-                                <option value="45 chỗ">Xe 45 chỗ</option>
-                                <option value="Limousine">Xe Limousine </option>
-                            }
                         </select>
                     </div>
                 </div>
             </div>
 
-            <!-- Số điện thoại -->
             <div class="col-lg-4 col-md-6">
                 <div class="booking-input-unit">
                     <label class="unit-label" for="phoneInput">
@@ -151,7 +130,6 @@
                 </div>
             </div>
 
-            <!-- Nút Submit Báo Giá -->
             <div class="col-lg-4 col-md-12">
                 <button id="bookingSubmitBtn" class="btn-booking-submit" type="submit">
                     <span id="bookingBtnText">NHẬN BÁO GIÁ NHANH</span>
@@ -160,10 +138,6 @@
             </div>
         </div>
 
-        <!-- Alert Message Container -->
-        <div id="bookingMsgArea" class="d-none mt-3 alert p-3" role="alert"></div>
-
-        <!-- Trust Seal Footer -->
         <div class="booking-trust-seal">
             <div class="seal-item">
                 <i class="fa-solid fa-bolt text-warning"></i>
@@ -180,47 +154,52 @@
         </div>
     </form>
 </div>
-<!-- END: Premium BookingCardForm -->
-
 <script>
-    // Global helper to select car and scroll to booking form
-    window.selectCarAndBook = function (carType) {
-        var carSelect = document.getElementById("carTypeSelect");
-        if (carSelect && carType) {
-            for (var i = 0; i < carSelect.options.length; i++) {
-                if (carSelect.options[i].value.toLowerCase().indexOf(carType.toLowerCase()) !== -1 ||
-                    carType.toLowerCase().indexOf(carSelect.options[i].value.toLowerCase()) !== -1) {
-                    carSelect.selectedIndex = i;
-                    break;
-                }
+(function () {
+    function notifyToast(ok, heading, text) {
+        if (typeof $.toast !== 'function') {
+            window.alert(text || heading);
+            return;
+        }
+        $.toast({
+            heading: heading,
+            text: text || '',
+            icon: ok ? 'success' : 'error',
+            position: 'bottom-right',
+            hideAfter: ok ? 4000 : 3500,
+            stack: 4
+        });
+    }
+
+    function initBookingForm() {
+        window.selectCarAndBook = function (carType) {
+            var $carSelect = $('#carTypeSelect');
+            if ($carSelect.length && carType) {
+                var needle = String(carType).toLowerCase();
+                $carSelect.find('option').each(function () {
+                    var val = String($(this).val() || '').toLowerCase();
+                    if (val.indexOf(needle) !== -1 || needle.indexOf(val) !== -1) {
+                        $carSelect.val($(this).val());
+                        return false;
+                    }
+                });
             }
-        }
-        var formCard = document.getElementById("booking-form-card");
-        if (formCard) {
-            formCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            formCard.style.boxShadow = "0 0 0 4px rgba(245, 130, 32, 0.4), var(--brand-shadow-lg)";
-            setTimeout(function () {
-                formCard.style.boxShadow = "";
-            }, 1800);
-        }
-        var phone = document.getElementById("phoneInput");
-        if (phone) {
-            setTimeout(function () { phone.focus(); }, 400);
-        }
-    };
+            var $formCard = $('#booking-form-card');
+            if ($formCard.length) {
+                $('html, body').animate({ scrollTop: $formCard.offset().top - 80 }, 400);
+                $formCard.css('box-shadow', '0 0 0 4px rgba(245, 130, 32, 0.4), var(--brand-shadow-lg)');
+                setTimeout(function () { $formCard.css('box-shadow', ''); }, 1800);
+            }
+            setTimeout(function () { $('#phoneInput').trigger('focus'); }, 400);
+        };
 
-    // Global helper to select route & car from pricing table
-    window.selectRouteAndBook = function (fromLoc, toLoc, carType) {
-        var pickup = document.getElementById("pickupLoc");
-        var dropoff = document.getElementById("dropoffLoc");
-        if (pickup && fromLoc) pickup.value = fromLoc;
-        if (dropoff && toLoc) dropoff.value = toLoc;
-        if (carType) window.selectCarAndBook(carType);
-        else window.selectCarAndBook();
-    };
+        window.selectRouteAndBook = function (fromLoc, toLoc, carType) {
+            if (fromLoc) $('#pickupLoc').val(fromLoc);
+            if (toLoc) $('#dropoffLoc').val(toLoc);
+            if (carType) window.selectCarAndBook(carType);
+            else window.selectCarAndBook();
+        };
 
-    document.addEventListener("DOMContentLoaded", function () {
-        // Set default datetime for FromDate (today + 2 hours)
         var now = new Date();
         now.setHours(now.getHours() + 2);
         now.setMinutes(0);
@@ -231,178 +210,136 @@
         nextDay.setHours(18, 0, 0, 0);
         var localReturnTime = (new Date(nextDay - offset)).toISOString().slice(0, 16);
 
-        var fromInput = document.getElementById("fromDateInput");
-        var toDateInput = document.getElementById("toDateInput");
-        if (fromInput && !fromInput.value) {
-            fromInput.value = localISOTime;
-        }
-        if (toDateInput && !toDateInput.value) {
-            toDateInput.value = localReturnTime;
-        }
+        var $fromInput = $('#fromDateInput');
+        var $toDateInput = $('#toDateInput');
+        if ($fromInput.length && !$fromInput.val()) $fromInput.val(localISOTime);
+        if ($toDateInput.length && !$toDateInput.val()) $toDateInput.val(localReturnTime);
 
-        // Segmented Trip Toggle
-        var btnOneWay = document.getElementById("btnTripOneWay");
-        var btnRoundTrip = document.getElementById("btnTripRoundTrip");
-        var tripTypeValue = document.getElementById("tripTypeValue");
-        var toDateContainer = document.getElementById("toDateContainer");
-        var toDateWrap = document.getElementById("toDateWrap");
-        var badgeReturn = document.getElementById("badgeReturn");
-        var pickupCol = document.getElementById("pickupCol");
-        var dropoffCol = document.getElementById("dropoffCol");
-        var fromDateCol = document.getElementById("fromDateCol");
-        var swapCol = document.getElementById("swapCol");
+        var $btnOneWay = $('#btnTripOneWay');
+        var $btnRoundTrip = $('#btnTripRoundTrip');
+        var $tripTypeValue = $('#tripTypeValue');
+        var $toDateContainer = $('#toDateContainer');
+        var $pickupCol = $('#pickupCol');
+        var $dropoffCol = $('#dropoffCol');
+        var $fromDateCol = $('#fromDateCol');
+        var $swapCol = $('#swapCol');
 
         function setTripType(isRoundTrip) {
             if (isRoundTrip) {
-                btnRoundTrip.classList.add("active");
-                btnOneWay.classList.remove("active");
-                tripTypeValue.value = "2_way";
-                if (toDateContainer) {
-                    toDateContainer.classList.remove("d-none");
-                    toDateContainer.style.display = "";
+                $btnRoundTrip.addClass('active');
+                $btnOneWay.removeClass('active');
+                $tripTypeValue.val('2_way');
+                $toDateContainer.removeClass('d-none').show();
+                $toDateInput.prop('disabled', false);
+                if (!$toDateInput.val()) {
+                    var baseDate = $fromInput.val() ? new Date($fromInput.val()) : new Date();
+                    var returnD = new Date(baseDate.getTime() + 24 * 60 * 60 * 1000);
+                    returnD.setHours(18, 0, 0, 0);
+                    $toDateInput.val((new Date(returnD - offset)).toISOString().slice(0, 16));
                 }
-                if (toDateInput) {
-                    toDateInput.disabled = false;
-                    if (!toDateInput.value) {
-                        var baseDate = fromInput && fromInput.value ? new Date(fromInput.value) : new Date();
-                        var returnD = new Date(baseDate.getTime() + 24 * 60 * 60 * 1000);
-                        returnD.setHours(18, 0, 0, 0);
-                        toDateInput.value = (new Date(returnD - offset)).toISOString().slice(0, 16);
-                    }
-                }
-                if (pickupCol) pickupCol.className = "col-lg-3 col-md-5 col-10";
-                if (dropoffCol) dropoffCol.className = "col-lg-3 col-md-5 col-12";
-                if (fromDateCol) fromDateCol.className = "col-lg col-md-6 col-sm-6";
-                if (swapCol) swapCol.className = "col-lg-auto col-md-2 col-2 location-swap-col";
+                $pickupCol.attr('class', 'col-lg-3 col-md-5 col-10');
+                $dropoffCol.attr('class', 'col-lg-3 col-md-5 col-12');
+                $fromDateCol.attr('class', 'col-lg col-md-6 col-sm-6');
+                $swapCol.attr('class', 'col-lg-auto col-md-2 col-2 location-swap-col');
             } else {
-                btnOneWay.classList.add("active");
-                btnRoundTrip.classList.remove("active");
-                tripTypeValue.value = "1_way";
-                if (toDateContainer) {
-                    toDateContainer.classList.add("d-none");
-                    toDateContainer.style.display = "none";
-                }
-                if (toDateInput) {
-                    toDateInput.disabled = true;
-                    toDateInput.value = "";
-                }
-                if (pickupCol) pickupCol.className = "col-lg-4 col-md-5 col-10";
-                if (dropoffCol) dropoffCol.className = "col-lg-4 col-md-5 col-12";
-                if (fromDateCol) fromDateCol.className = "col-lg col-md-6 col-sm-12";
-                if (swapCol) swapCol.className = "col-lg-auto col-md-2 col-2 location-swap-col";
+                $btnOneWay.addClass('active');
+                $btnRoundTrip.removeClass('active');
+                $tripTypeValue.val('1_way');
+                $toDateContainer.addClass('d-none').hide();
+                $toDateInput.prop('disabled', true).val('');
+                $pickupCol.attr('class', 'col-lg-4 col-md-5 col-10');
+                $dropoffCol.attr('class', 'col-lg-4 col-md-5 col-12');
+                $fromDateCol.attr('class', 'col-lg col-md-6 col-sm-12');
+                $swapCol.attr('class', 'col-lg-auto col-md-2 col-2 location-swap-col');
             }
         }
 
-        if (btnOneWay && btnRoundTrip) {
-            btnOneWay.addEventListener("click", function () { setTripType(false); });
-            btnRoundTrip.addEventListener("click", function () { setTripType(true); });
-        }
+        $btnOneWay.on('click', function () { setTripType(false); });
+        $btnRoundTrip.on('click', function () { setTripType(true); });
 
-        // Quick date presets
-        document.querySelectorAll(".date-pill").forEach(function (btn) {
-            btn.addEventListener("click", function () {
-                document.querySelectorAll(".date-pill").forEach(function (p) { p.classList.remove("active"); });
-                this.classList.add("active");
+        $(document).on('click', '.date-pill', function () {
+            var $btn = $(this);
+            $('.date-pill').removeClass('active');
+            $btn.addClass('active');
 
-                var days = parseInt(this.getAttribute("data-days") || "0", 10);
-                var targetDate = new Date();
-                if (days === 2) {
-                    var currentDay = targetDate.getDay();
-                    var dist = (6 - currentDay + 7) % 7;
-                    if (dist === 0) dist = 7;
-                    targetDate.setDate(targetDate.getDate() + dist);
-                } else {
-                    targetDate.setDate(targetDate.getDate() + days);
-                }
-                targetDate.setHours(8, 0, 0, 0);
-                if (fromInput) {
-                    fromInput.value = (new Date(targetDate - offset)).toISOString().slice(0, 16);
-                }
-                if (toDateInput && tripTypeValue.value === "2_way") {
-                    targetDate.setHours(18, 0, 0, 0);
-                    toDateInput.value = (new Date(targetDate - offset)).toISOString().slice(0, 16);
-                }
-            });
+            var days = parseInt($btn.attr('data-days') || '0', 10);
+            var targetDate = new Date();
+            if (days === 2) {
+                var currentDay = targetDate.getDay();
+                var dist = (6 - currentDay + 7) % 7;
+                if (dist === 0) dist = 7;
+                targetDate.setDate(targetDate.getDate() + dist);
+            } else {
+                targetDate.setDate(targetDate.getDate() + days);
+            }
+            targetDate.setHours(8, 0, 0, 0);
+            $fromInput.val((new Date(targetDate - offset)).toISOString().slice(0, 16));
+            if ($tripTypeValue.val() === '2_way') {
+                targetDate.setHours(18, 0, 0, 0);
+                $toDateInput.val((new Date(targetDate - offset)).toISOString().slice(0, 16));
+            }
         });
 
-        // Quick destination chips
-        document.querySelectorAll(".dest-pill").forEach(function (chip) {
-            chip.addEventListener("click", function () {
-                var dropoff = document.getElementById("dropoffLoc");
-                if (dropoff) {
-                    dropoff.value = this.getAttribute("data-loc") || this.textContent.trim();
-                    var wrap = dropoff.closest(".booking-input-wrap");
-                    if (wrap) {
-                        wrap.style.borderColor = "var(--brand-orange)";
-                        wrap.style.boxShadow = "0 0 0 4px rgba(245, 130, 32, 0.2)";
-                        setTimeout(function () {
-                            wrap.style.borderColor = "";
-                            wrap.style.boxShadow = "";
-                        }, 600);
-                    }
-                }
-            });
+        $(document).on('click', '.dest-pill', function () {
+            var $chip = $(this);
+            var $dropoff = $('#dropoffLoc');
+            $dropoff.val($chip.attr('data-loc') || $.trim($chip.text()));
+            var $wrap = $dropoff.closest('.booking-input-wrap');
+            $wrap.css({ borderColor: 'var(--brand-orange)', boxShadow: '0 0 0 4px rgba(245, 130, 32, 0.2)' });
+            setTimeout(function () { $wrap.css({ borderColor: '', boxShadow: '' }); }, 600);
         });
 
-        // Switch location button
-        var switchBtn = document.getElementById("switchLocationsBtn");
-        if (switchBtn) {
-            switchBtn.addEventListener("click", function () {
-                var pickup = document.getElementById("pickupLoc");
-                var dropoff = document.getElementById("dropoffLoc");
-                if (pickup && dropoff) {
-                    var temp = pickup.value;
-                    pickup.value = dropoff.value;
-                    dropoff.value = temp;
-                }
-            });
-        }
+        $('#switchLocationsBtn').on('click', function () {
+            var $pickup = $('#pickupLoc');
+            var $dropoff = $('#dropoffLoc');
+            var temp = $pickup.val();
+            $pickup.val($dropoff.val());
+            $dropoff.val(temp);
+        });
 
-        // AJAX Form Submit
-        var form = document.getElementById("heroBookingForm");
-        var msgArea = document.getElementById("bookingMsgArea");
-        var btn = document.getElementById("bookingSubmitBtn");
-        var btnText = document.getElementById("bookingBtnText");
+        $('#heroBookingForm').on('submit', function (e) {
+            e.preventDefault();
+            var $form = $(this);
+            var $btn = $('#bookingSubmitBtn');
+            var $btnText = $('#bookingBtnText');
 
-        if (form) {
-            form.addEventListener("submit", function (e) {
-                e.preventDefault();
-                btn.disabled = true;
-                btnText.textContent = "Đang gửi yêu cầu...";
+            $btn.prop('disabled', true);
+            $btnText.text('Đang gửi yêu cầu...');
 
-                var formData = new FormData(form);
-
-                fetch(form.action, {
-                    method: "POST",
-                    body: formData,
-                    headers: {
-                        "X-Requested-With": "XMLHttpRequest"
-                    }
-                })
-                .then(function (res) { return res.json(); })
-                .then(function (data) {
-                    msgArea.className = "mt-3 alert p-3";
-                    if (data.status) {
-                        msgArea.classList.add("alert-success");
-                        msgArea.innerHTML = '<div class="d-flex align-items-center gap-2 fw-bold mb-1"><i class="fa-solid fa-circle-check text-success fs-5"></i> Gửi yêu cầu báo giá thành công!</div><p class="mb-0 small text-dark">Đội ngũ điều hành xe đã tiếp nhận thông tin và sẽ gọi trực tiếp qua số điện thoại để tư vấn và gửi báo giá ưu đãi trong 5 phút.</p>';
-                        form.reset();
+            $.ajax({
+                url: $form.attr('action'),
+                type: 'POST',
+                data: $form.serialize(),
+                headers: { 'X-Requested-With': 'XMLHttpRequest' },
+                success: function (data) {
+                    if (data && data.status) {
+                        notifyToast(true, 'Thành công', 'Gửi yêu cầu báo giá thành công! Chúng tôi sẽ gọi lại trong 5 phút.');
+                        $form[0].reset();
                         setTripType(true);
-                        if (fromInput) fromInput.value = localISOTime;
-                        if (toDateInput) toDateInput.value = localReturnTime;
+                        $fromInput.val(localISOTime);
+                        $toDateInput.val(localReturnTime);
                     } else {
-                        msgArea.classList.add("alert-danger");
-                        msgArea.innerHTML = '<div class="d-flex align-items-center gap-2 fw-bold"><i class="fa-solid fa-circle-exclamation text-danger"></i> ' + (data.msg || "Có lỗi xảy ra, vui lòng kiểm tra lại thông tin.") + '</div>';
+                        notifyToast(false, 'Thất bại', (data && data.msg) || 'Có lỗi xảy ra, vui lòng kiểm tra lại thông tin.');
                     }
-                })
-                .catch(function () {
-                    msgArea.className = "mt-3 alert alert-danger p-3";
-                    msgArea.innerHTML = '<div class="d-flex align-items-center gap-2 fw-bold"><i class="fa-solid fa-circle-exclamation text-danger"></i> Không thể gửi yêu cầu lúc này. Vui lòng gọi trực tiếp hotline!</div>';
-                })
-                .finally(function () {
-                    btn.disabled = false;
-                    btnText.textContent = "NHẬN BÁO GIÁ NHANH";
-                });
+                },
+                error: function () {
+                    notifyToast(false, 'Thất bại', 'Không thể gửi yêu cầu lúc này. Vui lòng gọi trực tiếp hotline!');
+                },
+                complete: function () {
+                    $btn.prop('disabled', false);
+                    $btnText.text('NHẬN BÁO GIÁ NHANH');
+                }
             });
+        });
+    }
+
+    function waitJq() {
+        if (window.jQuery) {
+            jQuery(initBookingForm);
+        } else {
+            setTimeout(waitJq, 30);
         }
-    });
+    }
+    waitJq();
+})();
 </script>

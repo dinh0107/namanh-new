@@ -13,11 +13,9 @@
     var messengerUrl = !string.IsNullOrWhiteSpace(messenger) ? ("https://" + messenger.Trim().Replace("https://", "")) : "#";
 }
 
-<!-- BEGIN: MainFooter (Bootstrap 5) -->
 <footer class="main-footer" id="lien-he">
     <div class="container">
         <div class="row g-4 pb-4 border-bottom border-white border-opacity-10">
-            <!-- Col 1: Brand Info -->
             <div class="col-lg-4 col-md-6">
                 <div class="d-flex align-items-center gap-2 mb-3">
                     <span class="h4 fw-bold fst-italic text-white mb-0">@siteTitle</span>
@@ -40,7 +38,6 @@
                         <span><strong>Địa chỉ:</strong> @place</span>
                     </p>
                 </div>
-                <!-- Socials -->
                 <div class="d-flex align-items-center mt-2">
                     @if (!string.IsNullOrWhiteSpace(facebook))
                     {
@@ -63,7 +60,6 @@
                 </div>
             </div>
 
-            <!-- Col 2: Về Chúng Tôi -->
             <div class="col-lg-2 col-md-6 col-6">
                 <h5>Về Chúng Tôi</h5>
                 <ul>
@@ -75,7 +71,6 @@
                 </ul>
             </div>
 
-            <!-- Col 3: Dịch vụ -->
             <div class="col-lg-2 col-md-6 col-6">
                 <h5>Dịch vụ</h5>
                 <ul>
@@ -88,7 +83,6 @@
                 </ul>
             </div>
 
-            <!-- Col 4: Hỗ trợ -->
             <div class="col-lg-2 col-md-6 col-6">
                 <h5>Hỗ trợ</h5>
                 <ul>
@@ -100,7 +94,6 @@
                 </ul>
             </div>
 
-            <!-- Col 5: Liên hệ 24/7 -->
             <div class="col-lg-2 col-md-6 col-6">
                 <h5>Liên hệ 24/7</h5>
                 <div class="h5 fw-bold text-warning mb-2">
@@ -117,16 +110,12 @@
             </div>
         </div>
 
-        <!-- Copyright Bottom Bar -->
         <div class="pt-3 d-flex flex-column flex-sm-row align-items-center justify-content-between small text-white-50">
             <span>© @DateTime.Now.Year @siteTitle. All rights reserved.</span>
             <span>Thiết kế hiện đại & Tối ưu trải nghiệm</span>
         </div>
     </div>
 </footer>
-<!-- END: MainFooter -->
-
-<!-- Floating Contact Buttons (Mobile & Desktop) -->
 <div class="floating-actions">
     @if (!string.IsNullOrWhiteSpace(zalo))
     {

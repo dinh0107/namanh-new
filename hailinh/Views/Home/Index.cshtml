@@ -13,8 +13,6 @@
     }
     var hotline = config?.Hotline ?? "1900 8866";
     var zaloUrl = !string.IsNullOrWhiteSpace(config?.Zalo) ? "https://zalo.me/" + config.Zalo.Trim() : ("tel:" + hotline);
-
-    // Editable Hero Banner (GroupId = 1)
     var heroBanner = Model?.Banners?.FirstOrDefault(b => b.GroupId == 1 && b.Active);
     var heroBadge = !string.IsNullOrWhiteSpace(heroBanner?.Content) ? heroBanner.Content : "Uy tín – An toàn – Tận tâm";
     var heroTitle = !string.IsNullOrWhiteSpace(heroBanner?.BannerName) ? heroBanner.BannerName : "Cho thuê xe có lái – Xe đẹp, tài xế chuyên nghiệp, báo giá nhanh";
@@ -22,30 +20,18 @@
     var heroImg = !string.IsNullOrWhiteSpace(heroBanner?.Image)
         ? (heroBanner.Image.StartsWith("http") ? heroBanner.Image : Url.Content("~/images/banners/" + heroBanner.Image))
         : (!string.IsNullOrWhiteSpace(config?.AboutImage) ? Url.Content("~/images/configs/" + config.AboutImage) : "https://lh3.googleusercontent.com/aida-public/AB6AXuC__i21Wh1UkG1m7MvdXP_pp07pp56ss_ADvcowbOIM5uBngiWjp2yCBAjQxxwoc88U82Tpc7mqMbpr0-BYa0Z1f0yahWSlMkWBeJ2WpqCdlmBAmtQ-Mj3LjmhFPh145BGFWTtYQQx66YTiZ7G8IvXYoKRQCGp_Z740f8bwVDo3Zx511_jAN5KFer0kpRBEdO2GtZ04LVoLG0M9V1MlnYNxOcMjRJTWzeptgQEsPa31fVrkh6vGNqy34g");
-
-    // Editable Vehicle Fleet
     var services = Model?.Services?.ToList() ?? new List<CarService>();
-
-    // Editable Routes & Prices
     var priceLangdings = Model?.PriceLangdings?.ToList() ?? new List<PriceLangding>();
-
-    // Editable Testimonials / Reviews (GroupId = 2)
     var reviews = Model?.Banners?.Where(b => b.GroupId == 2 && b.Active).OrderBy(b => b.Sort).ToList() ?? new List<Banner>();
-
-    // Editable Articles
     var articles = Model?.Articles?.ToList() ?? new List<Article>();
-
-    // Editable FAQs (GroupId = 4)
     var faqs = Model?.Banners?.Where(b => b.GroupId == 4 && b.Active).OrderBy(b => b.Sort).ToList() ?? new List<Banner>();
-
-    // Section titles (ConfigSite)
     var fleetTitle = !string.IsNullOrWhiteSpace(config?.HomeFleetTitle) ? config.HomeFleetTitle : "Các dòng xe đang cho thuê";
     var fleetDesc = !string.IsNullOrWhiteSpace(config?.HomeFleetDesc) ? config.HomeFleetDesc : "Đa dạng lựa chọn từ 4 chỗ đến 45 chỗ và Limousine cao cấp đời mới";
     var priceTitle = !string.IsNullOrWhiteSpace(config?.HomePriceTitle) ? config.HomePriceTitle : "Bảng giá tham khảo tuyến đường phổ biến";
-    var priceDesc = !string.IsNullOrWhiteSpace(config?.HomePriceDesc) ? config.HomePriceDesc : "Bấm vào bất kỳ tuyến đường hoặc mức giá nào để tự động điền form và nhận báo giá chi tiết!";
-    var priceNoteTitle = !string.IsNullOrWhiteSpace(config?.HomePriceNoteTitle) ? config.HomePriceNoteTitle : "Ghi chú bảng giá";
+    var priceDesc = !string.IsNullOrWhiteSpace(config?.HomePriceDesc) ? config.HomePriceDesc : "Vui lòng liên hệ để nhận báo giá chính xác và phù hợp nhất với nhu cầu của bạn.";
+    var priceNoteTitle = !string.IsNullOrWhiteSpace(config?.HomePriceNoteTitle) ? config.HomePriceNoteTitle : "Ghi chú";
     var ctaTitle = !string.IsNullOrWhiteSpace(config?.HomeCtaTitle) ? config.HomeCtaTitle : "NHẬN BÁO GIÁ TỐT NHẤT NGAY";
-    var ctaDesc = !string.IsNullOrWhiteSpace(config?.HomeCtaDesc) ? config.HomeCtaDesc : "Bấm để điền thông tin và nhận ưu đãi giảm giá hôm nay";
+    var ctaDesc = !string.IsNullOrWhiteSpace(config?.HomeCtaDesc) ? config.HomeCtaDesc : "Liên hệ để được tư vấn nhanh chóng";
     var reviewTitle = !string.IsNullOrWhiteSpace(config?.HomeReviewTitle) ? config.HomeReviewTitle : "Khách hàng nói gì về chúng tôi?";
     var newsTitle = !string.IsNullOrWhiteSpace(config?.HomeNewsTitle) ? config.HomeNewsTitle : "Tin tức & Cẩm nang du lịch";
     var newsDesc = !string.IsNullOrWhiteSpace(config?.HomeNewsDesc) ? config.HomeNewsDesc : "Kinh nghiệm thuê xe, thông tin các tuyến đường và cẩm nang du lịch hữu ích";
@@ -65,29 +51,23 @@
     var editClass = isAdmin ? "js-inline-edit" : null;
 }
 
-<!-- BEGIN: HeroSection (Dynamic from Banners GroupId = 1 & ConfigSite) -->
 <section class="hero-section">
     <div class="container">
         <div class="row align-items-center g-5">
-            <!-- Left Hero Content -->
             <div class="col-lg-6">
-                <!-- Trust Badge -->
                 <div class="hero-badge">
                     <i class="fa-solid fa-shield-halved text-primary"></i>
                     <span class="@(isAdmin && heroBanner != null ? "js-inline-edit" : null)"@Html.Raw(EditAttrs("Content", "banner", heroBanner?.Id))>@heroBadge</span>
                 </div>
 
-                <!-- Headline -->
                 <h1 class="hero-title @(isAdmin && heroBanner != null ? "js-inline-edit" : null)"@Html.Raw(EditAttrs("BannerName", "banner", heroBanner?.Id))>
                     @Html.Raw(heroTitle)
                 </h1>
 
-                <!-- Description -->
                 <p class="hero-desc @(isAdmin && heroBanner != null ? "js-inline-edit" : null)"@Html.Raw(EditAttrs("Slogan", "banner", heroBanner?.Id))>
                     @heroDesc
                 </p>
 
-                <!-- Action CTAs -->
                 <div class="d-flex flex-wrap align-items-center gap-3 mb-4">
                     <button type="button" onclick="window.selectCarAndBook()" class="btn btn-brand-orange px-4 py-3 fw-bold fs-6">
                         <i class="fa-regular fa-file-lines me-2"></i>
@@ -99,7 +79,6 @@
                     </a>
                 </div>
 
-                <!-- Feature Bullets -->
                 <div class="hero-features">
                     <div class="item">
                         <i class="fa-solid fa-car text-primary"></i>
@@ -116,7 +95,6 @@
                 </div>
             </div>
 
-            <!-- Right Hero Image -->
             <div class="col-lg-6">
                 <div class="hero-img-wrap">
                     <img src="@heroImg" alt="@siteTitle" />
@@ -128,15 +106,9 @@
         </div>
     </div>
 </section>
-<!-- END: HeroSection -->
-
-<!-- BEGIN: BookingCardForm Section -->
 <section class="container booking-section-wrap" id="booking-form">
     @Html.Action("Form", "Home")
 </section>
-<!-- END: BookingCardForm Section -->
-
-<!-- BEGIN: VehicleFleet Slider (Dynamic from CarServices table) -->
 <section class="fleet-section-wrap" id="tuyen-xe">
     <div class="container">
         <div class="text-center mb-4">
@@ -147,9 +119,7 @@
             <p class="section-subtitle @editClass"@Html.Raw(EditAttrs("HomeFleetDesc", "config", null))>@fleetDesc</p>
         </div>
 
-        <!-- Fleet Slider Container -->
         <div class="fleet-slider-container">
-            <!-- Custom Prev/Next Navigation Buttons (Slender Minimalist Arrows) -->
             <button type="button" class="fleet-nav-btn fleet-nav-prev" id="fleetPrevBtn" aria-label="Xe trước">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
             </button>
@@ -157,7 +127,6 @@
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
             </button>
 
-            <!-- Slick Slider Track -->
             <div class="fleet-slider" id="fleetSlickSlider">
                 @if (services.Any())
                 {
@@ -171,10 +140,8 @@
                         
                         <div>
                             <div class="fleet-card-luxury">
-                                <!-- Full-bleed Car Stage -->
                                 <div class="fleet-stage">
                                     <img src="@img" alt="@car.Title" />
-                                    <!-- Floating Badges Overlay (Dynamic from Capacity & Slogan) -->
                                     <div class="fleet-card-header">
                                         <span class="fleet-pill-badge">@capacity</span>
                                         @if (!string.IsNullOrWhiteSpace(car.Slogan))
@@ -192,7 +159,6 @@
                                     </div>
                                 </div>
 
-                                <!-- Card Content -->
                                 <div class="fleet-card-body">
                                     <div>
                                         <h3 class="fleet-car-title">@car.Title</h3>
@@ -201,7 +167,6 @@
                                             <span>@(car.Car ?? car.Title)</span>
                                         </div>
 
-                                        <!-- Specifications Box (100% Dynamic from CarServices fields) -->
                                         <div class="fleet-spec-list">
                                             <div class="spec-item">
                                                 <i class="fa-solid fa-couch text-primary"></i>
@@ -218,7 +183,6 @@
                                         </div>
                                     </div>
 
-                                    <!-- Action Buttons (Refined Dual Pills) -->
                                     <div class="fleet-card-actions">
                                         <button type="button" onclick="window.selectCarAndBook('@capacity')" class="btn-fleet-book">
                                             <span>Đặt xe</span>
@@ -237,188 +201,262 @@
         </div>
     </div>
 </section>
-<!-- END: VehicleFleet Slider -->
+@{
+    var carImg4 = !string.IsNullOrWhiteSpace(config?.Car4) ? Url.Content("~/images/configs/" + config.Car4) : Url.Content("~/images/pricing/car-4-cho.png");
+    var carImg7 = !string.IsNullOrWhiteSpace(config?.Car7) ? Url.Content("~/images/configs/" + config.Car7) : Url.Content("~/images/pricing/car-7-cho.png");
+    var carImg16 = !string.IsNullOrWhiteSpace(config?.Car16) ? Url.Content("~/images/configs/" + config.Car16) : Url.Content("~/images/pricing/car-16-cho.png");
+    var allLocations = priceLangdings
+        .SelectMany(p => p.Locations ?? new List<Location>())
+        .Where(l => l.Active)
+        .OrderBy(l => l.Sort)
+        .ToList();
+    var displayRoutes = allLocations.GroupBy(l => l.Name).Select(g => g.First()).Take(10).ToList();
+}
+<section id="bang-gia">
+    <div class="scenic-bg" aria-hidden="true"></div>
+    <div class="pricing-container">
 
-<!-- BEGIN: PricingTableSection (Dynamic from PriceLangdings & Locations table) -->
-<section class="py-5 bg-white border-top" id="bang-gia">
-    <div class="container">
-        <!-- Trust Badges Header -->
-        <div class="d-flex flex-wrap justify-content-center align-items-center gap-3 mb-3">
-            <span class="badge bg-primary bg-opacity-10 text-primary px-3 py-2 rounded-pill fw-semibold">
-                <i class="fa-solid fa-shield-check me-1"></i> Giá minh bạch
-            </span>
-            <span class="badge bg-success bg-opacity-10 text-success px-3 py-2 rounded-pill fw-semibold">
-                <i class="fa-solid fa-comments me-1"></i> Tư vấn nhanh
-            </span>
-            <span class="badge bg-warning bg-opacity-10 text-dark px-3 py-2 rounded-pill fw-semibold">
-                <i class="fa-solid fa-headset me-1"></i> Hỗ trợ 24/7
-            </span>
+        <div class="top-trust-wrapper">
+            <div class="top-trust-pill">
+                <div class="trust-item">
+                    <div class="badge-icon">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                            <path d="M12 2L4 5.5V11.5C4 16.5 7.5 21 12 22C16.5 21 20 16.5 20 11.5V5.5L12 2Z" fill="#0066ff"/>
+                            <path d="M8.5 11.8L10.8 14.2L15.8 9.2" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                    <span>Giá minh bạch</span>
+                </div>
+                <div class="trust-divider" aria-hidden="true"></div>
+                <div class="trust-item">
+                    <div class="badge-icon">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                            <rect x="2" y="3" width="20" height="15" rx="7.5" fill="#10b981"/>
+                            <circle cx="9" cy="10.5" r="1.8" fill="#ffffff"/>
+                            <circle cx="15" cy="10.5" r="1.8" fill="#ffffff"/>
+                            <path d="M7 17.5L5 21L10 18H14.5" stroke="#10b981" stroke-width="2" stroke-linecap="round" fill="#10b981"/>
+                        </svg>
+                    </div>
+                    <span>Tư vấn nhanh</span>
+                </div>
+                <div class="trust-divider" aria-hidden="true"></div>
+                <div class="trust-item">
+                    <div class="badge-icon">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                            <circle cx="12" cy="12" r="10" stroke="#f97316" stroke-width="2" fill="#ffffff"/>
+                            <text x="12" y="15.5" font-family="'Be Vietnam Pro', sans-serif" font-size="8.5" font-weight="900" fill="#f97316" text-anchor="middle">24h</text>
+                        </svg>
+                    </div>
+                    <span>Hỗ trợ 24/7</span>
+                </div>
+            </div>
         </div>
 
-        <!-- Section Title -->
-        <div class="text-center mb-4">
-            <h2 class="section-title text-uppercase mb-2 @editClass"@Html.Raw(EditAttrs("HomePriceTitle", "config", null))>@priceTitle</h2>
-            <div class="title-line text-primary mb-2"></div>
-            <p class="section-subtitle @editClass"@Html.Raw(EditAttrs("HomePriceDesc", "config", null))>@priceDesc</p>
+        <div class="pricing-header">
+            <h2 class="pricing-title @editClass"@Html.Raw(EditAttrs("HomePriceTitle", "config", null))>@priceTitle</h2>
+            <div class="pricing-subtitle-wrapper">
+                <div class="deco-line left" aria-hidden="true"></div>
+                <p class="pricing-subtitle @editClass"@Html.Raw(EditAttrs("HomePriceDesc", "config", null))>@priceDesc</p>
+                <div class="deco-line right" aria-hidden="true"></div>
+            </div>
         </div>
 
-        <!-- Pricing Matrix Table -->
-        <div class="pricing-matrix-wrap">
-            <table class="table pricing-table align-middle">
-                <thead>
-                    <tr>
-                        <th class="route-th" style="min-width: 200px;">
-                            <div class="d-flex align-items-center gap-2">
-                                <i class="fa-solid fa-location-dot fs-5 text-info"></i>
-                                <div>
-                                    <div class="fw-bold">HÀNH TRÌNH</div>
-                                    <div class="small fw-normal text-white-50">2 CHIỀU</div>
-                                </div>
-                            </div>
-                        </th>
-                        <th style="min-width: 110px;">
-                            <i class="fa-solid fa-car text-primary d-block mb-1"></i>
-                            <span>4 CHỖ</span>
-                        </th>
-                        <th style="min-width: 110px;">
-                            <i class="fa-solid fa-van-shuttle text-primary d-block mb-1"></i>
-                            <span>7 CHỖ</span>
-                        </th>
-                        <th style="min-width: 110px;">
-                            <i class="fa-solid fa-bus-simple text-primary d-block mb-1"></i>
-                            <span>16 CHỖ</span>
-                        </th>
-                        <th style="min-width: 110px;">
-                            <i class="fa-solid fa-bus text-primary d-block mb-1"></i>
-                            <span>29 CHỖ</span>
-                        </th>
-                        <th style="min-width: 110px;">
-                            <i class="fa-solid fa-bus text-primary d-block mb-1"></i>
-                            <span>45 CHỖ</span>
-                        </th>
-                        <th style="min-width: 110px;">
-                            <i class="fa-solid fa-star text-warning d-block mb-1"></i>
-                            <span>LIMOUSINE</span>
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @{
-                        var allLocations = priceLangdings
-                            .SelectMany(p => p.Locations ?? new List<Location>())
-                            .Where(l => l.Active)
-                            .OrderBy(l => l.Sort)
-                            .ToList();
-
-                        var displayRoutes = allLocations.GroupBy(l => l.Name).Select(g => g.First()).Take(10).ToList();
-                    }
-
-                    @if (displayRoutes.Any())
-                    {
-                        foreach (var loc in displayRoutes)
-                        {
-                            var isHot = loc.Hot;
-                            var p4 = !string.IsNullOrWhiteSpace(loc.Price4) ? loc.Price4 : "Liên hệ";
-                            var p7 = !string.IsNullOrWhiteSpace(loc.Price7) ? loc.Price7 : "Liên hệ";
-                            var p16 = !string.IsNullOrWhiteSpace(loc.Price16) ? loc.Price16 : "Liên hệ";
-                            var p29 = !string.IsNullOrWhiteSpace(loc.Price29) ? loc.Price29 : "Liên hệ";
-                            var p45 = !string.IsNullOrWhiteSpace(loc.Price45) ? loc.Price45 : "Liên hệ";
-                            var pLim = !string.IsNullOrWhiteSpace(loc.PriceLim) ? loc.PriceLim : "Liên hệ";
-
-                            <tr class="@(isHot ? "is-hot-row" : "")" onclick="window.selectRouteAndBook('Hà Nội', '@loc.Name', '7 chỗ')">
-                                <td class="route-td">
-                                    <div class="d-flex align-items-center">
-                                        @if (isHot)
-                                        {
-                                            <span class="price-hot-tag"><i class="fa-solid fa-fire"></i> HOT</span>
-                                        }
-                                        else
-                                        {
-                                            <i class="fa-solid fa-location-dot text-primary me-2 small"></i>
-                                        }
-                                        <span>Hà Nội ↔ @loc.Name</span>
+        <div class="table-card">
+            <div class="table-responsive">
+                <table class="pricing-table">
+                    <thead>
+                        <tr>
+                            <th class="col-route">
+                                <div class="th-route-wrapper">
+                                    <div class="route-header-icon">
+                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/>
+                                            <circle cx="12" cy="9" r="2.8"/>
+                                        </svg>
                                     </div>
-                                </td>
-                                <td><span class="price-val @(isHot ? "hot-price" : "") @(p4 == "Liên hệ" ? "contact-price" : "")">@p4</span></td>
-                                <td><span class="price-val @(isHot ? "hot-price" : "") @(p7 == "Liên hệ" ? "contact-price" : "")">@p7</span></td>
-                                <td><span class="price-val @(isHot ? "hot-price" : "") @(p16 == "Liên hệ" ? "contact-price" : "")">@p16</span></td>
-                                <td><span class="price-val @(p29 == "Liên hệ" ? "contact-price" : "")">@p29</span></td>
-                                <td><span class="price-val @(p45 == "Liên hệ" ? "contact-price" : "")">@p45</span></td>
-                                <td><span class="price-val @(pLim == "Liên hệ" ? "contact-price" : "")">@pLim</span></td>
-                            </tr>
+                                    <div class="route-header-title">
+                                        <span>HÀNH TRÌNH</span>
+                                        <span>2 CHIỀU</span>
+                                    </div>
+                                </div>
+                            </th>
+                            <th class="col-car">
+                                <div class="car-header-cell">
+                                    <img src="@carImg4" alt="Xe 4 chỗ" class="car-header-img" />
+                                    <span class="car-header-label">4 CHỖ</span>
+                                </div>
+                            </th>
+                            <th class="col-car">
+                                <div class="car-header-cell">
+                                    <img src="@carImg7" alt="Xe 7 chỗ" class="car-header-img" />
+                                    <span class="car-header-label">7 CHỖ</span>
+                                </div>
+                            </th>
+                            <th class="col-car">
+                                <div class="car-header-cell">
+                                    <img src="@carImg16" alt="Xe 16 chỗ" class="car-header-img" />
+                                    <span class="car-header-label">16 CHỖ</span>
+                                </div>
+                            </th>
+                            <th class="col-car">
+                                <div class="car-header-cell">
+                                    <img src="@Url.Content("~/images/pricing/car-29-cho.png")" alt="Xe 29 chỗ" class="car-header-img" />
+                                    <span class="car-header-label">29 CHỖ</span>
+                                </div>
+                            </th>
+                            <th class="col-car">
+                                <div class="car-header-cell">
+                                    <img src="@Url.Content("~/images/pricing/car-45-cho.png")" alt="Xe 45 chỗ" class="car-header-img" />
+                                    <span class="car-header-label">45 CHỖ</span>
+                                </div>
+                            </th>
+                            <th class="col-car">
+                                <div class="car-header-cell">
+                                    <img src="@Url.Content("~/images/pricing/car-limousine.png")" alt="Xe Limousine" class="car-header-img" />
+                                    <span class="car-header-label">LIMOUSINE</span>
+                                </div>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (displayRoutes.Any())
+                        {
+                            foreach (var loc in displayRoutes)
+                            {
+                                var isHot = loc.Hot;
+                                var p4 = !string.IsNullOrWhiteSpace(loc.Price4) ? loc.Price4 : "Liên hệ";
+                                var p7 = !string.IsNullOrWhiteSpace(loc.Price7) ? loc.Price7 : "Liên hệ";
+                                var p16 = !string.IsNullOrWhiteSpace(loc.Price16) ? loc.Price16 : "Liên hệ";
+                                var p29 = !string.IsNullOrWhiteSpace(loc.Price29) ? loc.Price29 : "Liên hệ";
+                                var p45 = !string.IsNullOrWhiteSpace(loc.Price45) ? loc.Price45 : "Liên hệ";
+                                var pLim = !string.IsNullOrWhiteSpace(loc.PriceLim) ? loc.PriceLim : "Liên hệ";
+                                <tr class="@(isHot ? "row-hot" : null)" onclick="window.selectRouteAndBook('Hà Nội', '@loc.Name', '7 chỗ')" style="cursor:pointer;">
+                                    <td class="route-cell">
+                                        <div class="route-content @(isHot ? "hot-badge-wrapper" : null)">
+                                            @if (isHot)
+                                            {
+                                                <span class="hot-badge-flame">
+                                                    <img src="@Url.Content("~/images/pricing/badge-hot-clean.png")" alt="HOT" class="hot-badge-img" />
+                                                </span>
+                                            }
+                                            else
+                                            {
+                                                <svg class="pin-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                                                    <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 0 1 0-5 2.5 2.5 0 0 1 0 5z"/>
+                                                </svg>
+                                            }
+                                            <span>Hà Nội ↔ @loc.Name</span>
+                                        </div>
+                                    </td>
+                                    <td><span class="@(p4 == "Liên hệ" ? "contact-value" : "price-value")">@p4</span></td>
+                                    <td><span class="@(p7 == "Liên hệ" ? "contact-value" : "price-value")">@p7</span></td>
+                                    <td><span class="@(p16 == "Liên hệ" ? "contact-value" : "price-value")">@p16</span></td>
+                                    <td><span class="@(p29 == "Liên hệ" ? "contact-value" : "price-value")">@p29</span></td>
+                                    <td><span class="@(p45 == "Liên hệ" ? "contact-value" : "price-value")">@p45</span></td>
+                                    <td><span class="@(pLim == "Liên hệ" ? "contact-value" : "price-value")">@pLim</span></td>
+                                </tr>
+                            }
                         }
-                    }
-                </tbody>
-            </table>
+                    </tbody>
+                </table>
+            </div>
         </div>
 
-        <!-- Notes and Fast Prompt Card -->
-        <div class="row g-4 align-items-stretch">
-            <!-- Left: Notes (ConfigSite or Standard) -->
-            <div class="col-md-6">
-                <div class="bg-light p-4 rounded-3 border h-100 d-flex gap-3 align-items-start">
-                    <div class="p-3 bg-primary bg-opacity-10 rounded-circle text-primary flex-shrink-0">
-                        <i class="fa-solid fa-clipboard-check fs-4"></i>
+        <div class="bottom-grid">
+            <section class="notes-card">
+                <div class="notes-icon-wrapper">
+                    <img src="@Url.Content("~/images/pricing/icon-note.png")" alt="" class="notes-icon-img" />
+                </div>
+                <div class="notes-content">
+                    <h3 class="notes-title @editClass"@Html.Raw(EditAttrs("HomePriceNoteTitle", "config", null))>@priceNoteTitle</h3>
+                    @if (!string.IsNullOrWhiteSpace(config?.Price))
+                    {
+                        <div class="notes-list">@Html.Raw(config.Price)</div>
+                    }
+                    else
+                    {
+                        <ul class="notes-list">
+                            <li class="notes-item">
+                                <svg class="notes-check" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>
+                                <span>Giá trên đã bao gồm xăng dầu, lương lái xe</span>
+                            </li>
+                            <li class="notes-item">
+                                <svg class="notes-check" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>
+                                <span>Giá chưa gồm phí cầu đường và VAT 8%</span>
+                            </li>
+                            <li class="notes-item">
+                                <svg class="notes-check" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>
+                                <span>Giá có thể thay đổi theo thời điểm, giá nhiên liệu, hoặc theo hành trình thực tế</span>
+                            </li>
+                            <li class="notes-item">
+                                <svg class="notes-check" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>
+                                <span>Giá trên chưa bao gồm phí lưu đêm của xe (nếu có)</span>
+                            </li>
+                        </ul>
+                    }
+                </div>
+            </section>
+
+            <section class="cta-wrapper">
+                <button type="button" class="cta-button" onclick="window.selectCarAndBook()">
+                    <div class="cta-phone-icon">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                            <path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/>
+                        </svg>
                     </div>
-                    <div class="small text-secondary">  
-                        <h4 class="h6 fw-bold text-dark text-uppercase mb-2 @editClass"@Html.Raw(EditAttrs("HomePriceNoteTitle", "config", null))>@priceNoteTitle</h4>
-                        @if (!string.IsNullOrWhiteSpace(config?.Price))
-                        {
-                            @Html.Raw(config.Price)
-                        }
-                        else
-                        {
-                            <p class="mb-1"><i class="fa-solid fa-check text-success me-1"></i> Giá trên đã bao gồm xăng dầu, lương lái xe</p>
-                            <p class="mb-1"><i class="fa-solid fa-check text-success me-1"></i> Giá chưa gồm phí cầu đường cao tốc và VAT 8% (nếu có)</p>
-                            <p class="mb-1"><i class="fa-solid fa-check text-success me-1"></i> Giá thay đổi linh hoạt theo thời điểm hoặc hành trình thực tế</p>
-                            <p class="mb-0"><i class="fa-solid fa-check text-success me-1"></i> Giá chưa bao gồm phí lưu đêm của xe (nếu đi nhiều ngày)</p>
-                        }
+                    <div class="cta-text-group">
+                        <div class="cta-text-main @editClass"@Html.Raw(EditAttrs("HomeCtaTitle", "config", null))>@ctaTitle</div>
+                        <div class="cta-text-sub @editClass"@Html.Raw(EditAttrs("HomeCtaDesc", "config", null))>@ctaDesc</div>
+                    </div>
+                    <div class="cta-arrow">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                            <polyline points="12 5 19 12 12 19"></polyline>
+                        </svg>
+                    </div>
+                </button>
+
+                <div class="commitments-bar">
+                    <div class="commitment-item">
+                        <div class="commitment-icon shield">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                                <path d="M12 2L4 5.5V11.5C4 16.5 7.5 21 12 22C16.5 21 20 16.5 20 11.5V5.5L12 2Z" fill="#0066ff"/>
+                                <path d="M8.5 11.8L10.8 14.2L15.8 9.2" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
+                        <div class="commitment-text">
+                            <span class="commitment-title">An toàn</span>
+                            <span class="commitment-desc">Tài xế chuyên nghiệp</span>
+                        </div>
+                    </div>
+                    <div class="commitment-item">
+                        <div class="commitment-icon clock">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#0066ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <polyline points="12 6 12 12 15 15"></polyline>
+                            </svg>
+                        </div>
+                        <div class="commitment-text">
+                            <span class="commitment-title">Đúng giờ</span>
+                            <span class="commitment-desc">Cam kết đúng hẹn</span>
+                        </div>
+                    </div>
+                    <div class="commitment-item">
+                        <div class="commitment-icon heart">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="#ea3a00" aria-hidden="true">
+                                <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                            </svg>
+                        </div>
+                        <div class="commitment-text">
+                            <span class="commitment-title">Tận tâm</span>
+                            <span class="commitment-desc">Phục vụ chu đáo</span>
+                        </div>
                     </div>
                 </div>
-            </div>
-
-            <!-- Right: Prompt Fast Booking -->
-            <div class="col-md-6">
-                <div class="p-4 rounded-3 border h-100 d-flex flex-column justify-content-between" style="background-color: var(--brand-sky); border-color: var(--brand-sky-border) !important;">
-                    <button type="button" onclick="window.selectCarAndBook()" class="btn btn-primary p-3 rounded-3 d-flex align-items-center justify-content-between text-start mb-3 shadow-sm" style="background-color: var(--brand-dark-blue); border: none;">
-                        <div class="d-flex align-items-center gap-3">
-                            <div class="p-2 bg-white bg-opacity-10 rounded-circle text-white">
-                                <i class="fa-solid fa-phone-volume fs-5"></i>
-                            </div>
-                            <div>
-                                <div class="fw-bold fs-6 @editClass"@Html.Raw(EditAttrs("HomeCtaTitle", "config", null))>@ctaTitle</div>
-                                <div class="small text-white-50 @editClass"@Html.Raw(EditAttrs("HomeCtaDesc", "config", null))>@ctaDesc</div>
-                            </div>
-                        </div>
-                        <i class="fa-solid fa-arrow-right fs-5 text-white"></i>
-                    </button>
-
-                    <!-- 3 Service Commitments -->
-                    <div class="row text-center pt-2 border-top border-primary border-opacity-10">
-                        <div class="col-4">
-                            <i class="fa-solid fa-shield-check text-primary fs-5 mb-1 d-block"></i>
-                            <div class="fw-bold small text-dark">An toàn</div>
-                            <div class="text-muted" style="font-size: 0.75rem;">Tài xế chuẩn mực</div>
-                        </div>
-                        <div class="col-4">
-                            <i class="fa-regular fa-clock text-primary fs-5 mb-1 d-block"></i>
-                            <div class="fw-bold small text-dark">Đúng giờ</div>
-                            <div class="text-muted" style="font-size: 0.75rem;">Cam kết đón đúng hẹn</div>
-                        </div>
-                        <div class="col-4">
-                            <i class="fa-solid fa-hand-holding-heart text-danger fs-5 mb-1 d-block"></i>
-                            <div class="fw-bold small text-dark">Tận tâm</div>
-                            <div class="text-muted" style="font-size: 0.75rem;">Phục vụ chu đáo</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            </section>
         </div>
     </div>
 </section>
-<!-- END: PricingTableSection -->
-
-<!-- BEGIN: TestimonialsSection (Dynamic from Banners GroupId = 2) -->
 @if (reviews.Any())
 {
     <section class="py-5 bg-light" id="gioi-thieu">
@@ -463,9 +501,6 @@
         </div>
     </section>
 }
-<!-- END: TestimonialsSection -->
-
-<!-- BEGIN: News & Articles (Dynamic from Articles table) -->
 @if (articles.Any())
 {
     <section class="py-5 bg-white border-top" id="tin-tuc">
@@ -517,9 +552,6 @@
         </div>
     </section>
 }
-<!-- END: News & Articles -->
-
-<!-- BEGIN: FAQSection (Dynamic from Banners GroupId = 4) -->
 @if (faqs.Any())
 {
     <section class="py-5 bg-light border-top">
@@ -555,7 +587,6 @@
                 }
             </div>
 
-            <!-- FAQ CTA Box -->
             <div class="mt-4 p-4 rounded-3 text-center bg-white border shadow-sm">
                 <h4 class="h6 fw-bold text-dark mb-1 @editClass"@Html.Raw(EditAttrs("HomeFaqCtaTitle", "config", null))>@faqCtaTitle</h4>
                 <p class="small text-muted mb-3 @editClass"@Html.Raw(EditAttrs("HomeFaqCtaDesc", "config", null))>@faqCtaDesc</p>
@@ -571,13 +602,9 @@
         </div>
     </section>
 }
-<!-- END: FAQSection -->
-
 @section scripts {
     @if (isAdmin)
     {
-        <link rel="stylesheet" href="@Url.Content("~/Content/jquery.toast.css")" />
-        <script src="@Url.Content("~/Scripts/jquery.toast.js")"></script>
         <style>
             .js-inline-edit {
                 cursor: text;
