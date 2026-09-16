@@ -66,8 +66,7 @@ namespace hailinh.Controllers
                 Services = service,
                 Articles = articles.Take(6),
                 ArticleCategories = ArticleCategories().Where(a => a.TypePost == TypePost.Article && a.Home),
-                PriceLangdings = langdings,
-                PriceTables = _unitOfWork.PriceTableRepository.GetQuery(orderBy: a => a.OrderBy(b => b.Sort))
+                PriceLangdings = langdings
             };
             return View(model);
         }

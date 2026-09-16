@@ -1,7 +1,10 @@
 using hailinh.DAL;
 using hailinh.Models;
 using hailinh.ViewModel;
+using Helpers;
 using PagedList;
+using System;
+using System.IO;
 using System.Linq;
 using System.Web.Mvc;
 
@@ -52,6 +55,11 @@ namespace hailinh.Controllers
             {
                 var locations = model.Locations;
                 model.Locations = null;
+                var image = SaveImage();
+                if (image != null)
+                {
+                    model.Image = image;
+                }
                 _unitOfWork.PriceLangdingRepository.Insert(model);
                 _unitOfWork.Save();
                 SaveLocations(model.Id, locations);
@@ -87,6 +95,11 @@ namespace hailinh.Controllers
                 price.Description = model.Description;
                 price.Sort = model.Sort;
                 price.Active = model.Active;
+                var image = SaveImage();
+                if (image != null)
+                {
+                    price.Image = image;
+                }
 
                 var oldLocations = _unitOfWork.LocationRepository
                     .Get(x => x.PriceLangdingId == model.Id)
@@ -120,6 +133,30 @@ namespace hailinh.Controllers
             _unitOfWork.Save();
 
             return Json(new { success = true, message = "Xóa thành công" });
+        }
+
+        private string SaveImage()
+        {
+            var file = Request.Files["Image"];
+            if (file == null || file.ContentLength <= 0)
+            {
+                return null;
+            }
+            if (!HtmlHelpers.CheckFileExt(file.FileName, "jpg|jpeg|png|gif|webp"))
+            {
+                return null;
+            }
+            if (file.ContentLength > 4 * 1024 * 1024)
+            {
+                return null;
+            }
+
+            var imgPath = "/images/pricelangdings/" + DateTime.Now.ToString("yyyy/MM/dd");
+            HtmlHelpers.CreateFolder(Server.MapPath(imgPath));
+            var imgFileName = HtmlHelpers.ConvertToUnSign(null, Path.GetFileNameWithoutExtension(file.FileName)) +
+                "-" + DateTime.Now.Millisecond + Path.GetExtension(file.FileName);
+            file.SaveAs(Server.MapPath(Path.Combine(imgPath, imgFileName)));
+            return DateTime.Now.ToString("yyyy/MM/dd") + "/" + imgFileName;
         }
 
         private void SaveLocations(int priceLangdingId, System.Collections.Generic.ICollection<Location> locations)

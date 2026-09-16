@@ -202,12 +202,6 @@
     </div>
 </section>
 @{
-    var carImg4 = !string.IsNullOrWhiteSpace(config?.Car4) ? Url.Content("~/images/configs/" + config.Car4) : Url.Content("~/images/pricing/car-4.png");
-    var carImg7 = !string.IsNullOrWhiteSpace(config?.Car7) ? Url.Content("~/images/configs/" + config.Car7) : Url.Content("~/images/pricing/car-7.png");
-    var carImg16 = !string.IsNullOrWhiteSpace(config?.Car16) ? Url.Content("~/images/configs/" + config.Car16) : Url.Content("~/images/pricing/car-16.png");
-    var carImg29 = Url.Content("~/images/pricing/car-29.png");
-    var carImg45 = Url.Content("~/images/pricing/car-45.png");
-    var carImgLimo = Url.Content("~/images/pricing/car-limo.png");
     Func<string, string> NormTab = name => (name ?? "").ToLowerInvariant().Replace(" ", "").Replace("ỗ", "o").Replace("ổ", "o").Replace("ô", "o");
     var tabsOrdered = priceLangdings.OrderBy(t => t.Sort).ToList();
     Func<string, PriceLangding> FindTab = token =>
@@ -218,6 +212,10 @@
     var tab29 = FindTab("29cho") ?? tabsOrdered.ElementAtOrDefault(3);
     var tab45 = FindTab("45cho") ?? tabsOrdered.ElementAtOrDefault(4);
     var tabLim = priceLangdings.FirstOrDefault(t => NormTab(t.Name).Contains("limo")) ?? tabsOrdered.ElementAtOrDefault(5);
+    Func<PriceLangding, string> TabImg = tab =>
+        tab != null && !string.IsNullOrWhiteSpace(tab.Image)
+            ? Url.Content("~/images/pricelangdings/" + tab.Image)
+            : null;
     Func<string, PriceLangding, string> PriceFor = (dest, tab) =>
     {
         var loc = tab?.Locations?.FirstOrDefault(l => l.Active && string.Equals(l.Name, dest, StringComparison.OrdinalIgnoreCase));
@@ -229,7 +227,6 @@
         .Where(l => l.Active)
         .GroupBy(l => l.Name, StringComparer.OrdinalIgnoreCase)
         .OrderBy(g => g.Min(x => x.Sort))
-        .Take(10)
         .Select(g => new
         {
             Name = g.First().Name,
@@ -298,42 +295,30 @@
                                     </div>
                                 </div>
                             </th>
-                            <th class="col-car">
-                                <div class="car-header-cell">
-                                    <img src="@carImg4" alt="Xe 4 chỗ" class="car-header-img" />
-                                    <span class="car-header-label">4 CHỖ</span>
-                                </div>
-                            </th>
-                            <th class="col-car">
-                                <div class="car-header-cell">
-                                    <img src="@carImg7" alt="Xe 7 chỗ" class="car-header-img" />
-                                    <span class="car-header-label">7 CHỖ</span>
-                                </div>
-                            </th>
-                            <th class="col-car">
-                                <div class="car-header-cell">
-                                    <img src="@carImg16" alt="Xe 16 chỗ" class="car-header-img" />
-                                    <span class="car-header-label">16 CHỖ</span>
-                                </div>
-                            </th>
-                            <th class="col-car">
-                                <div class="car-header-cell">
-                                    <img src="@carImg29" alt="Xe 29 chỗ" class="car-header-img" />
-                                    <span class="car-header-label">29 CHỖ</span>
-                                </div>
-                            </th>
-                            <th class="col-car">
-                                <div class="car-header-cell">
-                                    <img src="@carImg45" alt="Xe 45 chỗ" class="car-header-img" />
-                                    <span class="car-header-label">45 CHỖ</span>
-                                </div>
-                            </th>
-                            <th class="col-car">
-                                <div class="car-header-cell">
-                                    <img src="@carImgLimo" alt="Limousine" class="car-header-img" />
-                                    <span class="car-header-label">LIMOUSINE</span>
-                                </div>
-                            </th>
+                            @{
+                                var carCols = new[]
+                                {
+                                    new { Tab = tab4, Label = "4 CHỖ" },
+                                    new { Tab = tab7, Label = "7 CHỖ" },
+                                    new { Tab = tab16, Label = "16 CHỖ" },
+                                    new { Tab = tab29, Label = "29 CHỖ" },
+                                    new { Tab = tab45, Label = "45 CHỖ" },
+                                    new { Tab = tabLim, Label = "LIMOUSINE" }
+                                };
+                            }
+                            @foreach (var col in carCols)
+                            {
+                                var img = TabImg(col.Tab);
+                                <th class="col-car">
+                                    <div class="car-header-cell">
+                                        @if (img != null)
+                                        {
+                                            <img src="@img" alt="@col.Label" class="car-header-img" />
+                                        }
+                                        <span class="car-header-label">@(col.Tab?.Name?.ToUpperInvariant() ?? col.Label)</span>
+                                    </div>
+                                </th>
+                            }
                         </tr>
                     </thead>
                     <tbody>

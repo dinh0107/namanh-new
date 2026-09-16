@@ -3639,14 +3639,14 @@ footer h2 {
   border-radius: 8px 0 0 8px;
 }
 
-@media (max-width: 600px) {
-  .title-section-in {
-    font-size: 1.125rem;
-    width: auto;
-    text-align: center;
-  }
+    @media (max-width: 600px) {
+      .title-section-in {
+        font-size: 1.125rem;
+        width: auto;
+        text-align: center;
+      }
 
-  .accordion-icon {
-    display: none;
-  }
-}
+      .accordion-icon {
+        display: none;
+      }
+    }

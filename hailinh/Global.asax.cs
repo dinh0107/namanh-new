@@ -39,7 +39,13 @@ BEGIN
     UPDATE dbo.__MigrationHistory
     SET ContextKey = N'hailinh.Migrations.Configuration'
     WHERE ContextKey <> N'hailinh.Migrations.Configuration';
-END");
+END
+
+-- PriceLangding.Image: code đã map cột này; đảm bảo DB product có cột trước khi query Index.
+IF OBJECT_ID(N'dbo.PriceLangdings', N'U') IS NOT NULL
+   AND COL_LENGTH(N'dbo.PriceLangdings', N'Image') IS NULL
+    ALTER TABLE dbo.PriceLangdings ADD Image NVARCHAR(500) NULL;
+");
                     }
                 }
             }

@@ -29,12 +29,19 @@
             </div>
             <div id="createForm" class="accordion-collapse collapse show">
                 <div class="accordion-body">
-                    @using (Html.BeginForm("Price", "Price", FormMethod.Post, new { @id = "data-insert-form" }))
+                    @using (Html.BeginForm("Price", "Price", FormMethod.Post, new { @id = "data-insert-form", enctype = "multipart/form-data" }))
                     {
                         @Html.ValidationSummary(true)
                         <div class="mb-3 row">
                             <label class="col-form-label col-lg-3">Loại xe (tab) <span class="text-danger">*</span></label>
                             <div class="col-lg-9">@Html.EditorFor(a => a.Name, new { htmlAttributes = new { placeholder = "VD: 4 chỗ, 8 chỗ, Limousine — tự đặt tên tab" } })</div>
+                        </div>
+                        <div class="mb-3 row">
+                            <label class="col-form-label col-lg-3">Ảnh loại xe</label>
+                            <div class="col-lg-9">
+                                <input type="file" name="Image" accept="image/*" />
+                                <div class="text-danger mt-2">jpg, png, gif, webp &lt; 4MB — hiện trên cột bảng giá trang chủ</div>
+                            </div>
                         </div>
                         <div class="mb-3 row">
                             <label class="col-form-label col-lg-3">Mô tả</label>

@@ -51,6 +51,8 @@ namespace hailinh.Models
         public int Sort { get; set; }
         [Display(Name = "Hoạt động")]
         public bool Active { set; get; }
+        [Display(Name = "Ảnh loại xe"), StringLength(500), UIHint("TextBox")]
+        public string Image { get; set; }
         public virtual ICollection<Location> Locations { get; set; }
     }
 
