@@ -7,9 +7,12 @@ namespace hailinh.Utils
 {
     /// <summary>
     /// SMTP gửi mail — lưu trên ConfigSites (cột ngoài EF model để khỏi migration snapshot).
+    /// Cấu hình tại MMS → Thông tin chung.
     /// </summary>
     public static class SmtpSettings
     {
+        const string RemovedLegacySmtp = "kythuatluatankhang@gmail.com";
+
         public static void EnsureColumns()
         {
             var cs = WebConfigurationManager.ConnectionStrings["DataEntities"]?.ConnectionString;
@@ -27,26 +30,15 @@ BEGIN
         ALTER TABLE dbo.ConfigSites ADD SmtpEmail NVARCHAR(100) NULL;
     IF COL_LENGTH(N'dbo.ConfigSites', N'SmtpPassword') IS NULL
         ALTER TABLE dbo.ConfigSites ADD SmtpPassword NVARCHAR(200) NULL;
-END";
-                    cmd.ExecuteNonQuery();
-                }
 
-                // Seed once from Web.config if empty
-                var fallbackEmail = ConfigurationManager.AppSettings["email"];
-                var fallbackPass = ConfigurationManager.AppSettings["password"];
-                if (!string.IsNullOrWhiteSpace(fallbackEmail))
-                {
-                    using (var cmd = conn.CreateCommand())
-                    {
-                        cmd.CommandText = @"
-UPDATE TOP (1) dbo.ConfigSites
-SET SmtpEmail = @e,
-    SmtpPassword = CASE WHEN SmtpPassword IS NULL OR LTRIM(RTRIM(SmtpPassword)) = N'' THEN @p ELSE SmtpPassword END
-WHERE SmtpEmail IS NULL OR LTRIM(RTRIM(SmtpEmail)) = N''";
-                        cmd.Parameters.AddWithValue("@e", fallbackEmail);
-                        cmd.Parameters.AddWithValue("@p", (object)fallbackPass ?? DBNull.Value);
-                        cmd.ExecuteNonQuery();
-                    }
+    -- Gỡ SMTP cũ không còn dùng
+    IF COL_LENGTH(N'dbo.ConfigSites', N'SmtpEmail') IS NOT NULL
+        UPDATE dbo.ConfigSites
+        SET SmtpEmail = NULL, SmtpPassword = NULL
+        WHERE SmtpEmail = @legacy;
+END";
+                    cmd.Parameters.AddWithValue("@legacy", RemovedLegacySmtp);
+                    cmd.ExecuteNonQuery();
                 }
             }
         }
@@ -79,13 +71,26 @@ WHERE SmtpEmail IS NULL OR LTRIM(RTRIM(SmtpEmail)) = N''";
             }
             catch
             {
-                // cột chưa có — fallback appSettings
+                // cột chưa có
             }
 
+            if (string.Equals(email, RemovedLegacySmtp, StringComparison.OrdinalIgnoreCase))
+            {
+                email = null;
+                password = null;
+            }
+
+            // Fallback tùy chọn từ appSettings (nếu còn khai báo)
             if (string.IsNullOrWhiteSpace(email))
                 email = ConfigurationManager.AppSettings["email"];
             if (string.IsNullOrWhiteSpace(password))
                 password = ConfigurationManager.AppSettings["password"];
+
+            if (string.Equals(email, RemovedLegacySmtp, StringComparison.OrdinalIgnoreCase))
+            {
+                email = null;
+                password = null;
+            }
         }
 
         public static void Save(string email, string password)
