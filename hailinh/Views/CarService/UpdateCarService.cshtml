@@ -48,7 +48,7 @@
                             </div>
                         </div>
                         <div class="mb-3 row">
-                            <label class="col-form-label col-lg-3" for="Slogan">Tag nhãn nổi bật (Badge góc phải)</label>
+                            <label class="col-form-label col-lg-3" for="Slogan">Dòng phụ dưới tiêu đề (trang dịch vụ)</label>
                             <div class="col-lg-9">
                                 @Html.TextBoxFor(a => a.Slogan, new { @class = "form_control w300", placeholder = "VD: Đời mới 2024 hoặc VIP Luxury" })
                             </div>
@@ -167,12 +167,13 @@
                         </div>
                         <div class="mb-3 row">
                             <div class="col-lg-3">
-                                <label>Thông số hiển thị thẻ xe</label>
+                                <label>Thông số hiển thị thẻ xe (trang chủ)</label>
+                                <div class="small text-muted">Trang dịch vụ Figma: 3 badge hero + 4+5 block = 9 dòng loại <strong>Ưu điểm</strong> (Sort 1–9).</div>
                             </div>
                             <div class="col-lg-9 row">
                                 <div class="col-6">
                                     <div class="row mb-3">
-                                        <label class="col-form-label col-lg-4" for="Capacity">Số ghế ngồi (Badge)</label>
+                                        <label class="col-form-label col-lg-4" for="Capacity">Số ghế / badge thẻ</label>
                                         <div class="col-lg-8">
                                             @Html.TextBoxFor(a => a.Capacity, new { @class = "form_control w300", placeholder = "VD: 29 chỗ ngồi" })
                                         </div>
@@ -180,17 +181,17 @@
                                 </div>
                                 <div class="col-6">
                                     <div class="row mb-3">
-                                        <label class="col-form-label col-lg-4" for="Speed">Tiện nghi trang bị</label>
+                                        <label class="col-form-label col-lg-4" for="Speed">Tiện nghi</label>
                                         <div class="col-lg-8">
-                                            @Html.TextBoxFor(a => a.Speed, new { @class = "form_control w300", placeholder = "VD: Điều hòa 2 vùng mát lạnh" })
+                                            @Html.TextBoxFor(a => a.Speed, new { @class = "form_control w300", placeholder = "VD: Điều hòa 2 vùng" })
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-6">
                                     <div class="row mb-3">
-                                        <label class="col-form-label col-lg-4" for="Type">Mục đích phục vụ</label>
+                                        <label class="col-form-label col-lg-4" for="Type">Mục đích</label>
                                         <div class="col-lg-8">
-                                            @Html.TextBoxFor(a => a.Type, new { @class = "form_control w300", placeholder = "VD: Đoàn thể, sự kiện, du lịch" })
+                                            @Html.TextBoxFor(a => a.Type, new { @class = "form_control w300", placeholder = "VD: Du lịch, sự kiện" })
                                         </div>
                                     </div>
                                 </div>
@@ -198,7 +199,7 @@
                                     <div class="row mb-3">
                                         <label class="col-form-label col-lg-4" for="Firm">Hãng xe</label>
                                         <div class="col-lg-8">
-                                            @Html.TextBoxFor(a => a.Firm, new { @class = "form_control w300", placeholder = "VD: Hyundai / Toyota" })
+                                            @Html.TextBoxFor(a => a.Firm, new { @class = "form_control w300", placeholder = "VD: Toyota" })
                                         </div>
                                     </div>
                                 </div>

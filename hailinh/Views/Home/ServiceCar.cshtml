@@ -1,352 +1,447 @@
 @model hailinh.ViewModel.ServiceCarViewModel
 @using hailinh.Models
-@using hailinh.Utils
+@using System.Web
 @{
     var config = (ConfigSite)HttpContext.Current.Application["ConfigSite"];
-    ViewBag.Title = Model.CarService.TitleMeta ?? Model.CarService.Title;
-    ViewBag.Description = Model.CarService.DescriptionMeta ?? Model.CarService.Description;
-    ViewBag.Canonical = Request.Url?.GetLeftPart(UriPartial.Authority) + Url.Action("Index");
-    var share = Model.CarService.ImageUrl ?? Model.CarService.ImageUrlMobile;
-    if (share != null)
+    var cs = Model.CarService;
+    ViewBag.Title = cs.TitleMeta ?? cs.Title;
+    ViewBag.Description = cs.DescriptionMeta ?? cs.Description;
+    ViewBag.Canonical = Request.Url?.GetLeftPart(UriPartial.Authority) + Url.Action("ServiceCar", new { url = cs.Slug });
+
+    var share = cs.ImageUrl ?? cs.ImageUrlMobile ?? cs.Image;
+    if (!string.IsNullOrEmpty(share))
     {
-        ViewBag.ImageShare = Request.Url?.GetLeftPart(UriPartial.Authority) + Path.Combine("/images/carService/", share);
+        ViewBag.ImageShare = Request.Url?.GetLeftPart(UriPartial.Authority) + Url.Content("~/images/carService/" + share);
     }
-    int count = 1;
-    var banner = Model.Banners.Where(a => a.GroupId == 6).FirstOrDefault();
 
-    var desktopImage = Model.CarService?.ImageUrl ?? Model.CarService?.ImageUrlMobile;
-    var mobileImage = Model.CarService?.ImageUrlMobile ?? Model.CarService?.ImageUrl;
-}
-<style>
-
-    .box-price tbody tr td:first-child {
-        text-align: center;
-    }
-</style>
-
-<section class="banner custom-baner">
-    @if (UserUtils.FBrowserIsMobile())
+    Func<string, string> carImg = path =>
     {
-        if (!string.IsNullOrEmpty(mobileImage))
-        {
-            <img src="~/Content/images/img-main/base64.gif" data-src="@Path.Combine("/images/carService/", mobileImage)" alt="@Model.CarService.Title" class="lazyload service-banner d-lg-none d-block" />
-        }
+        if (string.IsNullOrWhiteSpace(path)) return null;
+        if (path.StartsWith("http", StringComparison.OrdinalIgnoreCase) || path.StartsWith("/"))
+            return path.StartsWith("http", StringComparison.OrdinalIgnoreCase) ? path : Url.Content("~" + path);
+        return Url.Content("~/images/carService/" + path.TrimStart('/'));
+    };
+    Func<string, string> detailImg = path =>
+    {
+        if (string.IsNullOrWhiteSpace(path)) return null;
+        if (path.StartsWith("http", StringComparison.OrdinalIgnoreCase) || path.StartsWith("/"))
+            return path.StartsWith("http", StringComparison.OrdinalIgnoreCase) ? path : Url.Content("~" + path);
+        return Url.Content("~/images/detail/" + path.TrimStart('/'));
+    };
+
+    var heroImg = carImg(cs.ImageUrl ?? cs.Image ?? cs.ImageUrlMobile) ?? Url.Content("~/images/carService/seed/hero-vios.webp");
+    var details = cs.Details?.OrderBy(d => d.Sort).ToList() ?? new List<CarServiceDetail>();
+    var highlights = details.Where(d => d.CarServiceType == CarServiceType.Highlight).ToList();
+    var gallery = details.Where(d => d.CarServiceType == CarServiceType.SupportedCar).ToList();
+    var faqs = details.Where(d => d.CarServiceType == CarServiceType.Policy).ToList();
+    var prices = cs.CarServicePrices?.OrderBy(p => p.Sort).ToList() ?? new List<CarServicePrice>();
+    var testimonials = Model.Banners?.Where(b => b.Active && b.GroupId == 5).OrderBy(b => b.Sort).ToList() ?? new List<Banner>();
+
+    var heroBadgeDefaults = new[] {
+        Tuple.Create("Xe đời mới", "Sang trọng, sạch"),
+        Tuple.Create("Tài xế chuẩn", "Chuyên nghiệp"),
+        Tuple.Create("Giá trọn gói", "Minh bạch 100%")
+    };
+    var heroBadges = highlights.Take(3).Select(h => Tuple.Create(h.Name, h.Desciption)).ToList();
+    while (heroBadges.Count < 3)
+    {
+        heroBadges.Add(heroBadgeDefaults[heroBadges.Count]);
+    }
+    var badgeIcons = new[] { "fa-car-side", "fa-user-tie", "fa-tags" };
+    var captionTitle = cs.Car;
+    if (!string.IsNullOrWhiteSpace(captionTitle))
+    {
+        var cut = captionTitle.Split(new[] { '(', ',', ';' }, StringSplitOptions.RemoveEmptyEntries)[0].Trim();
+        if (cut.Length > 0) { captionTitle = cut; }
     }
     else
     {
-        if (!string.IsNullOrEmpty(desktopImage))
+        captionTitle = "Toyota Vios";
+    }
+    var captionSub = "Lựa chọn lý tưởng cho mọi hành trình";
+    var includeIcons = new[] { "fa-car", "fa-id-card", "fa-map-location-dot", "fa-headset" };
+    var whyIcons = new[] { "fa-gem", "fa-road", "fa-file-invoice-dollar", "fa-clock", "fa-bolt" };
+
+    var included = highlights.Skip(3).Take(4).ToList();
+    var whyChoose = highlights.Skip(7).Take(5).ToList();
+    if (!included.Any())
+    {
+        included = highlights.Take(4).ToList();
+    }
+    if (!included.Any())
+    {
+        included = new List<CarServiceDetail> {
+            new CarServiceDetail { Name = "Xe sạch, đời mới" },
+            new CarServiceDetail { Name = "Tài xế chuyên nghiệp, lịch sự" },
+            new CarServiceDetail { Name = "Đón trả tận nơi theo yêu cầu" },
+            new CarServiceDetail { Name = "Hỗ trợ nhiệt tình 24/7" }
+        };
+    }
+    if (!whyChoose.Any())
+    {
+        whyChoose = new List<CarServiceDetail> {
+            new CarServiceDetail { Name = "Xe chất lượng cao", Desciption = "Đội xe đời mới, bảo dưỡng định kỳ" },
+            new CarServiceDetail { Name = "Tài xế kinh nghiệm", Desciption = "Am hiểu tuyến đường, phục vụ chu đáo" },
+            new CarServiceDetail { Name = "Giá minh bạch", Desciption = "Báo giá rõ ràng, không phát sinh" },
+            new CarServiceDetail { Name = "Hỗ trợ 24/7", Desciption = "Luôn sẵn sàng tư vấn và hỗ trợ" },
+            new CarServiceDetail { Name = "Đặt xe nhanh", Desciption = "Nhận báo giá trong vài phút" }
+        };
+    }
+    if (!faqs.Any())
+    {
+        faqs = new List<CarServiceDetail> {
+            new CarServiceDetail { Name = "Giá thuê xe bao gồm những gì?", Body = "<p>Giá đã bao gồm xăng dầu và lương lái xe theo lộ trình thỏa thuận. Phí cầu đường và VAT (nếu có) sẽ được báo trước.</p>" },
+            new CarServiceDetail { Name = "Có phát sinh chi phí ẩn không?", Body = "<p>Không. Hà Linh cam kết báo giá minh bạch trước khi xuất phát.</p>" }
+        };
+    }
+    if (!prices.Any())
+    {
+        prices = new List<CarServicePrice> {
+            new CarServicePrice { RouteDescription = "Hà Nội ↔ Ninh Bình", Price = "1.200.000đ" },
+            new CarServicePrice { RouteDescription = "Hà Nội ↔ Hạ Long", Price = "1.600.000đ" },
+            new CarServicePrice { RouteDescription = "Hà Nội ↔ Hải Phòng", Price = "1.500.000đ" }
+        };
+    }
+
+    var ctaSource = cs.Slogan ?? "";
+    List<string> ctaPills;
+    if (ctaSource.Contains("|"))
+    {
+        ctaPills = ctaSource.Split('|').Select(x => x.Trim()).Where(x => x.Length > 0).Take(3).ToList();
+    }
+    else
+    {
+        ctaPills = new List<string> { "Báo giá nhanh", "Xe đời mới", "Hỗ trợ 24/7" };
+    }
+
+    var hotline = config?.Hotline ?? "1900 8866";
+    var zalo = config?.Zalo;
+    var heroSub = !string.IsNullOrWhiteSpace(cs.Slogan) ? cs.Slogan : "Nhỏ gọn – Tiết kiệm – Linh hoạt";
+    Func<string, IHtmlString> formatRoute = route =>
+    {
+        if (string.IsNullOrWhiteSpace(route)) return new HtmlString("");
+        var parts = route.Split(new[] { "<=>", "↔", "⇔", " - ", " – " }, StringSplitOptions.None);
+        if (parts.Length >= 2)
         {
-            <img src="~/Content/images/img-main/base64.gif" data-src="@Path.Combine("/images/carService/", desktopImage)" alt="@Model.CarService.Title" class="lazyload service-banner d-lg-block d-none" />
+            return new HtmlString(string.Format("{0} <i class=\"fa-solid fa-arrows-left-right sc-route-arrow\"></i> {1}",
+                HttpUtility.HtmlEncode(parts[0].Trim()), HttpUtility.HtmlEncode(parts[1].Trim())));
+        }
+        return new HtmlString(HttpUtility.HtmlEncode(route));
+    };
+}
+
+@section styles {
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="@Url.Content("~/Content/service-car-page.css")?v=5" />
+}
+
+<main class="service-car-page">
+    <section class="sc-hero-banner">
+        <div class="container">
+            <nav class="sc-breadcrumb" aria-label="Breadcrumb">
+                <a href="@Url.Action("Index", "Home")">Trang chủ</a>
+                <span class="sep">›</span>
+                <a href="@Url.Action("Index", "Home")#tuyen-xe">Dịch vụ</a>
+                <span class="sep">›</span>
+                <span class="current">@cs.Title</span>
+            </nav>
+
+            <div class="sc-hero">
+                <div class="sc-hero-copy">
+                    <h1>@cs.Title</h1>
+                    <p class="sc-hero-sub">@heroSub</p>
+                    @if (!string.IsNullOrWhiteSpace(cs.Description))
+                    {
+                        <div class="sc-hero-desc">@Html.Raw(cs.Description)</div>
+                    }
+                    else
+                    {
+                        <div class="sc-hero-desc">
+                            <p>Lựa chọn lý tưởng cho các chuyến công tác, đưa đón sân bay, đi tỉnh hoặc các chuyến du lịch ngắn ngày với chất lượng dịch vụ chuyên nghiệp nhất.</p>
+                        </div>
+                    }
+                    <div class="sc-hero-highlights">
+                        @for (var bi = 0; bi < 3; bi++)
+                        {
+                            var badge = heroBadges[bi];
+                            var sub = string.IsNullOrWhiteSpace(badge.Item2)
+                                ? heroBadgeDefaults[bi].Item2
+                                : badge.Item2;
+                            <div class="sc-highlight-card">
+                                <div class="sc-highlight-ico"><i class="fa-solid @badgeIcons[bi]"></i></div>
+                                <strong>@badge.Item1</strong>
+                                <span>@sub</span>
+                            </div>
+                        }
+                    </div>
+                </div>
+
+                <div class="sc-hero-media">
+                    <div class="sc-hero-photo">
+                        <img src="@heroImg" alt="@cs.Title" />
+                    </div>
+                    <div class="sc-hero-caption">
+                        <strong>@captionTitle</strong>
+                        <em>@captionSub</em>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="sc-booking-strip">
+        <div class="container">
+            @Html.Action("Form", "Home", new { hideCarType = true, presetTypeCar = cs.Car ?? cs.Capacity ?? cs.Title })
+        </div>
+    </section>
+
+    @if (prices.Any())
+    {
+        <section class="sc-section soft">
+            <div class="container">
+                <h2 class="sc-h2">Bảng giá tham khảo @(string.IsNullOrWhiteSpace(cs.Car) ? cs.Title : ("thuê xe " + cs.Car))</h2>
+                <p class="sc-sub">Giá có thể thay đổi theo thời điểm, vui lòng liên hệ để nhận báo giá chính xác nhất.</p>
+                <div class="sc-price-card" id="scPriceCard">
+                    <table class="sc-price-table">
+                        <thead>
+                            <tr>
+                                <th>Hành trình đi (2 chiều)</th>
+                                <th>Giá tham khảo</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{ var pi = 0; }
+                            @foreach (var item in prices)
+                            {
+                                <tr class="@(pi >= 5 ? "sc-price-more" : null)">
+                                    <td>@formatRoute(item.RouteDescription)</td>
+                                    <td>@item.Price</td>
+                                </tr>
+                                pi++;
+                            }
+                        </tbody>
+                    </table>
+                    @if (prices.Count > 5)
+                    {
+                        <button type="button" class="sc-price-more-btn" id="scPriceMoreBtn">
+                            Xem thêm các hành trình khác <i class="fa-solid fa-chevron-down"></i>
+                        </button>
+                    }
+                </div>
+                <div class="sc-price-cta">
+                    <a href="#booking-form-card" class="sc-btn-outline-orange">Nhận báo giá chi tiết <i class="fa-solid fa-arrow-right"></i></a>
+                </div>
+                <div class="sc-note">
+                    <strong>Ghi chú:</strong>
+                    <ul>
+                        <li>Giá đã bao gồm xăng dầu, lương lái xe (trừ khi có thỏa thuận khác).</li>
+                        <li>Chưa gồm phí cầu đường và thuế VAT (nếu xuất hóa đơn).</li>
+                        <li>Giá có thể thay đổi theo mùa và lộ trình cụ thể.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+    }
+
+    @if (included.Any())
+    {
+        <section class="sc-section alt">
+            <div class="container">
+                <h2 class="sc-h2">Dịch vụ bao gồm</h2>
+                <div class="sc-include-grid" style="margin-top:24px">
+                    @{ var ii = 0; }
+                    @foreach (var item in included)
+                    {
+                        <div class="sc-include-item">
+                            <div class="sc-include-ico"><i class="fa-solid @(includeIcons[ii % includeIcons.Length])"></i></div>
+                            <h3>@item.Name</h3>
+                        </div>
+                        ii++;
+                    }
+                </div>
+            </div>
+        </section>
+    }
+
+    @if (gallery.Any())
+    {
+        var galImgs = new List<(string url, string name)>();
+        foreach (var item in gallery)
+        {
+            if (!string.IsNullOrWhiteSpace(item.Image))
+            {
+                galImgs.Add((detailImg(item.Image), item.Name));
+            }
+            if (!string.IsNullOrWhiteSpace(item.ListImage))
+            {
+                foreach (var p in item.ListImage.Split(',').Select(x => x.Trim()).Where(x => x.Length > 0))
+                {
+                    galImgs.Add((detailImg(p), item.Name));
+                }
+            }
+        }
+        galImgs = galImgs.GroupBy(x => x.url).Select(g => g.First()).Take(3).ToList();
+        if (!galImgs.Any())
+        {
+            galImgs = new List<(string url, string name)> {
+                (Url.Content("~/images/detail/seed/exterior.webp"), "Ngoại thất"),
+                (Url.Content("~/images/detail/seed/interior.webp"), "Nội thất"),
+                (Url.Content("~/images/detail/seed/trunk.webp"), "Cốp xe")
+            };
+        }
+        if (galImgs.Any())
+        {
+            <section class="sc-section soft">
+                <div class="container">
+                    <h2 class="sc-h2">Hình ảnh thực tế</h2>
+                    <p class="sc-sub">Xe thật đang vận hành tại Hà Linh</p>
+                    <div class="sc-gallery">
+                        <a class="sc-gallery-main" href="@galImgs[0].url" data-fancybox="sc-gallery" data-caption="@galImgs[0].name">
+                            <img src="@galImgs[0].url" alt="@galImgs[0].name" />
+                        </a>
+                        @if (galImgs.Count > 1)
+                        {
+                            <div class="sc-gallery-side">
+                                @for (var g = 1; g < galImgs.Count; g++)
+                                {
+                                    <a href="@galImgs[g].url" data-fancybox="sc-gallery" data-caption="@galImgs[g].name">
+                                        <img src="@galImgs[g].url" alt="@galImgs[g].name" />
+                                    </a>
+                                }
+                            </div>
+                        }
+                    </div>
+                </div>
+            </section>
         }
     }
 
-    <a href="tel:@config.Hotline" class="call-to-action d-lg-flex d-none">
-        <div class="icon-action">
-            <i class="fas fa-phone-alt"></i>
-        </div>
-        <span>Liên hệ ngay</span>
-    </a>
-    <div class="banner-form">
-        @Html.Action("FormLanding", new { typeCar = Model.CarService.Car })
-    </div>
-</section>
-<div class="container py-3">
-    <div class=" d-lg-none d-block align-items-center justify-content-center">
-        @Html.Action("FormLanding")
-    </div>
-</div>
-
-@if (Model.CarService.CarServicePrices.Any())
-{
-    <section class="page-section">
-        <h2 class="title">bảng giá dịch vụ minh bạch </h2>
-        <p class="sub-title  mb-4">
-            Bảng giá mang tính tham khảo — vui lòng liên hệ để nhận báo giá tốt nhất theo lộ trình của bạn.
-        </p>
-        <div class="container">
-            <div class="box-price">
-                <table class="table table-bordered table-service" id="service-tb">
-                    <thead class="header-tb">
-                        <tr>
-                            <td scope="col">Hành trình <span class="d-block">(2 chiều)</span></td>
-                            <td scope="col"><span class="d-block pb-2">Giá</span></td>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var item in Model.CarService.CarServicePrices.OrderBy(x => x.Sort))
-                        {
-                            var hot = item.Hot ? "class=hot" : "";
-                            var hotImg = item.Hot ? "<img src=\"/Content/images/hot-gif.gif\" width=\"30\" height=\"30\" alt=\"Hot\" />" : "";
-                            <tr @hot>
-                                <td scope="row">@item.RouteDescription @Html.Raw(hotImg) </td>
-                                <td>@item.Price</td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-                <div class="d-flex justify-content-center pb-2" id="box-btn">
-                    <div id="show-more-table" class="btn-color more-tabe">
-                        xem bảng giá đầy đủ
-                        <div class="box-icon">
-                            <i class="far fa-long-arrow-right"></i>
-                        </div>
-                    </div>
-                    <a href="https://zalo.me/@config.Zalo" id="show-call-table" class="btn-color more-tabe-2">
-                        Nhận báo giá chính xác
-                    </a>
-                </div>
-            </div>
-            <div class="note mt-3">
-                <small><strong>Ghi chú:</strong></small>
-                <ul class="px-3">
-                    <li><small>Giá trên đã bao gồm xăng dầu, lương lái xe</small></li>
-                    <li><small>Giá chưa gồm phí cầu đường và thuế VAT 8%</small></li>
-                    <li><small>Giá trên có thể thay đổi theo từng thời điểm ( sự thay đổi giá nhiên liệu, hoặc tùy theo hành trình thuê xe của khách hàng)</small></li>
-                    <li><small>Giá trên chưa bao gồm phí lưu đêm của xe ( nếu có )</small></li>
-                </ul>
-            </div>
-        </div>
-    </section>
-}
-@if (Model.CarService.Details.Any(a => a.CarServiceType == CarServiceType.SupportedCar))
-{
-    <section class="page-section overflow-hidden">
-        <div class="container">
-            <h2 class="title">các dòng xe @Model.CarService.Car có lái </h2>
-            <p class="sub-title">Dịch vụ thuê xe có lái chuyên nghiệp – linh hoạt theo ngày / tháng / năm đáp ứng mọi nhu cầu di chuyển cá nhân.</p>
-            <div class="list-car">
-                @foreach (var item in Model.CarService.Details.Where(a => a.CarServiceType == CarServiceType.SupportedCar))
-                {
-                    var galleryId = "detail-" + item.Id;
-                    var listImgs = (item.ListImage ?? "")
-                      .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
-                      .Select(x => x.Trim())
-                      .Where(x => !string.IsNullOrWhiteSpace(x))
-                      .Distinct(StringComparer.OrdinalIgnoreCase)
-                      .ToList();
-
-                    <div class="car-item" onclick="document.querySelector('#@galleryId-first').click()">
-                        @if (item.Image != null)
-                        {
-                            <img src="~/Content/images/img-main/base64.gif" data-src="@Path.Combine("/images/detail/", item.Image)" alt="@item.Name" class="lazyload" />
-                        }
-                        @if (listImgs.Any())
-                        {
-                            var firstImgUrl = Url.Content("~/images/detail/" + listImgs.First());
-                            <a id="@galleryId-first" href="@firstImgUrl" data-fancybox="@galleryId" data-caption="@item.Name" style="display:none"></a>
-
-                            foreach (var img in listImgs.Skip(1))
-                            {
-                                var imgUrl = Url.Content("~/images/detail/" + img);
-                                <a href="@imgUrl" data-fancybox="@galleryId" data-caption="@item.Name" style="display:none"></a>
-                            }
-                        }
-
-                        @*<div class="car-name">
-                                @item.Name
-                            </div>
-                            <div class="year-car">
-                                @item.Desciption
-                            </div>*@
-                    </div>
-                }
-            </div>
-        </div>
-    </section>
-}
-
-<section class="page-section">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-4">
-                <div class="step">
-                    <h2 class="title text-left">quy trình thuê xe đơn giản</h2>
-                    @foreach (var item in Model.CarService.Details.Where(a => a.CarServiceType == CarServiceType.ProcessStep))
+    @if (whyChoose.Any())
+    {
+        <section class="sc-section alt">
+            <div class="container">
+                <h2 class="sc-h2">Tại sao nên chọn Hà Linh?</h2>
+                <div class="sc-why-grid" style="margin-top:28px">
+                    @{ var wi = 0; }
+                    @foreach (var item in whyChoose)
                     {
-                        <div class="d-flex mt-4 align-items-center gap-2">
-                            <div class="step-count">
-                                @count
-                            </div>
-                            <div class="step-name h-auto">
-                                @item.Name
-                            </div>
+                        <div class="sc-why-item">
+                            <div class="sc-why-ico"><i class="fa-solid @(whyIcons[wi % whyIcons.Length])"></i></div>
+                            <h3>@item.Name</h3>
+                            @if (!string.IsNullOrWhiteSpace(item.Desciption))
+                            {
+                                <p>@item.Desciption</p>
+                            }
                         </div>
-                        count += 1;
+                        wi++;
                     }
                 </div>
             </div>
-            <div class="col-lg-8 position-relative QA">
-                <h2 class="title">Câu hỏi thường gặp</h2>
-                <p class="sub-title">Câu hỏi thường gặp</p>
-                @{
-                    var banners = Model.CarService.Details.Where(a => a.CarServiceType == CarServiceType.Policy).ToList();
-                    int index = 0;
-                }
+        </section>
+    }
 
-                <div class="accordion" id="accordionExample">
-                    @foreach (var item in banners)
+    @if (faqs.Any())
+    {
+        <section class="sc-section soft sc-faq">
+            <div class="container">
+                <h2 class="sc-h2">Câu hỏi thường gặp</h2>
+                <div class="accordion" id="scFaqAccordion" style="margin-top:20px">
+                    @{ var faqIdx = 0; }
+                    @foreach (var item in faqs)
                     {
-                        var headingId = $"heading{index}";
-                        var collapseId = $"collapse{index}";
-                        bool isFirst = index == 0;
-                        int delay = 200;
-                        <div class="accordion-item" data-aos-duration="700" data-aos-delay="@delay" data-aos="fade-right">
-                            <h2 class="accordion-header" id="@headingId">
-                                <button onclick="toggleAccordion(this)" class="accordion-button @(isFirst ? "" : "collapsed")"
-                                        type="button"
-                                        data-bs-toggle="collapse"
-                                        data-bs-target="#@collapseId"
-                                        aria-expanded="@(isFirst.ToString().ToLower())"
-                                        aria-controls="@collapseId">
+                        var collapseId = "scFaqC" + faqIdx;
+                        var open = faqIdx == 0;
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button @(open ? "" : "collapsed")" type="button" data-bs-toggle="collapse" data-bs-target="#@collapseId" aria-expanded="@open.ToString().ToLower()">
                                     @item.Name
-                                    <i class="fal fa-arrow-down accordion-icon"></i>
                                 </button>
                             </h2>
-                            <div id="@collapseId"
-                                 class="accordion-collapse collapse @(isFirst ? "show" : "")"
-                                 aria-labelledby="@headingId"
-                                 data-bs-parent="#accordionExample">
-                                <div class="accordion-body">
-                                    @Html.Raw(item.Body)
-                                </div>
+                            <div id="@collapseId" class="accordion-collapse collapse @(open ? "show" : "")" data-bs-parent="#scFaqAccordion">
+                                <div class="accordion-body">@Html.Raw(item.Body ?? item.Desciption)</div>
                             </div>
                         </div>
-
-                        index++; delay += 200;
+                        faqIdx++;
                     }
                 </div>
-
             </div>
-        </div>
-    </div>
-</section>
+        </section>
+    }
 
-<section class="page-section feedback">
-    <div class="container">
-        <h2 class="title">Khách hàng nói gì về chúng tôi</h2>
-        <div class="row mt-3">
-            <div class="col-lg-7">
-                <div id="car-img" class="slider-for">
-                    @if (Model.CarService.Details.Any(a => a.CarServiceType == CarServiceType.SupportedCar))
-                    {
-                        foreach (var item in Model.CarService.Details.Where(a => a.CarServiceType == CarServiceType.SupportedCar))
-                        {
-                            <img src="~/Content/images/img-main/base64.gif" data-src="@Path.Combine("/images/detail/", item.Image)" alt="@item.Name" class="lazyload" />
-                        }
-
+    @if (testimonials.Any())
+    {
+        var review = testimonials.First();
+        <section class="sc-section alt">
+            <div class="container">
+                <h2 class="sc-h2">Khách hàng nói gì?</h2>
+                <div class="sc-review" style="margin-top:20px">
+                    @{
+                        var av = !string.IsNullOrWhiteSpace(review.Image)
+                            ? Url.Content("~/images/banners/" + review.Image)
+                            : Url.Content("~/images/banners/seed/avatar.webp");
                     }
-                </div>
-                @if (Model.CarService.Details.Any(a => a.CarServiceType == CarServiceType.SupportedCar))
-                {
-                    <div class="slider-nav">
-                        @foreach (var item in Model.CarService.Details.Where(a => a.CarServiceType == CarServiceType.SupportedCar))
-                        {
-                            <img src="~/Content/images/img-main/base64.gif" data-src="@Path.Combine("/images/detail/", item.Image)" alt="@item.Name" class="lazyload" />
-                        }
+                    <img src="@av" alt="@review.BannerName" />
+                    <div class="sc-stars">
+                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
                     </div>
+                    @if (!string.IsNullOrWhiteSpace(review.Content))
+                    {
+                        <p>@Html.Raw(review.Content)</p>
+                    }
+                    else if (!string.IsNullOrWhiteSpace(review.Slogan))
+                    {
+                        <p>@review.Slogan</p>
+                    }
+                    <strong>@review.BannerName</strong>
+                </div>
+            </div>
+        </section>
+    }
+
+    <section class="sc-cta">
+        <div class="container">
+            <h2>Bạn đã có lịch trình? Nhận báo giá xe trong vài phút</h2>
+            <div class="sc-cta-pills">
+                @foreach (var pill in ctaPills)
+                {
+                    <span>@pill</span>
                 }
             </div>
-            <div class="col-lg-5 mt-lg-0 mt-2">
-                <div class="d-flex box-am">
-                    <div id="marquee1" class="marquee-item">
-                        <div>
-                            @foreach (var item in Model.Banners.Where(a => a.GroupId == 5))
-                            {
-                                if (item.Image != null)
-                                {
-                                    <img src="~/Content/images/img-main/base64.gif" data-src="@Path.Combine("/images/banners/", item.Image)" alt="@item.BannerName" class="lazyload" />
-                                }
-                            }
-                        </div>
-                    </div>
-                    <div id="marquee2" class="marquee-item">
-                        <div>
-                            @foreach (var item in Model.Banners.Where(a => a.GroupId == 7))
-                            {
-                                if (item.Image != null)
-                                {
-                                    <img src="~/Content/images/img-main/base64.gif" data-src="@Path.Combine("/images/banners/", item.Image)" alt="@item.BannerName" class="lazyload" />
-
-                                }
-                            }
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-<section class="page-section">
-    <div class="container">
-        <h2 class="title ">tin tức -  sự kiện</h2>
-        @*<p class="sub-title  mb-4">
-                Dịch vụ thuê xe có lái chuyên nghiệp – linh hoạt theo ngày / tháng / năm đáp ứng mọi nhu cầu di chuyển cá nhân.
-            </p>*@
-        <div class=" row filter-ar gap-2">
-            @foreach (var item in Model.ArticleCategories)
-            {
-                <button type="button" data-id="@item.Id" class="btn filter-btn">@item.CategoryName</button>
-            }
-        </div>
-        <div class="row article-row mt-3" id="body-ar">
-
-        </div>
-    </div>
-</section>
-@if (Model.CarService.Body != null)
-{
-    <section class="page-section">
-        <div class="container">
-            <div class="detail-content car-body">
-                @Html.Raw(Model.CarService.Body)
-            </div>
-            <div class="view-all text-center mt-3 text-primary pointer-event">
-                Xem thêm
+            <div class="sc-cta-actions">
+                <a class="sc-btn-ghost" href="tel:@hotline"><i class="fa-solid fa-phone"></i> Gọi ngay</a>
+                @if (!string.IsNullOrWhiteSpace(zalo))
+                {
+                    <a class="sc-btn-ghost" href="https://zalo.me/@zalo" target="_blank" rel="noopener"><i class="fa-solid fa-comment"></i> Zalo</a>
+                }
+                <a class="sc-btn-orange" href="#booking-form-card">Nhận báo giá</a>
             </div>
         </div>
     </section>
-}
 
-@section scripts{
-    <script src="~/Scripts/jquery.marquee.min.js"></script>
+    @if (!string.IsNullOrWhiteSpace(cs.Body))
+    {
+        <section class="sc-section">
+            <div class="container">
+                <div class="sc-body-content car-body detail-content">@Html.Raw(cs.Body)</div>
+                <div class="view-all text-center mt-3 text-primary" style="cursor:pointer">Xem thêm</div>
+            </div>
+        </section>
+    }
+</main>
+
+@section scripts {
     <script>
-        homeJs()
-        function loadArticlesById(id) {
-            $.ajax({
-                url: '@Url.Action("GetArticle", "Home")',
-                type: 'GET',
-                data: { id: id },
-                success: function (result) {
-                    $('#body-ar').html(result);
-                },
-                error: function () {
-                    alert("Lỗi tải dữ liệu!");
-                }
-            });
-        }
-
-        $(document).ready(function () {
-            var firstBtn = $('.filter-btn').first();
-            var firstId = firstBtn.data('id');
-            loadArticlesById(firstId);
-            firstBtn.addClass('active');
-        });
-
-        $(document).on('click', '.filter-btn', function() {
-            var id = $(this).data('id');
-            $('.filter-btn').removeClass('active');
-            $(this).addClass('active');
-            loadArticlesById(id);
-        });
+        (function () {
+            var moreBtn = document.getElementById('scPriceMoreBtn');
+            var card = document.getElementById('scPriceCard');
+            if (moreBtn && card) {
+                moreBtn.addEventListener('click', function () {
+                    card.classList.toggle('is-open');
+                    moreBtn.innerHTML = card.classList.contains('is-open')
+                        ? 'Thu gọn <i class="fa-solid fa-chevron-up"></i>'
+                        : 'Xem thêm các hành trình khác <i class="fa-solid fa-chevron-down"></i>';
+                });
+            }
+        })();
     </script>
-    <script type="application/ld+json">
-        @Html.Raw(@"{
-          ""@context"": ""https://schema.org"",
-          ""@type"": ""Service"",
-          ""name"": " + Newtonsoft.Json.JsonConvert.SerializeObject(ViewBag.Title) + @",
-          ""image"": " + Newtonsoft.Json.JsonConvert.SerializeObject(ViewBag.ImgShare) + @",
-          ""description"": " + Newtonsoft.Json.JsonConvert.SerializeObject(ViewBag.Description) + @"
-        }")
-    </script>
-
 }

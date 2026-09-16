@@ -316,6 +316,7 @@
     <Content Include="Content\site-header.css" />
     <Content Include="Content\hailinh-theme.css" />
     <Content Include="Content\home-pricing.css" />
+    <Content Include="Content\service-car-page.css" />
     <Content Include="Content\price-routes.css" />
     <Content Include="Content\style.css">
       <DependentUpon>style.scss</DependentUpon>

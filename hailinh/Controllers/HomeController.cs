@@ -83,7 +83,9 @@ namespace hailinh.Controllers
         [Route("dich-vu/{url}")]
         public ActionResult ServiceCar(string url)
         {
-            var carService = _unitOfWork.CarServiceRepository.GetQuery(a => a.Slug == url).FirstOrDefault();
+            var carService = _unitOfWork.CarServiceRepository
+                .GetQuery(a => a.Slug == url, includeProperties: "Details,CarServicePrices")
+                .FirstOrDefault();
             if (carService == null)
             {
                 return RedirectToActionPermanent("ErrorPage");
@@ -174,18 +176,21 @@ namespace hailinh.Controllers
             return PartialView(model);
 
         }
-        public PartialViewResult Form()
+        public PartialViewResult Form(bool hideCarType = false, string presetTypeCar = null)
         {
             var services = _unitOfWork.CarServiceRepository.GetQuery(a => a.Active && a.Home, o => o.OrderBy(a => a.Sort)).ToList();
             var locations = _unitOfWork.LocationRepository.GetQuery(a => a.Active, o => o.OrderByDescending(a => a.Hot).ThenBy(a => a.Sort)).Select(a => a.Name).Distinct().Take(8).ToList();
             ViewBag.Services = services;
             ViewBag.Locations = locations;
+            ViewBag.HideCarType = hideCarType;
+            ViewBag.PresetTypeCar = presetTypeCar;
             return PartialView();
         }
 
-        public PartialViewResult FormLanding(string typeCar = "")
+        public PartialViewResult FormLanding(string typeCar = "", bool serviceLayout = false)
         {
             ViewBag.TypeCar = typeCar;
+            ViewBag.ServiceLayout = serviceLayout;
             return PartialView();
         }
         [HttpPost, ValidateAntiForgeryToken]

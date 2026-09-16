@@ -4,6 +4,8 @@
     var config = (ConfigSite)HttpContext.Current.Application["ConfigSite"];
     var services = ViewBag.Services as IEnumerable<CarService> ?? new List<CarService>();
     var hotLocations = ViewBag.Locations as IEnumerable<string> ?? new List<string>();
+    var hideCarType = ViewBag.HideCarType == true;
+    var presetTypeCar = ViewBag.PresetTypeCar as string;
 }
 
 <div class="premium-booking-card" id="booking-form-card">
@@ -93,30 +95,36 @@
         </div>
 
         <div class="row g-3 align-items-end mt-1">
-            <div class="col-lg-4 col-md-6">
-                <div class="booking-input-unit">
-                    <label class="unit-label" for="carTypeSelect">
-                        <i class="fa-solid fa-car text-primary"></i>
-                        <span>Loại xe mong muốn</span>
-                        <span class="req">*</span>
-                    </label>
-                    <div class="booking-input-wrap">
-                        @*<span class="unit-icon"><i class="fa-solid fa-car-side text-primary"></i></span>*@
-                        <select id="carTypeSelect" name="TypeCar" required class="form-select">
-                            @if (services.Any())
-                            {
-                                foreach (var s in services)
+            @if (hideCarType)
+            {
+                <input type="hidden" name="TypeCar" value="@(presetTypeCar ?? "")" />
+            }
+            else
+            {
+                <div class="col-lg-4 col-md-6">
+                    <div class="booking-input-unit">
+                        <label class="unit-label" for="carTypeSelect">
+                            <i class="fa-solid fa-car text-primary"></i>
+                            <span>Loại xe mong muốn</span>
+                            <span class="req">*</span>
+                        </label>
+                        <div class="booking-input-wrap">
+                            <select id="carTypeSelect" name="TypeCar" required class="form-select">
+                                @if (services.Any())
                                 {
-                                    var cap = !string.IsNullOrWhiteSpace(s.Capacity) ? s.Capacity : s.Title;
-                                    <option value="@cap" @(cap.Contains("7") ? "selected" : "")>@s.Title (@(s.Car ?? cap))</option>
+                                    foreach (var s in services)
+                                    {
+                                        var cap = !string.IsNullOrWhiteSpace(s.Capacity) ? s.Capacity : s.Title;
+                                        <option value="@cap" @(cap.Contains("7") ? "selected" : "")>@s.Title (@(s.Car ?? cap))</option>
+                                    }
                                 }
-                            }
-                        </select>
+                            </select>
+                        </div>
                     </div>
                 </div>
-            </div>
+            }
 
-            <div class="col-lg-4 col-md-6">
+            <div class="@(hideCarType ? "col-lg-6" : "col-lg-4") col-md-6">
                 <div class="booking-input-unit">
                     <label class="unit-label" for="phoneInput">
                         <i class="fa-solid fa-phone text-success"></i>
@@ -124,13 +132,12 @@
                         <span class="req">*</span>
                     </label>
                     <div class="booking-input-wrap">
-                        @*<span class="unit-icon"><i class="fa-solid fa-phone-volume text-success"></i></span>*@
                         <input id="phoneInput" name="Mobile" required pattern="[0-9]{10}" class="form-control" placeholder="Nhập số điện thoại (10 số)..." type="tel">
                     </div>
                 </div>
             </div>
 
-            <div class="col-lg-4 col-md-12">
+            <div class="@(hideCarType ? "col-lg-6" : "col-lg-4") col-md-12">
                 <button id="bookingSubmitBtn" class="btn-booking-submit" type="submit">
                     <span id="bookingBtnText">NHẬN BÁO GIÁ NHANH</span>
                     <i class="fa-solid fa-paper-plane"></i>
