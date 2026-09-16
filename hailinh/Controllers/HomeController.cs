@@ -8,17 +8,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
-using System.Web.Configuration;
 using System.Web.Mvc;
-using System.Web.Razor;
 
 namespace hailinh.Controllers
 {
     public class HomeController : Controller
     {
         private readonly UnitOfWork _unitOfWork = new UnitOfWork();
-        private static string Email => WebConfigurationManager.AppSettings["email"];
-        private static string Password => WebConfigurationManager.AppSettings["password"];
         public ConfigSite ConfigSite => (ConfigSite)HttpContext.Application["ConfigSite"];
 
         private IEnumerable<ArticleCategory> ArticleCategories() =>

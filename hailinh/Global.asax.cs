@@ -60,6 +60,8 @@ IF OBJECT_ID(N'dbo.PriceLangdings', N'U') IS NOT NULL
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
 
+            try { Utils.SmtpSettings.EnsureColumns(); } catch { /* ignore */ }
+
             using (var unitofWork = new UnitOfWork())
             {
                 Application["ConfigSite"] = unitofWork.ConfigSiteRepository.GetQuery().FirstOrDefault();
@@ -75,20 +77,33 @@ IF OBJECT_ID(N'dbo.PriceLangdings', N'U') IS NOT NULL
         protected void Application_PostAuthenticateRequest(Object sender, EventArgs e)
         {
             var authCookie = Request.Cookies[FormsAuthentication.FormsCookieName];
-            if (authCookie != null)
+            if (authCookie == null || string.IsNullOrEmpty(authCookie.Value))
             {
-                var ticket = FormsAuthentication.Decrypt(authCookie.Value);
-                if (ticket != null && !ticket.Expired)
-                {
-                    string roleString = ticket.UserData;
-
-                    var identity = new GenericIdentity(ticket.Name);
-                    var principal = new GenericPrincipal(identity, new[] { roleString });
-
-                    HttpContext.Current.User = principal;
-                    Thread.CurrentPrincipal = principal;
-                }
+                return;
             }
+
+            FormsAuthenticationTicket ticket;
+            try
+            {
+                ticket = FormsAuthentication.Decrypt(authCookie.Value);
+            }
+            catch
+            {
+                // Cookie cũ / machineKey đổi — bỏ qua, coi như chưa đăng nhập
+                return;
+            }
+
+            if (ticket == null || ticket.Expired || string.IsNullOrEmpty(ticket.Name))
+            {
+                return;
+            }
+
+            var roleString = ticket.UserData ?? string.Empty;
+            var identity = new GenericIdentity(ticket.Name, "Forms");
+            var principal = new GenericPrincipal(identity, string.IsNullOrEmpty(roleString) ? new string[0] : new[] { roleString });
+
+            HttpContext.Current.User = principal;
+            Thread.CurrentPrincipal = principal;
         }
     }
 }

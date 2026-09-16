@@ -38,12 +38,24 @@ namespace hailinh.Controllers
 
                 if (admin != null && HtmlHelpers.VerifyHash(model.Password, "SHA256", admin.Password))
                 {
-                    var ticket = new FormsAuthenticationTicket(1, model.Username.ToLower(), DateTime.Now, DateTime.Now.AddDays(30), true,
-                       FormsAuthentication.FormsCookiePath);
+                    var ticket = new FormsAuthenticationTicket(
+                        1,
+                        model.Username.ToLower(),
+                        DateTime.Now,
+                        DateTime.Now.AddDays(30),
+                        true,
+                        string.Empty,
+                        FormsAuthentication.FormsCookiePath);
 
                     var encTicket = FormsAuthentication.Encrypt(ticket);
-                    // Create the cookie.
-                    Response.Cookies.Add(new HttpCookie(FormsAuthentication.FormsCookieName, encTicket));
+                    var authCookie = new HttpCookie(FormsAuthentication.FormsCookieName, encTicket)
+                    {
+                        HttpOnly = true,
+                        Path = FormsAuthentication.FormsCookiePath,
+                        Secure = Request.IsSecureConnection,
+                        Expires = ticket.Expiration
+                    };
+                    Response.Cookies.Add(authCookie);
                     if (Url.IsLocalUrl(returnUrl) && returnUrl.Length > 1 && returnUrl.StartsWith("/")
                         && !returnUrl.StartsWith("//") && !returnUrl.StartsWith("/\\"))
                     {
@@ -220,6 +232,8 @@ namespace hailinh.Controllers
         {
             ViewBag.Result = result;
             var config = _unitOfWork.ConfigSiteRepository.Get().FirstOrDefault();
+            Utils.SmtpSettings.Get(out var smtpEmail, out _);
+            ViewBag.SmtpEmail = smtpEmail;
             return View(config);
         }
         [Route("thong-tin-chung")]
@@ -286,6 +300,7 @@ namespace hailinh.Controllers
                 config.Hotline = model.Hotline;
                 //config.Hotline2 = model.Hotline2;
                 config.Email = model.Email;
+                Utils.SmtpSettings.Save(fc["SmtpEmail"], fc["SmtpPassword"]);
                 config.Messenger = model.Messenger;
                 config.Place = model.Place;
                 config.AboutText = model.AboutText;

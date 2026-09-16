@@ -17,8 +17,7 @@ namespace hailinh.Utils
         {
             try
             {
-                var senderEmail = ConfigurationManager.AppSettings["email"];
-                var senderPassword = ConfigurationManager.AppSettings["password"];
+                SmtpSettings.Get(out var senderEmail, out var senderPassword);
                 var recipientEmail = config?.Email ?? senderEmail;
 
                 if (string.IsNullOrWhiteSpace(senderEmail) || string.IsNullOrWhiteSpace(senderPassword) || string.IsNullOrWhiteSpace(recipientEmail))

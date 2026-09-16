@@ -205,8 +205,25 @@
                 <div class="col-lg-9">@Html.EditorFor(a => a.Hotline2)</div>
             </div>*@
                         <div class="mb-3 row">
-                            @Html.LabelFor(a => a.Email, new { @class = "col-form-label col-lg-3" })
-                            <div class="col-lg-9">@Html.EditorFor(a => a.Email)</div>
+                            <label class="col-form-label col-lg-3" for="Email">Email nhận thông báo / hiển thị</label>
+                            <div class="col-lg-9">
+                                @Html.EditorFor(a => a.Email)
+                                <div class="form-text text-muted">Email khách/admin nhận đơn đặt xe (footer cũng dùng email này).</div>
+                            </div>
+                        </div>
+                        <div class="mb-3 row">
+                            <label class="col-form-label col-lg-3" for="SmtpEmail">Email SMTP (Gmail gửi)</label>
+                            <div class="col-lg-9">
+                                <input type="email" name="SmtpEmail" id="SmtpEmail" class="form_control w300" value="@(ViewBag.SmtpEmail as string)" placeholder="vd: your@gmail.com" />
+                                <div class="form-text text-muted">Tài khoản Gmail dùng để <strong>gửi</strong> mail thông báo đặt xe.</div>
+                            </div>
+                        </div>
+                        <div class="mb-3 row">
+                            <label class="col-form-label col-lg-3" for="SmtpPassword">Mật khẩu ứng dụng Gmail</label>
+                            <div class="col-lg-9">
+                                <input type="password" name="SmtpPassword" id="SmtpPassword" class="form_control w300" value="" autocomplete="new-password" placeholder="Để trống = giữ mật khẩu cũ" />
+                                <div class="form-text text-muted">App password 16 ký tự (Google Account → Bảo mật → Mật khẩu ứng dụng). Để trống nếu không đổi.</div>
+                            </div>
                         </div>
                         <div class="mb-3 row">
                             @Html.LabelFor(a => a.Facebook, new { @class = "col-form-label col-lg-3" })
