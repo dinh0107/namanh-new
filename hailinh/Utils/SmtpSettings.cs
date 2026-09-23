@@ -18,28 +18,45 @@ namespace hailinh.Utils
             var cs = WebConfigurationManager.ConnectionStrings["DataEntities"]?.ConnectionString;
             if (string.IsNullOrWhiteSpace(cs)) return;
 
-            using (var conn = new SqlConnection(cs))
+            try
             {
-                conn.Open();
-                using (var cmd = conn.CreateCommand())
+                using (var conn = new SqlConnection(cs))
                 {
-                    cmd.CommandText = @"
-IF OBJECT_ID(N'dbo.ConfigSites', N'U') IS NOT NULL
-BEGIN
-    IF COL_LENGTH(N'dbo.ConfigSites', N'SmtpEmail') IS NULL
-        ALTER TABLE dbo.ConfigSites ADD SmtpEmail NVARCHAR(100) NULL;
-    IF COL_LENGTH(N'dbo.ConfigSites', N'SmtpPassword') IS NULL
-        ALTER TABLE dbo.ConfigSites ADD SmtpPassword NVARCHAR(200) NULL;
+                    conn.Open();
 
-    -- Gỡ SMTP cũ không còn dùng
-    IF COL_LENGTH(N'dbo.ConfigSites', N'SmtpEmail') IS NOT NULL
-        UPDATE dbo.ConfigSites
-        SET SmtpEmail = NULL, SmtpPassword = NULL
-        WHERE SmtpEmail = @legacy;
-END";
-                    cmd.Parameters.AddWithValue("@legacy", RemovedLegacySmtp);
-                    cmd.ExecuteNonQuery();
+                    // 1. Thêm cột SmtpEmail nếu chưa có
+                    using (var cmd = conn.CreateCommand())
+                    {
+                        cmd.CommandText = @"
+IF OBJECT_ID(N'dbo.ConfigSites', N'U') IS NOT NULL AND COL_LENGTH(N'dbo.ConfigSites', N'SmtpEmail') IS NULL
+    ALTER TABLE dbo.ConfigSites ADD SmtpEmail NVARCHAR(100) NULL;";
+                        cmd.ExecuteNonQuery();
+                    }
+
+                    // 2. Thêm cột SmtpPassword nếu chưa có
+                    using (var cmd = conn.CreateCommand())
+                    {
+                        cmd.CommandText = @"
+IF OBJECT_ID(N'dbo.ConfigSites', N'U') IS NOT NULL AND COL_LENGTH(N'dbo.ConfigSites', N'SmtpPassword') IS NULL
+    ALTER TABLE dbo.ConfigSites ADD SmtpPassword NVARCHAR(200) NULL;";
+                        cmd.ExecuteNonQuery();
+                    }
+
+                    // 3. Gỡ SMTP cũ không còn dùng (dùng sp_executesql để chỉ compile khi cột đã tồn tại)
+                    using (var cmd = conn.CreateCommand())
+                    {
+                        cmd.CommandText = @"
+IF OBJECT_ID(N'dbo.ConfigSites', N'U') IS NOT NULL AND COL_LENGTH(N'dbo.ConfigSites', N'SmtpEmail') IS NOT NULL
+    EXEC sp_executesql N'UPDATE dbo.ConfigSites SET SmtpEmail = NULL, SmtpPassword = NULL WHERE SmtpEmail = @legacy',
+                       N'@legacy NVARCHAR(100)', @legacy = @legacy;";
+                        cmd.Parameters.AddWithValue("@legacy", RemovedLegacySmtp);
+                        cmd.ExecuteNonQuery();
+                    }
                 }
+            }
+            catch
+            {
+                // Tránh lỗi ngoại lệ làm gián đoạn ứng dụng
             }
         }
 
@@ -100,23 +117,33 @@ END";
 
             EnsureColumns();
 
-            using (var conn = new SqlConnection(cs))
+            try
             {
-                conn.Open();
-                using (var cmd = conn.CreateCommand())
+                using (var conn = new SqlConnection(cs))
                 {
-                    // Giữ mật khẩu cũ nếu form để trống
-                    cmd.CommandText = @"
-UPDATE TOP (1) dbo.ConfigSites
-SET SmtpEmail = @e,
-    SmtpPassword = CASE
-        WHEN @p IS NULL OR LTRIM(RTRIM(@p)) = N'' THEN SmtpPassword
-        ELSE @p
-    END";
-                    cmd.Parameters.AddWithValue("@e", (object)email ?? DBNull.Value);
-                    cmd.Parameters.AddWithValue("@p", string.IsNullOrWhiteSpace(password) ? (object)DBNull.Value : password);
-                    cmd.ExecuteNonQuery();
+                    conn.Open();
+                    using (var cmd = conn.CreateCommand())
+                    {
+                        // Giữ mật khẩu cũ nếu form để trống
+                        cmd.CommandText = @"
+IF OBJECT_ID(N'dbo.ConfigSites', N'U') IS NOT NULL AND COL_LENGTH(N'dbo.ConfigSites', N'SmtpEmail') IS NOT NULL
+BEGIN
+    UPDATE TOP (1) dbo.ConfigSites
+    SET SmtpEmail = @e,
+        SmtpPassword = CASE
+            WHEN @p IS NULL OR LTRIM(RTRIM(@p)) = N'' THEN SmtpPassword
+            ELSE @p
+        END
+END";
+                        cmd.Parameters.AddWithValue("@e", (object)email ?? DBNull.Value);
+                        cmd.Parameters.AddWithValue("@p", string.IsNullOrWhiteSpace(password) ? (object)DBNull.Value : password);
+                        cmd.ExecuteNonQuery();
+                    }
                 }
+            }
+            catch
+            {
+                // Tránh throw làm crash trang admin nếu kết nối hoặc bảng có vấn đề
             }
         }
     }

@@ -3,8 +3,8 @@
 @{
     var config = (ConfigSite)HttpContext.Current.Application["ConfigSite"];
     var siteTitle = config?.Title ?? "Hà Linh - Cho thuê xe có lái";
-    var hotline = config?.Hotline ?? "1900 8866";
-    var email = config?.Email ?? "contact@hailinh-thuexe.vn";
+    var hotline = config?.Hotline ?? "";
+    var email = config?.Email ?? "";
     var place = config?.Place ?? "Hà Nội, Việt Nam";
     var zalo = config?.Zalo;
     var zaloUrl = !string.IsNullOrWhiteSpace(zalo) ? ("https://zalo.me/" + zalo.Trim()) : ("tel:" + hotline);
