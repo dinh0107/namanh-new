@@ -81,161 +81,11 @@ $('.price-slick').slick({
 
 
 
-function autoComplate() {
-    const API_KEY = "zxjFUlokomoYCcC9EzXHKSwXml4tYSafvdwJ6Qgn";
-    const lat = null;
-    const lng = null;
-    const radius = 50000;
-    let fromLatLng = null;
-    let toLatLng = null;
-    let isOutProvince = false;
 
-    $(document).on("click", ".form-title", function () {
-        $(".form-title").removeClass("active");
-        $(this).addClass("active");
 
-        if ($(this).find("i").hasClass("fa-road")) {
-            isOutProvince = true;
-            $("#diemDen").val("");
-            toLatLng = null;
-            console.log("Chế độ: Đi tỉnh");
-        } else {
-            isOutProvince = false;
-            console.log("Chế độ: Sân bay");
-            setDefaultDestination();
-        }
-    });
 
-    function setDefaultDestination() {
-        const defaultDescription = "Sân bay Nội Bài";
-        $("#diemDen").val(defaultDescription);
-
-        $.getJSON(`https://rsapi.goong.io/Place/AutoComplete?api_key=${API_KEY}&input=${encodeURIComponent(defaultDescription)}&location=${lat},${lng}`, function (data) {
-            if (data.predictions && data.predictions.length > 0) {
-                const placeId = data.predictions[0].place_id;
-                $.getJSON(`https://rsapi.goong.io/Place/Detail?place_id=${placeId}&api_key=${API_KEY}`, function (res) {
-                    const loc = res.result.geometry.location;
-                    toLatLng = loc.lat + "," + loc.lng;
-                });
-            }
-        });
-    }
-
-    setDefaultDestination();
-
-    let debounceTimer = null;
-
-    $(document).on("input", ".autocomplete-input", function () {
-        const $input = $(this);
-        const keyword = $input.val().trim();
-        const $container = $input.closest(".autocomplete-container");
-        const $list = $container.find(".autocomplete-list");
-
-        clearTimeout(debounceTimer);
-        $list.empty().hide();
-
-        if (keyword.length < 3) return;
-
-        debounceTimer = setTimeout(() => {
-            let url = isOutProvince
-                ? `https://rsapi.goong.io/Place/AutoComplete?api_key=${API_KEY}&input=${encodeURIComponent(keyword)}`
-                : `https://rsapi.goong.io/Place/AutoComplete?api_key=${API_KEY}&input=${encodeURIComponent(keyword)}&location=${lat},${lng}`;
-
-            $.getJSON(url, function (data) {
-                $.each(data.predictions, function (i, item) {
-                    const $div = $("<div>", { class: "autocomplete-item" });
-                    const $icon = $("<img>", {
-                        class: "autocomplete-icon",
-                        src: "https://cdn-icons-png.flaticon.com/512/1865/1865269.png"
-                    });
-                    const $textWrap = $("<div>", { class: "autocomplete-text" });
-                    const $primary = $("<div>", { class: "primary" }).text(item.structured_formatting.main_text || item.description);
-                    const $secondary = $("<div>", { class: "secondary" }).text(item.structured_formatting.secondary_text || "");
-                    $textWrap.append($primary, $secondary);
-                    $div.append($icon, $textWrap);
-
-                    $div.on("click", function () {
-                        selectPlace(item.place_id, item.description, $input, $list);
-                    });
-
-                    $list.append($div);
-                });
-                $list.show();
-            });
-
-        }, 300); // delay 300ms chống spam API
-    });
-
-    function selectPlace(placeId, description, $input, $list) {
-        $list.empty().hide();
-        $input.val(description);
-
-        $.getJSON(`https://rsapi.goong.io/Place/Detail?place_id=${placeId}&api_key=${API_KEY}`, function (data) {
-            const loc = data.result.geometry.location;
-            const latlng = loc.lat + "," + loc.lng;
-
-            if ($input.attr('id') === 'diemDi') fromLatLng = latlng;
-            if ($input.attr('id') === 'diemDen') toLatLng = latlng;
-
-            if (fromLatLng && toLatLng) {
-                getDistance(fromLatLng, toLatLng);
-            }
-        });
-    }
-
-    function getDistance(origin, destination) {
-        $.getJSON(`https://rsapi.goong.io/Direction?origin=${origin}&destination=${destination}&vehicle=car&api_key=${API_KEY}`, function (res) {
-            if (res.routes && res.routes.length > 0) {
-                console.log("Khoảng cách:", res.routes[0].legs[0].distance.text);
-            }
-        });
-    }
-}
-
-$(document).ready(autoComplate);
-
-//document.addEventListener("DOMContentLoaded", function () {
-//    const marquees = document.querySelectorAll(".marquee-item");
-
-//    marquees.forEach((marquee, index) => {
-//        marquee.innerHTML += marquee.innerHTML;
-//        const height = marquee.scrollHeight / 2;
-
-//        gsap.to(marquee, {
-//            y: -height,
-//            duration: index === 0 ? 7 : 5,
-//            ease: "linear",
-//            repeat: -1
-//        });
-//    });
-//});
 
 function homeJs() {
-    
-    
-    //document.addEventListener('DOMContentLoaded', function () {
-    //    Fancybox.bind("[data-fancybox]", { Thumbs: { autoStart: true } });
-    //});
-    //$('.slider-for').slick({
-    //    slidesToShow: 1,
-    //    autoplay: true,
-    //    autoplaySpeed: 2000,
-    //    arrows: false,
-    //    asNavFor: '.slider-nav'
-    //})
-    //$('.slider-nav').slick({
-    //    slidesToShow: 4,
-    //    arrows: false,
-    //    slidesToScroll: 1,
-    //    asNavFor: '.slider-for',
-    //    focusOnSelect: true
-    //});
-    //$('.list-baner').slick({
-    //    slidesToShow: 1,
-    //    autoplay: true,
-    //    autoplaySpeed: 3000,
-    //    arrows: false,
-    //})
 
     $('.service-slide').slick({
         centerMode: true,
@@ -339,8 +189,8 @@ function homeJs() {
     });
 
 
-    
- 
+
+
 
 }
 

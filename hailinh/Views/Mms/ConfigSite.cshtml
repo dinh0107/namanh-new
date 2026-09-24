@@ -89,28 +89,6 @@
                                 <div class="col-lg-9"><img class="img-border" src="@Path.Combine("/images/configs/", Model.ImageShare)?w=150" /></div>
                             </div>
                         }
-                        <div class="mb-3 row">
-                            @Html.LabelFor(a => a.FooterImage, new { @class = "col-form-label col-lg-3" })
-                            <div class="col-lg-9">@Html.TextBoxFor(a => a.FooterImage, new { type = "file" })</div>
-                        </div>
-                        if (Model.FooterImage != null)
-                        {
-                            <div class="mb-3 row">
-                                <label class="col-form-label col-lg-3"></label>
-                                <div class="col-lg-9"><img class="img-border" src="@Path.Combine("/images/configs/", Model.FooterImage)?w=150" /></div>
-                            </div>
-                        }
-                        <div class="mb-3 row">
-                            @Html.LabelFor(a => a.AboutMission, new { @class = "col-form-label col-lg-3" })
-                            <div class="col-lg-9">@Html.TextBoxFor(a => a.AboutMission, new { type = "file" })</div>
-                        </div>
-                        if (Model.AboutMission != null)
-                        {
-                            <div class="mb-3 row">
-                                <label class="col-form-label col-lg-3"></label>
-                                <div class="col-lg-9"><img class="img-border" src="@Path.Combine("/images/configs/", Model.AboutMission)?w=150" /></div>
-                            </div>
-                        }
                         <hr />
                         <div class="mb-3 row">
                             <div class="col-lg-12"><strong>Tiêu đề trang chủ</strong></div>

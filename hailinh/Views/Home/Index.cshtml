@@ -97,7 +97,7 @@
 
             <div class="col-lg-6">
                 <div class="hero-img-wrap">
-                    <img src="@heroImg" alt="@siteTitle" />
+                    <img src="@heroImg" alt="@siteTitle" fetchpriority="high" decoding="async" />
                     <div class="hero-img-overlay-badge">
                         @siteTitle
                     </div>
@@ -133,7 +133,7 @@
                     foreach (var car in services)
                     {
                         var capacity = !string.IsNullOrWhiteSpace(car.Capacity) ? car.Capacity : (car.Title ?? "Xe du lịch");
-                        var img = !string.IsNullOrWhiteSpace(car.Image)
+                        var img = (!string.IsNullOrWhiteSpace(car.Image) && (car.Image.Contains(".") || car.Image.StartsWith("http")))
                             ? (car.Image.StartsWith("http") ? car.Image : Url.Content("~/images/services/" + car.Image))
                             : "https://lh3.googleusercontent.com/aida-public/AB6AXuBxH9mM3TTqypemJmIspSjhh78iSk2e6dFPMa1Baap857mWAR3BixkGaeQR7BLOZIzmUj6HNeVGraRNBpwZADIY3TOcrn6XVDQmpZFG3pPbLB1hT8pYHhP4WHSJNzu91LrOx5nHAMd7x9tfqNfp47_A1r5UuZdEMw2USWeoL29vZPEaqgreInmmpsFtGc1bXAquR1WSd9ZR0S_IhZG5o_nopXLNvq4AnnOoujRrCfcreM7EPnGLNdCYAw";
                         var carUrl = Url.Action("ServiceCar", "Home", new { url = car.Slug });
@@ -141,7 +141,7 @@
                         <div>
                             <div class="fleet-card-luxury">
                                 <div class="fleet-stage">
-                                    <img src="@img" alt="@car.Title" />
+                                    <img src="@img" alt="@car.Title" loading="lazy" decoding="async" />
                                     <div class="fleet-card-header">
                                         <span class="fleet-pill-badge">@capacity</span>
                                         @if (!string.IsNullOrWhiteSpace(car.Slogan))
@@ -313,7 +313,7 @@
                                     <div class="car-header-cell">
                                         @if (img != null)
                                         {
-                                            <img src="@img" alt="@col.Label" class="car-header-img" />
+                                            <img src="@img" alt="@col.Label" class="car-header-img" loading="lazy" decoding="async" />
                                         }
                                         <span class="car-header-label">@(col.Tab?.Name?.ToUpperInvariant() ?? col.Label)</span>
                                     </div>
@@ -490,7 +490,7 @@
                                 </p>
                             </div>
                             <div class="d-flex align-items-center gap-3 pt-3 border-top">
-                                <img src="@revImg" alt="@rev.BannerName" class="testimonial-avatar" />
+                                <img src="@revImg" alt="@rev.BannerName" class="testimonial-avatar" loading="lazy" decoding="async" />
                                 <div>
                                     <div class="fw-bold small text-dark">@rev.BannerName</div>
                                     <div class="text-muted" style="font-size: 0.75rem;">@rev.Content</div>
@@ -526,7 +526,7 @@
                         <div class="article-card">
                             <div class="article-thumb">
                                 <a href="@artUrl">
-                                    <img src="@artImg" alt="@art.Subject" />
+                                    <img src="@artImg" alt="@art.Subject" loading="lazy" decoding="async" />
                                 </a>
                             </div>
                             <div class="article-body">

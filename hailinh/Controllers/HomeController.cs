@@ -192,6 +192,8 @@ namespace hailinh.Controllers
             return PartialView(model);
 
         }
+        [ChildActionOnly]
+        [OutputCache(Duration = 1800)]
         public PartialViewResult Form(bool hideCarType = false, string presetTypeCar = null)
         {
             var services = _unitOfWork.CarServiceRepository.GetQuery(a => a.Active && a.Home, o => o.OrderBy(a => a.Sort)).ToList();

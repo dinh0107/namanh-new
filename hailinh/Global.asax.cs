@@ -23,7 +23,6 @@ namespace hailinh
 
             Database.SetInitializer<DataEntities>(null);
 
-            AreaRegistration.RegisterAllAreas();
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
@@ -31,10 +30,6 @@ namespace hailinh
             using (var unitofWork = new UnitOfWork())
             {
                 Application["ConfigSite"] = unitofWork.ConfigSiteRepository.GetQuery().FirstOrDefault();
-                // Warm up EF queries & mapping views so the first visitor never waits for EF compile
-                var _ = unitofWork.BannerRepository.GetQuery(a => a.Active).Take(1).ToList();
-                var __ = unitofWork.CarServiceRepository.GetQuery(a => a.Active).Take(1).ToList();
-                var ___ = unitofWork.PriceLangdingRepository.GetQuery(a => a.Active, includeProperties: "Locations").Take(1).ToList();
             }
         }
         
