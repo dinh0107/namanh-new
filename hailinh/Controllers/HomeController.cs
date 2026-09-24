@@ -33,17 +33,19 @@ namespace hailinh.Controllers
             return list;
         }
         [ChildActionOnly]
+        [OutputCache(Duration = 1800)]
         public PartialViewResult Header()
         {
             var model = new HeaderViewModel
             {
                 ArticleCategories = ArticleCategories().Where(a => a.ShowMenu),
-                Services = _unitOfWork.CarServiceRepository.GetQuery(a => a.Active && a.Menu, o => o.OrderBy(a => a.Sort)),
+                Services = _unitOfWork.CarServiceRepository.GetQuery(a => a.Active && a.Menu, o => o.OrderBy(a => a.Sort)).ToList(),
                 Banner = _unitOfWork.BannerRepository.GetQuery(a => a.Active && a.GroupId == 1 && a.Image != null).FirstOrDefault()
             };
             return PartialView(model);
         }
         [ChildActionOnly]
+        [OutputCache(Duration = 1800)]
         public PartialViewResult Footer()
         {
             var model = new FooterViewModel
@@ -52,11 +54,12 @@ namespace hailinh.Controllers
             };
             return PartialView(model);
         }
+        [OutputCache(Duration = 300, VaryByCustom = "IsAdmin")]
         public ActionResult Index()
         {
-            var banner = _unitOfWork.BannerRepository.GetQuery(a => a.Active, o => o.OrderBy(a => a.Sort));
-            var service = _unitOfWork.CarServiceRepository.GetQuery(a => a.Active && a.Home, o => o.OrderBy(a => a.Sort));
-            var articles = _unitOfWork.ArticleRepository.GetQuery(a => a.Active && (a.ArticleCategory.TypePost == TypePost.Article && a.Home && !a.Draft), o => o.OrderByDescending(a => a.CreateDate));
+            var banner = _unitOfWork.BannerRepository.GetQuery(a => a.Active, o => o.OrderBy(a => a.Sort)).ToList();
+            var service = _unitOfWork.CarServiceRepository.GetQuery(a => a.Active && a.Home, o => o.OrderBy(a => a.Sort)).ToList();
+            var articles = _unitOfWork.ArticleRepository.GetQuery(a => a.Active && (a.ArticleCategory.TypePost == TypePost.Article && a.Home && !a.Draft), o => o.OrderByDescending(a => a.CreateDate)).Take(6).ToList();
             
             var langdings = _unitOfWork.PriceLangdingRepository
                 .GetQuery(a => a.Active, orderBy: a => a.OrderBy(b => b.Sort), includeProperties: "Locations")
@@ -77,7 +80,7 @@ namespace hailinh.Controllers
             {
                 Banners = banner,
                 Services = service,
-                Articles = articles.Take(6),
+                Articles = articles,
                 ArticleCategories = ArticleCategories().Where(a => a.TypePost == TypePost.Article && a.Home),
                 PriceLangdings = langdings
             };

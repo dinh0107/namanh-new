@@ -18,53 +18,22 @@ namespace hailinh
     {
         protected void Application_Start()
         {
-            ViewEngines.Engines.Clear();
+              ViewEngines.Engines.Clear();
             ViewEngines.Engines.Add(new RazorViewEngine());
 
-            ControllerBuilder.Current.DefaultNamespaces.Clear();
-            ControllerBuilder.Current.DefaultNamespaces.Add("hailinh.Controllers");
-
-            // Tắt khởi tạo / migration tự động để tăng tốc khởi động ứng dụng (Cold start)
             Database.SetInitializer<DataEntities>(null);
-            try
-            {
-                using (var db = new DataEntities())
-                {
-                    if (db.Database.Exists())
-                    {
-                        db.Database.ExecuteSqlCommand(@"
-IF OBJECT_ID(N'dbo.__MigrationHistory', N'U') IS NOT NULL
-BEGIN
-    UPDATE dbo.__MigrationHistory
-    SET ContextKey = N'hailinh.Migrations.Configuration'
-    WHERE ContextKey <> N'hailinh.Migrations.Configuration';
-END
-
--- PriceLangding.Image: code đã map cột này; đảm bảo DB product có cột trước khi query Index.
-IF OBJECT_ID(N'dbo.PriceLangdings', N'U') IS NOT NULL
-   AND COL_LENGTH(N'dbo.PriceLangdings', N'Image') IS NULL
-    ALTER TABLE dbo.PriceLangdings ADD Image NVARCHAR(500) NULL;
-");
-                    }
-                }
-            }
-            catch
-            {
-                // DB chưa sẵn sàng
-            }
 
             AreaRegistration.RegisterAllAreas();
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
 
-            try { Utils.SmtpSettings.EnsureColumns(); } catch { /* ignore */ }
-
             using (var unitofWork = new UnitOfWork())
             {
                 Application["ConfigSite"] = unitofWork.ConfigSiteRepository.GetQuery().FirstOrDefault();
             }
         }
+        
         protected void Application_BeginRequest(object sender, EventArgs e)
         {
             Response.Charset = "utf-8";
@@ -102,6 +71,15 @@ IF OBJECT_ID(N'dbo.PriceLangdings', N'U') IS NOT NULL
 
             HttpContext.Current.User = principal;
             Thread.CurrentPrincipal = principal;
+        }
+
+        public override string GetVaryByCustomString(HttpContext context, string custom)
+        {
+            if (string.Equals(custom, "IsAdmin", StringComparison.OrdinalIgnoreCase))
+            {
+                return context?.User?.Identity?.IsAuthenticated == true ? "Admin" : "Anonymous";
+            }
+            return base.GetVaryByCustomString(context, custom);
         }
     }
 }

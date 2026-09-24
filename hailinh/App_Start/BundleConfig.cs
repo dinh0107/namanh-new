@@ -34,15 +34,16 @@ namespace hailinh
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.css",
                       "~/Content/PagedList.css",
-                      "~/Content/all.css",
                       "~/Content/aos.css",
                       "~/Content/slick.css",
                       "~/Content/jquery.toast.css",
                       "~/Content/jquery.fancybox.css",
                       "~/Content/daterangepicker.css",
                       "~/Content/style.css",
+                      "~/Content/hailinh-theme.css",
                       "~/Content/site-header.css",
-                      "~/Content/price-routes.css"));
+                      "~/Content/price-routes.css",
+                      "~/Content/home-pricing.css"));
 
             bundles.Add(new StyleBundle("~/Content/admincss").Include(
                       "~/Content/bootstrap.css",

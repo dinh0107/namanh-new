@@ -1,4 +1,4 @@
-@using hailinh.Models
+﻿@using hailinh.Models
 @{
     var config = (ConfigSite)HttpContext.Current.Application["ConfigSite"];
 }
@@ -68,26 +68,7 @@
                             <span>Tổng quan website</span>
                         </a>
                     </li>
-                    <li class="nav-item nav-item-submenu" data-id="carservice">
-                        <a href="javascript:;" class="nav-link">
-                            <i class="fa-solid fa-car-side"></i>
-                            <span>Quản lý Dòng xe &amp; Dịch vụ</span>
-                        </a>
-                        <ul class="nav-group-sub">
-                            <li class="nav-item">
-                                <a href="@Url.Action("CarService", "CarService")" class="nav-link">
-                                    <i class="fa-light fa-list"></i>
-                                    <span>Danh sách dòng xe</span>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="@Url.Action("CarService", "CarService")" class="nav-link">
-                                    <i class="fa-light fa-square-plus"></i>
-                                    <span>Thêm mới dòng xe</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
+                    
                     <li class="nav-item nav-item-submenu" data-id="2">
                         <a href="javascript:;" class="nav-link">
                             <i class="fas fa-user-cog"></i>
@@ -120,6 +101,28 @@
                             </li>
                         </ul>
                     </li>
+
+                    <li class="nav-item nav-item-submenu" data-id="carservice">
+                        <a href="javascript:;" class="nav-link">
+                            <i class="fa-solid fa-car-side"></i>
+                            <span>Quản lý Dòng xe &amp; Dịch vụ</span>
+                        </a>
+                        <ul class="nav-group-sub">
+                            <li class="nav-item">
+                                <a href="@Url.Action("CarService", "CarService")" class="nav-link">
+                                    <i class="fa-light fa-list"></i>
+                                    <span>Danh sách dòng xe</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="@Url.Action("CarService", "CarService")" class="nav-link">
+                                    <i class="fa-light fa-square-plus"></i>
+                                    <span>Thêm mới dòng xe</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    
                     <li class="nav-item" data-id="1">
                         <a href="@Url.Action("List","Price")" class="nav-link">
                             <i class="fa-solid fa-table-list"></i>
