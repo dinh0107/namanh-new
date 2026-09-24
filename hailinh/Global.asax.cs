@@ -1,5 +1,4 @@
 using hailinh.DAL;
-using hailinh.Migrations;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -25,7 +24,7 @@ namespace hailinh
             ControllerBuilder.Current.DefaultNamespaces.Clear();
             ControllerBuilder.Current.DefaultNamespaces.Add("hailinh.Controllers");
 
-            // Đồng bộ ContextKey migration sau khi đổi namespace — tránh EF chạy lại CreateTable.
+            // Tắt khởi tạo / migration tự động để tăng tốc khởi động ứng dụng (Cold start)
             Database.SetInitializer<DataEntities>(null);
             try
             {
@@ -51,11 +50,9 @@ IF OBJECT_ID(N'dbo.PriceLangdings', N'U') IS NOT NULL
             }
             catch
             {
-                // DB chưa sẵn sàng — để MigrateDatabaseToLatestVersion xử lý.
+                // DB chưa sẵn sàng
             }
 
-            // Tắt tự động quét migration mỗi lần khởi động để tăng tốc Cold start
-            Database.SetInitializer<DataEntities>(null);
             AreaRegistration.RegisterAllAreas();
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);

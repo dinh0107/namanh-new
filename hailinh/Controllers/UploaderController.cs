@@ -45,7 +45,7 @@ namespace hailinh.Controllers
                         }
                     }
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                 }
             }

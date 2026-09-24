@@ -1,14 +1,12 @@
-﻿@using hailinh.Models
+@using hailinh.Models
 @{
     var config = (ConfigSite)HttpContext.Current.Application["ConfigSite"];
-    var role = User.IsInRole;
 }
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    @*<meta name="viewport" content="width=device-width" />*@
     <title>@ViewBag.Title</title>
     @if (config.Favicon != null)
     {

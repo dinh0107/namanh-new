@@ -344,60 +344,6 @@ namespace hailinh.Controllers
             return PartialView();
         }
 
-
-        //[HttpPost]
-        //public ActionResult ImportFromJson()
-        //{
-        //    try
-        //    {
-        //        string filePath = Server.MapPath("~/App_Start/prices.json");
-
-        //        if (!System.IO.File.Exists(filePath))
-        //            return Json(new { success = false, message = "Không tìm thấy file prices.json" });
-
-        //        string json = System.IO.File.ReadAllText(filePath);
-
-        //        var routes = JsonConvert.DeserializeObject<List<dynamic>>(json);
-        //        var list = new List<PriceTable>();
-        //        int sort = 1;
-
-        //        foreach (var r in routes)
-        //        {
-        //            var hanhTrinh = (string)r.hanh_trinh;
-        //            bool hot = r.hot != null && (bool)r.hot;
-        //            var gia = r.gia;
-
-        //            var item = new PriceTable
-        //            {
-        //                CarServiceId = 1, 
-        //                RouteDescription = hanhTrinh.Replace("<i class='fa-thin fa-arrows-left-right'></i>", "↔"),
-        //                Price4 = gia["4_cho"]?.ToString() ?? "Liên hệ",
-        //                Price7 = gia["7_cho"]?.ToString() ?? "Liên hệ",
-        //                Price16 = gia["16_cho"]?.ToString() ?? "Liên hệ",
-        //                Price29 = gia["29_cho"]?.ToString() ?? "Liên hệ",
-        //                Price45 = gia["45_cho"]?.ToString() ?? "Liên hệ",
-        //                PriceLim = gia["limousine"]?.ToString() ?? "Liên hệ",
-        //                Hot = hot,
-        //                Sort = sort++
-        //            };
-
-        //            list.Add(item);
-        //        }
-
-        //        foreach (var item in list)
-        //        {
-        //            _unitOfWork.PriceTableRepository.Insert(item);
-        //        }
-
-        //        _unitOfWork.Save();
-
-        //        return Json(new { success = true, message = $"Đã import {list.Count} dòng dữ liệu thành công!" });
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return Json(new { success = false, message = ex.Message });
-        //    }
-        //}
         protected override void Dispose(bool disposing)
         {
             _unitOfWork.Dispose();

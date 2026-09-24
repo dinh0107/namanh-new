@@ -17,8 +17,6 @@ namespace hailinh.DAL
         private GenericRepository<Driver> _driverRepository;
         private GenericRepository<Expense> _expenseRepository;
         private GenericRepository<Introduce> _introduceRepository;
-        //private GenericRepository<Product> _productRepository;
-        //private GenericRepository<ProductCategory> _productCategoryRepository;
         private GenericRepository<Trip> _tripRepository;
         private GenericRepository<Voucher> _voucherRepository;
         private GenericRepository<CarService> _carServiceRepository;
@@ -61,10 +59,6 @@ namespace hailinh.DAL
             _expenseRepository ?? (_expenseRepository = new GenericRepository<Expense>(_context));
         public GenericRepository<Introduce> IntroduceRepository =>
             _introduceRepository ?? (_introduceRepository = new GenericRepository<Introduce>(_context));
-        //public GenericRepository<Product> ProductRepository =>
-        //    _productRepository ?? (_productRepository = new GenericRepository<Product>(_context));
-        //public GenericRepository<ProductCategory> ProductCategoryRepository =>
-        //    _productCategoryRepository ?? (_productCategoryRepository = new GenericRepository<ProductCategory>(_context));
         public GenericRepository<Trip> TripRepository =>
             _tripRepository ?? (_tripRepository = new GenericRepository<Trip>(_context));
         public GenericRepository<Voucher> VoucherRepository =>
