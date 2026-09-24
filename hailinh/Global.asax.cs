@@ -54,7 +54,8 @@ IF OBJECT_ID(N'dbo.PriceLangdings', N'U') IS NOT NULL
                 // DB chưa sẵn sàng — để MigrateDatabaseToLatestVersion xử lý.
             }
 
-            Database.SetInitializer(new MigrateDatabaseToLatestVersion<DataEntities, Configuration>());
+            // Tắt tự động quét migration mỗi lần khởi động để tăng tốc Cold start
+            Database.SetInitializer<DataEntities>(null);
             AreaRegistration.RegisterAllAreas();
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);

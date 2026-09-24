@@ -111,18 +111,6 @@
                                 <div class="col-lg-9"><img class="img-border" src="@Path.Combine("/images/configs/", Model.AboutMission)?w=150" /></div>
                             </div>
                         }
-                        <div class="mb-3 row">
-                            @Html.LabelFor(a => a.AboutText, new { @class = "col-form-label col-lg-3" })
-                            <div class="col-lg-9">@Html.EditorFor(a => a.AboutText)</div>
-                        </div>
-                        <div class="mb-3 row">
-                            @Html.LabelFor(a => a.AboutUrl, new { @class = "col-form-label col-lg-3" })
-                            <div class="col-lg-9">@Html.EditorFor(a => a.AboutUrl)</div>
-                        </div>
-                        <div class="mb-3 row">
-                            @Html.LabelFor(a => a.Price, new { @class = "col-form-label col-lg-3" })
-                            <div class="col-lg-9">@Html.EditorFor(a => a.Price)</div>
-                        </div>
                         <hr />
                         <div class="mb-3 row">
                             <div class="col-lg-12"><strong>Tiêu đề trang chủ</strong></div>

@@ -17,8 +17,21 @@ namespace hailinh.Controllers
         private readonly UnitOfWork _unitOfWork = new UnitOfWork();
         public ConfigSite ConfigSite => (ConfigSite)HttpContext.Application["ConfigSite"];
 
-        private IEnumerable<ArticleCategory> ArticleCategories() =>
-            _unitOfWork.ArticleCategoryRepository.Get(a => a.CategoryActive, q => q.OrderBy(a => a.CategorySort));
+        private IEnumerable<ArticleCategory> ArticleCategories()
+        {
+            if (System.Web.HttpContext.Current?.Items["_ArticleCategoriesCache"] is IEnumerable<ArticleCategory> cached)
+            {
+                return cached;
+            }
+            var list = _unitOfWork.ArticleCategoryRepository
+                .Get(a => a.CategoryActive, q => q.OrderBy(a => a.CategorySort))
+                .ToList();
+            if (System.Web.HttpContext.Current != null)
+            {
+                System.Web.HttpContext.Current.Items["_ArticleCategoriesCache"] = list;
+            }
+            return list;
+        }
         [ChildActionOnly]
         public PartialViewResult Header()
         {
@@ -46,14 +59,18 @@ namespace hailinh.Controllers
             var articles = _unitOfWork.ArticleRepository.GetQuery(a => a.Active && (a.ArticleCategory.TypePost == TypePost.Article && a.Home && !a.Draft), o => o.OrderByDescending(a => a.CreateDate));
             
             var langdings = _unitOfWork.PriceLangdingRepository
-                .GetQuery(a => a.Active, orderBy: a => a.OrderBy(b => b.Sort))
+                .GetQuery(a => a.Active, orderBy: a => a.OrderBy(b => b.Sort), includeProperties: "Locations")
                 .ToList();
 
             foreach (var langding in langdings)
             {
-                langding.Locations = _unitOfWork.LocationRepository
-                    .Get(x => x.PriceLangdingId == langding.Id && x.Active, orderBy: q => q.OrderBy(l => l.Sort))
-                    .ToList();
+                if (langding.Locations != null)
+                {
+                    langding.Locations = langding.Locations
+                        .Where(x => x.Active)
+                        .OrderBy(l => l.Sort)
+                        .ToList();
+                }
             }
 
             var model = new HomeViewModel

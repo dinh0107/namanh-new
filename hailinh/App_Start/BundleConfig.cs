@@ -57,6 +57,8 @@ namespace hailinh
 
             bundles.Add(new StyleBundle("~/Content/themes/base/css").Include(
                       "~/Content/themes/base/*.css"));
+
+            BundleTable.EnableOptimizations = true;
         }
     }
 }
