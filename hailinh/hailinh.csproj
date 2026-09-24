@@ -1982,7 +1982,6 @@
     <Content Include="Views\Shared\_AdminIframeLayout.cshtml" />
     <Content Include="Views\Shared\_AdminLayout.cshtml" />
     <Content Include="Views\Shared\_ArticleItem.cshtml" />
-    <Content Include="Views\Shared\_ProductItem.cshtml" />
     <Content Include="webfonts\1FTV-VIP-Blacksword.woff2" />
     <Content Include="webfonts\fa-brands-400.ttf" />
     <Content Include="webfonts\fa-brands-400.woff2" />
