@@ -1,4 +1,4 @@
-﻿AOS.init({
+AOS.init({
     once: true,
 });
 $('.button-wrap').on("click", function () {
@@ -6,78 +6,84 @@ $('.button-wrap').on("click", function () {
     $(".toDate").toggleClass('input-active');
 });
 
-$('.slider-thuml').slick({
-    slidesToShow: 1,
-    slidesToScroll: 1,
-    arrows: false,
-    fade: true,
-    asNavFor: '.slider-nav'
-});
+if ($('.slider-thuml').length) {
+    $('.slider-thuml').slick({
+        slidesToShow: 1,
+        slidesToScroll: 1,
+        arrows: false,
+        fade: true,
+        asNavFor: '.slider-nav'
+    });
 
-$('.slider-nav').slick({
-    slidesToShow: 5,
-    arrows: false,
-    slidesToScroll: 1,
-    asNavFor: '.slider-thuml',
-    focusOnSelect: true,
-    responsive: [
-        {
-            breakpoint: 900,
-            settings: {
-                dots: false,
-                slidesToShow: 3
-            }
-        },
-        {
-            breakpoint: 768,
-            settings: {
-                centerPadding: '0',
-                dots: false,
-                slidesToShow: 3
-            }
-        },
-        {
-            breakpoint: 480,
-            settings: {
-                centerPadding: '0', dots: false,
-                slidesToShow: 3
-            }
-        }
-    ]
-});
+    if ($('.slider-nav').length) {
+        $('.slider-nav').slick({
+            slidesToShow: 5,
+            arrows: false,
+            slidesToScroll: 1,
+            asNavFor: '.slider-thuml',
+            focusOnSelect: true,
+            responsive: [
+                {
+                    breakpoint: 900,
+                    settings: {
+                        dots: false,
+                        slidesToShow: 3
+                    }
+                },
+                {
+                    breakpoint: 768,
+                    settings: {
+                        centerPadding: '0',
+                        dots: false,
+                        slidesToShow: 3
+                    }
+                },
+                {
+                    breakpoint: 480,
+                    settings: {
+                        centerPadding: '0', dots: false,
+                        slidesToShow: 3
+                    }
+                }
+            ]
+        });
+    }
+}
 
 
-$('.price-slick').slick({
-    slidesToShow: 3,
-    arrows: false,
-    slidesToScroll: 1,
-    centerMode: true,
-    centerPadding: '0',
-    responsive: [
-        {
-            breakpoint: 900,
-            settings: {
-                dots: false,
-                slidesToShow: 3
+if ($('.price-slick').length) {
+    $('.price-slick').slick({
+        slidesToShow: 3,
+        arrows: false,
+        slidesToScroll: 1,
+        centerMode: true,
+        centerPadding: '0',
+        responsive: [
+            {
+                breakpoint: 900,
+                settings: {
+                    dots: false,
+                    slidesToShow: 3
+                }
+            },
+            {
+                breakpoint: 768,
+                settings: {
+                    centerPadding: '0',
+                    dots: false,
+                    slidesToShow: 3
+                }
+            },
+            {
+                breakpoint: 480,
+                settings: {
+                    centerPadding: '0', dots: false,
+                    slidesToShow: 1
+                }
             }
-        },
-        {
-            breakpoint: 768,
-            settings: {
-                centerPadding: '0',
-                dots: false,
-                slidesToShow: 3
-            }
-        },
-        {
-            breakpoint: 480,
-            settings: {
-                centerPadding: '0', dots: false,
-                slidesToShow: 1
-            }
-        }
-    ]
-});
+        ]
+    });
+}
 
 
 
@@ -296,6 +302,7 @@ $(function () {
     const destinations = ["Nội Bài", "Mỹ Đình", "Hải Phòng", "Hạ Long", "Ninh Bình"];
 
     const item = document.getElementById("seedItem");
+    if (!item) return;
     let idx = 0;
     const SHOW_TIME = 6000; // thời gian hiển thị mỗi item
     const GAP_TIME = 4000;   // khoảng nghỉ giữa 2 item (ms)
@@ -323,6 +330,8 @@ $(function () {
     showOnce();
     setInterval(showOnce, SHOW_TIME + GAP_TIME);
 })();
-$('[data-fancybox]').fancybox({
-    caption: ''
-});
+if ($.fn.fancybox) {
+    $('[data-fancybox]').fancybox({
+        caption: ''
+    });
+}
