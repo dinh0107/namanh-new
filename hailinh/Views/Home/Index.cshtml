@@ -22,9 +22,85 @@
         : (!string.IsNullOrWhiteSpace(config?.AboutImage) ? Url.Content("~/images/configs/" + config.AboutImage) : "https://lh3.googleusercontent.com/aida-public/AB6AXuC__i21Wh1UkG1m7MvdXP_pp07pp56ss_ADvcowbOIM5uBngiWjp2yCBAjQxxwoc88U82Tpc7mqMbpr0-BYa0Z1f0yahWSlMkWBeJ2WpqCdlmBAmtQ-Mj3LjmhFPh145BGFWTtYQQx66YTiZ7G8IvXYoKRQCGp_Z740f8bwVDo3Zx511_jAN5KFer0kpRBEdO2GtZ04LVoLG0M9V1MlnYNxOcMjRJTWzeptgQEsPa31fVrkh6vGNqy34g");
     var services = Model?.Services?.ToList() ?? new List<CarService>();
     var priceLangdings = Model?.PriceLangdings?.ToList() ?? new List<PriceLangding>();
-    var reviews = Model?.Banners?.Where(b => b.GroupId == 2 && b.Active).OrderBy(b => b.Sort).ToList() ?? new List<Banner>();
+    var feedbackSliders = Model?.Banners?.Where(b => b.GroupId == 5 && b.Active).OrderBy(b => b.Sort).ToList();
+    if (feedbackSliders == null || !feedbackSliders.Any())
+    {
+        feedbackSliders = new List<Banner>
+        {
+            new Banner { Image = "2025/10/03/z7064113690485-5e9b8798ea634c483531d7f42bcf4aae-875.jpg", BannerName = "Khách hàng 1" },
+            new Banner { Image = "2025/10/03/z7064113682257-245ec8cc7c4ae1e27552fd21bd0b7d92-373.jpg", BannerName = "Khách hàng 2" },
+            new Banner { Image = "2025/10/03/z7064113681355-9fd0f864ba16d3a2884a1e6b346f028b-373.jpg", BannerName = "Khách hàng 3" },
+            new Banner { Image = "2025/10/03/z7064113683390-b940d43a3afaf726c2fe36d18c5973cb-373.jpg", BannerName = "Khách hàng 4" },
+            new Banner { Image = "2025/10/03/z6986397435245-f734a169d958c2ca7d1a59720bbc9f6c-672.jpg", BannerName = "Khách hàng 5" },
+            new Banner { Image = "2025/10/03/7-688.jpg", BannerName = "Khách hàng 6" },
+            new Banner { Image = "2025/10/03/2-672.jpg", BannerName = "Khách hàng 7" }
+        };
+    }
+
+    var feedbackMarquees = Model?.Banners?.Where(b => b.GroupId == 7 && b.Active).OrderBy(b => b.Sort).ToList();
+    if (feedbackMarquees == null || !feedbackMarquees.Any())
+    {
+        feedbackMarquees = new List<Banner>
+        {
+            new Banner { Image = "2025/10/02/z7064118606917-80072b95499cc7964f01282c2ab4a408-76.jpg", BannerName = "Đánh giá 1" },
+            new Banner { Image = "2025/10/02/z7064118607117-af9989d6766526bc24e7bb8c9922b689-976.jpg", BannerName = "Đánh giá 2" },
+            new Banner { Image = "2025/10/02/z7064118607118-8c160cf8ebd0f3882624d426b18a130c-526.jpg", BannerName = "Đánh giá 3" },
+            new Banner { Image = "2025/10/02/z7064118607119-b08875ef1051053048b387f35b393d0e-238.jpg", BannerName = "Đánh giá 4" },
+            new Banner { Image = "2025/10/02/z7064118607121-baf6ae27147c94670d2bd0b711ef1ca9-676.jpg", BannerName = "Đánh giá 5" },
+            new Banner { Image = "2025/10/02/z7064118607122-274eb4fdffbdb0665e4f863f2f2601ba-974.jpg", BannerName = "Đánh giá 6" },
+            new Banner { Image = "2025/10/02/z7064118607123-9e10fd625b77151b0b8b9c8355460ff3-693.jpg", BannerName = "Đánh giá 7" },
+            new Banner { Image = "2025/10/02/z7064118607124-e8240a825b6cf4d8c84919a2d33ecaac-909.jpg", BannerName = "Đánh giá 8" },
+            new Banner { Image = "2025/10/02/z7064118607120-83f7a98740cf1c1df74b1dfafe958b46-909.jpg", BannerName = "Đánh giá 9" }
+        };
+    }
+
+    var mTotal = feedbackMarquees.Count;
+    var splitIndex = mTotal >= 6 ? (mTotal > 7 ? 6 : (int)Math.Ceiling(mTotal / 2.0)) : (int)Math.Ceiling(mTotal / 2.0);
+    var marqueeCol1 = feedbackMarquees.Take(splitIndex).ToList();
+    var marqueeCol2 = feedbackMarquees.Skip(splitIndex).ToList();
+    if (!marqueeCol2.Any()) {
+        marqueeCol2 = marqueeCol1;
+    }
+
     var articles = Model?.Articles?.ToList() ?? new List<Article>();
+    var steps = Model?.Banners?.Where(b => b.GroupId == 3 && b.Active).OrderBy(b => b.Sort).ToList() ?? new List<Banner>();
+    if (!steps.Any())
+    {
+        steps = new List<Banner>
+        {
+            new Banner { Sort = 1, BannerName = "Phản hồi" },
+            new Banner { Sort = 2, BannerName = "Chọn tuyến du lịch hoặc số ngày thuê." },
+            new Banner { Sort = 3, BannerName = "Chọn loại xe (16 chỗ, 29 chỗ, 45 chỗ...)" },
+            new Banner { Sort = 4, BannerName = "Nhập số lượng hành khách + lịch trình." },
+            new Banner { Sort = 5, BannerName = "Xác nhận giá + ký hợp đồng điện tử." },
+            new Banner { Sort = 6, BannerName = "Nhà xe chuẩn bị xe và tài xế đúng ngày giờ." }
+        };
+    }
     var faqs = Model?.Banners?.Where(b => b.GroupId == 4 && b.Active).OrderBy(b => b.Sort).ToList() ?? new List<Banner>();
+    if (!faqs.Any())
+    {
+        faqs = new List<Banner>
+        {
+            new Banner
+            {
+                Sort = 1,
+                BannerName = "Giá dịch vụ thuê xe có lái tại Hà Nội được tính thế nào? Bao gồm gì & phát sinh khi nào?",
+                Content = "<p><span style=\"font-size:14px;\">Giá cơ bản thường <strong>gồm xe + tài xế + nhiên liệu trong giới hạn km/giờ</strong> của gói (nội thành/ngoại thành, nửa ngày/cả ngày).</span></p><p><span style=\"font-size:14px;\"><strong>Phụ phí phổ biến</strong>: vượt km, vượt giờ, <strong>phí cầu đường/đỗ bến, lưu đêm</strong>, phụ thu cuối tuần/lễ Tết, và <strong>VAT 10% (một số nơi đã gồm, nhiều nơi chưa)</strong> &rarr; cần hỏi rõ trước khi chốt</span></p><p><span style=\"font-size:14px;\">Ví dụ thực tế từ nhà cung cấp: bảng giá có <strong>mức quá km/giờ cụ thể</strong>; có nơi <strong>đã bao gồm</strong> VAT/phí nội thành, có nơi <strong>chưa bao gồm</strong> VAT.&nbsp;</span></p>"
+            },
+            new Banner
+            {
+                Sort = 2,
+                BannerName = "Giới hạn km/giờ trong gói thuê là bao nhiêu? Nếu vượt thì tính ra sao?",
+                Content = "<p><span style=\"font-size:14px;\">Gói theo <strong>nửa ngày/cả ngày</strong> thường kèm giới hạn <strong>km &amp; giờ</strong> (ví dụ 8–10 giờ/ngày); vượt sẽ tính <strong>phụ phí theo km</strong> và/hoặc <strong>phụ phí theo giờ.&nbsp;</strong><br />Phụ phí vượt <strong>km</strong>: 6.5k–20k/km và <strong>ngoài giờ:</strong> 60k–200k/giờ ( tùy vào từng dòng xe 4 - 7 - 16 -29 - 45 - Limousine )<br />Thuê theo <strong>tháng </strong>thường có <strong>định mức km/tháng;</strong> vượt km, làm cuối tuần/lễ Tết hay lưu đêm sẽ có phụ phí riêng.&nbsp;</span></p>"
+            },
+            new Banner
+            {
+                Sort = 3,
+                BannerName = "Tôi cần chuẩn bị gì khi đặt thuê xe có lái? Chính sách hủy/đổi thường thế nào?",
+                Content = "<p><span style=\"font-size:14px;\"><strong>Thông tin cần có khi đặt</strong>: điểm đón/trả, ngày giờ, thời lượng (nửa ngày/cả ngày/theo tháng), <strong>lịch trình dự kiến &amp; tổng km ước tính, loại xe/chỗ ngồi.&nbsp;</strong><br /><strong>Hủy/đổi:</strong> Quý Khách hủy hợp đồng trước 24h (trước giờ đặt lịch): Hoàn 100% tiền đặt cọc&nbsp;</span></p>"
+            }
+        };
+    }
     var fleetTitle = !string.IsNullOrWhiteSpace(config?.HomeFleetTitle) ? config.HomeFleetTitle : "Các dòng xe đang cho thuê";
     var fleetDesc = !string.IsNullOrWhiteSpace(config?.HomeFleetDesc) ? config.HomeFleetDesc : "Đa dạng lựa chọn từ 4 chỗ đến 45 chỗ và Limousine cao cấp đời mới";
     var priceTitle = !string.IsNullOrWhiteSpace(config?.HomePriceTitle) ? config.HomePriceTitle : "Bảng giá tham khảo tuyến đường phổ biến";
@@ -556,50 +632,79 @@
         </div>
     </div>
 </section>
-@if (reviews.Any())
-{
-    <section class="py-5 bg-light" id="gioi-thieu">
-        <div class="container">
-            <div class="text-center mb-5">
-                <h2 class="section-title mb-2 @editClass"@Html.Raw(EditAttrs("HomeReviewTitle", "config", null))>@reviewTitle</h2>
-                <div class="title-line text-primary mb-2">
-                    <i class="fa-solid fa-car-side fs-5"></i>
-                </div>
-            </div>
-
-            <div class="row g-4">
-                @foreach (var rev in reviews)
-                {
-                    var revImg = !string.IsNullOrWhiteSpace(rev.Image)
-                        ? (rev.Image.StartsWith("http") ? rev.Image : Url.Content("~/images/banners/" + rev.Image))
-                        : "https://lh3.googleusercontent.com/aida-public/AB6AXuCj4JG-Zz12MYmlNAp-opswnskC-nsiHxoRR6Vvbaq4yM0x2AUTVNLPD6e4HDV_WRTi2IM8tSCQDLXFz4PRuXpMRTD8VTtnSN-gsAbVCpMyd0LitIGaHWCDrX4z3o9gRaO5vAwcXpCLdOwQ9k3VgGI_wz7cB4sFNYWh9Vdx8wBpYNWBvRqiSInWY0bpod1snIebpoK4EFE-rEaGYjUICeqNA8uO3RVhnw1B3QvR6NO35VNMd43Qgyf-Lg";
-                    <div class="col-lg-3 col-md-6">
-                        <div class="testimonial-card">
-                            <div>
-                                <div class="d-flex justify-content-between align-items-center text-warning mb-3">
-                                    <span class="fs-1 text-primary opacity-25 fw-bold font-monospace lh-1">“</span>
-                                    <div class="small">
-                                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
-                                    </div>
-                                </div>
-                                <p class="small text-secondary mb-4">
-                                    @rev.Slogan
-                                </p>
-                            </div>
-                            <div class="d-flex align-items-center gap-3 pt-3 border-top">
-                                <img src="@revImg" alt="@rev.BannerName" class="testimonial-avatar" loading="lazy" decoding="async" />
-                                <div>
-                                    <div class="fw-bold small text-dark">@rev.BannerName</div>
-                                    <div class="text-muted" style="font-size: 0.75rem;">@rev.Content</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                }
+<section class="page-section feedback py-5" id="gioi-thieu">
+    <div class="container">
+        <div class="text-center mb-4">
+            <h2 class="section-title mb-2 @editClass"@Html.Raw(EditAttrs("HomeReviewTitle", "config", null))>@reviewTitle</h2>
+            <div class="title-line text-primary mb-2">
+                <i class="fa-solid fa-car-side fs-5"></i>
             </div>
         </div>
-    </section>
-}
+
+        <div class="row mt-3">
+            <div class="col-lg-7">
+                <div id="car-img" class="slider-for">
+                    @foreach (var item in feedbackSliders)
+                    {
+                        var imgUrl = !string.IsNullOrWhiteSpace(item.Image)
+                            ? (item.Image.StartsWith("http") ? item.Image : Url.Content("~/images/banners/" + item.Image))
+                            : "";
+                        <img src="@imgUrl" alt="@item.BannerName" loading="lazy" decoding="async" />
+                    }
+                </div>
+                <div class="slider-nav">
+                    @foreach (var item in feedbackSliders)
+                    {
+                        var imgUrl = !string.IsNullOrWhiteSpace(item.Image)
+                            ? (item.Image.StartsWith("http") ? item.Image : Url.Content("~/images/banners/" + item.Image))
+                            : "";
+                        <img src="@imgUrl" alt="@item.BannerName" loading="lazy" decoding="async" />
+                    }
+                </div>
+            </div>
+            <div class="col-lg-5 mt-lg-0 mt-3">
+                <div class="d-flex box-am">
+                    <div id="marquee1" class="marquee-item">
+                        <div>
+                            @foreach (var item in marqueeCol1)
+                            {
+                                var imgUrl = !string.IsNullOrWhiteSpace(item.Image)
+                                    ? (item.Image.StartsWith("http") ? item.Image : Url.Content("~/images/banners/" + item.Image))
+                                    : "";
+                                <img src="@imgUrl" alt="@item.BannerName" loading="lazy" decoding="async" />
+                            }
+                            @foreach (var item in marqueeCol1)
+                            {
+                                var imgUrl = !string.IsNullOrWhiteSpace(item.Image)
+                                    ? (item.Image.StartsWith("http") ? item.Image : Url.Content("~/images/banners/" + item.Image))
+                                    : "";
+                                <img src="@imgUrl" alt="@item.BannerName" loading="lazy" decoding="async" />
+                            }
+                        </div>
+                    </div>
+                    <div id="marquee2" class="marquee-item ms-2">
+                        <div>
+                            @foreach (var item in marqueeCol2)
+                            {
+                                var imgUrl = !string.IsNullOrWhiteSpace(item.Image)
+                                    ? (item.Image.StartsWith("http") ? item.Image : Url.Content("~/images/banners/" + item.Image))
+                                    : "";
+                                <img src="@imgUrl" alt="@item.BannerName" loading="lazy" decoding="async" />
+                            }
+                            @foreach (var item in marqueeCol2)
+                            {
+                                var imgUrl = !string.IsNullOrWhiteSpace(item.Image)
+                                    ? (item.Image.StartsWith("http") ? item.Image : Url.Content("~/images/banners/" + item.Image))
+                                    : "";
+                                <img src="@imgUrl" alt="@item.BannerName" loading="lazy" decoding="async" />
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 @*@if (articles.Any())
 {
     <section class="py-5 bg-white border-top" id="tin-tuc">
@@ -651,51 +756,62 @@
         </div>
     </section>
 }*@
-@if (faqs.Any())
+@if (steps.Any() || faqs.Any())
 {
-    <section class="py-5 bg-light border-top">
-        <div class="container" style="max-width: 850px;">
-            <div class="text-center mb-5">
-                <h2 class="section-title mb-2 @editClass"@Html.Raw(EditAttrs("HomeFaqTitle", "config", null))>@faqTitle</h2>
-                <div class="title-line text-primary mb-2">
-                    <i class="fa-solid fa-circle-question fs-5"></i>
-                </div>
-            </div>
-
-            <div class="accordion custom-faq" id="homeFaqAccordion">
-                @{
-                    var fIndex = 1;
-                }
-                @foreach (var faq in faqs)
-                {
-                    var isFirst = fIndex == 1;
-                    <div class="accordion-item">
-                        <h2 class="accordion-header" id="faqHeading@(fIndex)">
-                            <button class="accordion-button @(isFirst ? "" : "collapsed")" type="button" data-bs-toggle="collapse" data-bs-target="#faqCollapse@(fIndex)" aria-expanded="@(isFirst ? "true" : "false")" aria-controls="faqCollapse@(fIndex)">
-                                <i class="fa-regular fa-file-lines text-primary me-2"></i>
-                                <span>@faq.BannerName</span>
-                            </button>
-                        </h2>
-                        <div id="faqCollapse@(fIndex)" class="accordion-collapse collapse @(isFirst ? "show" : "")" aria-labelledby="faqHeading@(fIndex)" data-bs-parent="#homeFaqAccordion">
-                            <div class="accordion-body">
-                                @Html.Raw(faq.Content ?? faq.Slogan)
+    <section class="page-section" id="cau-hoi">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4">
+                    <div class="step">
+                        <h2 class="section-title text-left">Quy trình thuê xe đơn giản</h2>
+                        @foreach (var step in steps)
+                        {
+                            <div class="d-flex mt-4 align-items-center gap-2">
+                                <div class="step-count">
+                                    @step.Sort
+                                </div>
+                                <div class="step-name h-auto">
+                                    @step.BannerName
+                                </div>
                             </div>
-                        </div>
+                        }
                     </div>
-                    fIndex++;
-                }
-            </div>
+                </div>
+                <div class="col-lg-8 position-relative QA mt-lg-0 mt-4">
+                    <h2 class="title @editClass"@Html.Raw(EditAttrs("HomeFaqTitle", "config", null))>@faqTitle</h2>
+                    <p class="sub-title">Câu hỏi thường gặp</p>
 
-            <div class="mt-4 p-4 rounded-3 text-center bg-white border shadow-sm">
-                <h4 class="h6 fw-bold text-dark mb-1 @editClass"@Html.Raw(EditAttrs("HomeFaqCtaTitle", "config", null))>@faqCtaTitle</h4>
-                <p class="small text-muted mb-3 @editClass"@Html.Raw(EditAttrs("HomeFaqCtaDesc", "config", null))>@faqCtaDesc</p>
-                <div class="d-flex justify-content-center gap-3">
-                    <a href="tel:@hotline" class="btn btn-primary btn-sm px-3 fw-bold" style="background-color: var(--brand-dark-blue); border: none;">
-                        <i class="fa-solid fa-phone me-1"></i> Hotline: @hotline
-                    </a>
-                    <a href="@zaloUrl" target="_blank" rel="noopener" class="btn btn-outline-primary btn-sm px-3 fw-bold">
-                        <i class="fa-solid fa-comments me-1"></i> Chat Zalo
-                    </a>
+                    <div class="accordion" id="accordionExample">
+                        @{
+                            var fIndex = 0;
+                        }
+                        @foreach (var faq in faqs)
+                        {
+                            var isFirst = fIndex == 0;
+                            <div class="accordion-item @(isFirst ? "is-active" : "")" data-aos-duration="700" data-aos-delay="200" data-aos="fade-right">
+                                <h2 class="accordion-header" id="heading@(fIndex)">
+                                    <button class="accordion-button @(isFirst ? "" : "collapsed")"
+                                            type="button"
+                                            data-bs-toggle="collapse"
+                                            data-bs-target="#collapse@(fIndex)"
+                                            aria-expanded="@(isFirst ? "true" : "false")"
+                                            aria-controls="collapse@(fIndex)">
+                                        <span>@faq.BannerName</span>
+                                        <i class="fa-solid fa-arrow-down accordion-icon"></i>
+                                    </button>
+                                </h2>
+                                <div id="collapse@(fIndex)"
+                                     class="accordion-collapse collapse @(isFirst ? "show" : "")"
+                                     aria-labelledby="heading@(fIndex)"
+                                     data-bs-parent="#accordionExample">
+                                    <div class="accordion-body">
+                                        @Html.Raw(faq.Content ?? faq.Slogan)
+                                    </div>
+                                </div>
+                            </div>
+                            fIndex++;
+                        }
+                    </div>
                 </div>
             </div>
         </div>
@@ -777,6 +893,24 @@
                 });
             }
 
+            if ($('#car-img').length && $.fn.slick) {
+                $('#car-img').slick({
+                    slidesToShow: 1,
+                    autoplay: true,
+                    autoplaySpeed: 2500,
+                    arrows: false,
+                    fade: true,
+                    asNavFor: '.slider-nav'
+                });
+                $('.slider-nav').slick({
+                    slidesToShow: 4,
+                    arrows: false,
+                    slidesToScroll: 1,
+                    asNavFor: '#car-img',
+                    focusOnSelect: true
+                });
+            }
+
             if ($('#pricingMobileSlider').length && $.fn.slick) {
                 var $pricingSlider = $('#pricingMobileSlider');
                 $pricingSlider.slick({
@@ -804,6 +938,12 @@
                     }
                 });
             }
+
+            $('#accordionExample').on('show.bs.collapse', function (e) {
+                $(e.target).closest('.accordion-item').addClass('is-active');
+            }).on('hide.bs.collapse', function (e) {
+                $(e.target).closest('.accordion-item').removeClass('is-active');
+            });
 
             @if (isAdmin)
             {

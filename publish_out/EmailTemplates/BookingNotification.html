@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đơn đặt xe mới - Hà Linh</title>
+    <!--[if mso]>
+    <style type="text/css">
+        body, table, td, a { font-family: -apple-system, BlinkMacSystemFont, Arial, sans-serif !important; }
+    </style>
+    <![endif]-->
+    <style type="text/css">
+        body, p, h1, h2, h3, h4, table, td {
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            background-color: #F8FAFC;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            color: #1E293B;
+            -webkit-font-smoothing: antialiased;
+            -ms-text-size-adjust: 100%;
+            -webkit-text-size-adjust: 100%;
+            line-height: 1.6;
+        }
+        table {
+            border-collapse: collapse;
+            mso-table-lspace: 0pt;
+            mso-table-rspace: 0pt;
+        }
+        a {
+            text-decoration: none;
+        }
+        .email-wrapper {
+            width: 100%;
+            background-color: #F8FAFC;
+            padding: 40px 16px;
+        }
+        .email-card {
+            max-width: 560px;
+            margin: 0 auto;
+            background-color: #FFFFFF;
+            border-radius: 12px;
+            border: 1px solid #E2E8F0;
+            overflow: hidden;
+        }
+        
+        /* Header */
+        .email-header {
+            padding: 28px 32px 20px 32px;
+            border-bottom: 1px solid #F1F5F9;
+        }
+        .brand-name {
+            font-size: 14px;
+            font-weight: 700;
+            color: #0F172A;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+        .header-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #0F172A;
+            margin-top: 12px;
+            margin-bottom: 4px;
+        }
+        .header-meta {
+            font-size: 13px;
+            color: #64748B;
+        }
+
+        /* Content Body */
+        .email-body {
+            padding: 24px 32px;
+        }
+        
+        /* Phone Highlight Box */
+        .phone-box {
+            background-color: #F8FAFC;
+            border: 1px solid #E2E8F0;
+            border-radius: 8px;
+            padding: 16px 20px;
+            margin-bottom: 24px;
+        }
+        .phone-label {
+            font-size: 12px;
+            color: #64748B;
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+        .phone-number {
+            font-size: 22px;
+            font-weight: 700;
+            color: #0F172A;
+            text-decoration: none;
+        }
+
+        /* Summary Table */
+        .order-table {
+            width: 100%;
+            margin-bottom: 24px;
+        }
+        .order-table td {
+            padding: 12px 0;
+            border-bottom: 1px solid #F1F5F9;
+            font-size: 14px;
+            vertical-align: top;
+        }
+        .order-table td.label-cell {
+            width: 38%;
+            color: #64748B;
+            font-weight: 500;
+        }
+        .order-table td.value-cell {
+            color: #0F172A;
+            font-weight: 600;
+            text-align: right;
+        }
+
+        /* Buttons */
+        .btn-group {
+            padding-top: 8px;
+            margin-bottom: 8px;
+        }
+        .btn-call {
+            display: inline-block;
+            background-color: #0F172A;
+            color: #FFFFFF !important;
+            font-size: 14px;
+            font-weight: 600;
+            padding: 11px 22px;
+            border-radius: 6px;
+            margin-right: 8px;
+            margin-bottom: 8px;
+        }
+        .btn-zalo {
+            display: inline-block;
+            background-color: #F1F5F9;
+            color: #0F172A !important;
+            font-size: 14px;
+            font-weight: 600;
+            padding: 11px 20px;
+            border-radius: 6px;
+            border: 1px solid #E2E8F0;
+            margin-bottom: 8px;
+        }
+        .admin-link {
+            display: inline-block;
+            margin-top: 14px;
+            font-size: 13px;
+            color: #475569;
+            text-decoration: underline;
+        }
+
+        /* Footer */
+        .email-footer {
+            padding: 24px 32px;
+            background-color: #FAFAFA;
+            border-top: 1px solid #F1F5F9;
+            font-size: 12px;
+            color: #94A3B8;
+            line-height: 1.6;
+        }
+        .email-footer a {
+            color: #64748B;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="email-wrapper">
+        <center>
+            <table class="email-card" width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width: 560px;">
+                <!-- Header -->
+                <tr>
+                    <td class="email-header">
+                        <div class="brand-name">Hà Linh — Cho Thuê Xe</div>
+                        <div class="header-title">Thông báo đơn đặt xe mới</div>
+                        <div class="header-meta">Thời gian gửi: {{CreateDate}}</div>
+                    </td>
+                </tr>
+
+                <!-- Body -->
+                <tr>
+                    <td class="email-body">
+                        <!-- Customer Quick Contact Box -->
+                        <div class="phone-box">
+                            <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                                <tr>
+                                    <td>
+                                        <div class="phone-label">Số điện thoại khách hàng</div>
+                                        <a href="tel:{{Mobile}}" class="phone-number">{{Mobile}}</a>
+                                    </td>
+                                    <td align="right" valign="middle">
+                                        <a href="tel:{{Mobile}}" class="btn-call" style="margin: 0; padding: 8px 16px; font-size: 13px;">
+                                            Gọi điện
+                                        </a>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+
+                        <!-- Details Table -->
+                        <table class="order-table" role="presentation">
+                            <tr>
+                                <td class="label-cell">Điểm đón</td>
+                                <td class="value-cell">{{From}}</td>
+                            </tr>
+                            <tr>
+                                <td class="label-cell">Điểm đến</td>
+                                <td class="value-cell">{{To}}</td>
+                            </tr>
+                            <tr>
+                                <td class="label-cell">Loại xe</td>
+                                <td class="value-cell">{{TypeCar}}</td>
+                            </tr>
+                            <tr>
+                                <td class="label-cell">Loại chuyến</td>
+                                <td class="value-cell">{{TripType}}</td>
+                            </tr>
+                            <tr>
+                                <td class="label-cell">Thời gian đi</td>
+                                <td class="value-cell">{{FromDate}}</td>
+                            </tr>
+                            <tr>
+                                <td class="label-cell">Thời gian về</td>
+                                <td class="value-cell">{{ReturnDateText}}</td>
+                            </tr>
+                        </table>
+
+                        <!-- Action buttons -->
+                        <div class="btn-group">
+                            <a href="tel:{{Mobile}}" class="btn-call">
+                                 Gọi {{Mobile}}
+                            </a>
+                            <a href="{{ZaloUrl}}" target="_blank" class="btn-zalo">
+                                 Nhắn Zalo
+                            </a>
+                        </div>
+                        <div>
+                            <a href="{{AdminUrl}}" target="_blank" class="admin-link">
+                                Xem danh sách đơn trong Quản trị (Admin) →
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+
+                <!-- Footer -->
+                <tr>
+                    <td class="email-footer">
+                        <div>Thuê xe Hà Linh (hailinh-thuexe) • Hotline: <a href="tel:{{Hotline}}">{{Hotline}}</a> • Website: <a href="{{WebsiteUrl}}">{{WebsiteUrl}}</a></div>
+                        <div style="margin-top: 4px;">Email này được gửi tự động từ hệ thống khi có khách đặt xe trên website.</div>
+                    </td>
+                </tr>
+            </table>
+        </center>
+    </div>
+</body>
+</html>
