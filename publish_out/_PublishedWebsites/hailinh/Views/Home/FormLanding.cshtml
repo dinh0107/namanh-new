@@ -1,0 +1,130 @@
+@model hailinh.Models.Contact
+@{
+    var serviceLayout = ViewBag.ServiceLayout == true;
+    var typeCar = ViewBag.TypeCar as string ?? "";
+}
+@if (serviceLayout)
+{
+    <div class="sc-quote-card">
+        <div class="sc-quote-head">Nhận báo giá nhanh</div>
+        <div class="sc-quote-body">
+            <form method="post" class="contact-part sc-quote-form" id="bookingForm">
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary(true)
+                <div class="sc-trip-toggle" role="group" aria-label="Loại chuyến">
+                    <button type="button" class="sc-trip-btn active" data-trip="one">1 chiều</button>
+                    <button type="button" class="sc-trip-btn" data-trip="round">2 chiều</button>
+                </div>
+                <div class="row g-2">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            @Html.LabelFor(a => a.From)
+                            @Html.TextBoxFor(a => a.From, new { @class = "form-control", @placeholder = "Nhập điểm đón", @id = "scFrom" })
+                            <small class="text-danger">@Html.ValidationMessageFor(a => a.From)</small>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            @Html.LabelFor(a => a.To)
+                            @Html.TextBoxFor(a => a.To, new { @class = "form-control", @placeholder = "Nhập điểm đến", @id = "scTo" })
+                            <small class="text-danger">@Html.ValidationMessageFor(a => a.To)</small>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            @Html.LabelFor(a => a.FromDate)
+                            @Html.TextBoxFor(a => a.FromDate, new { @class = "form-control", @type = "datetime-local" })
+                            <small class="text-danger">@Html.ValidationMessageFor(a => a.FromDate)</small>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group toDate" id="scReturnDate">
+                            @Html.LabelFor(a => a.ToDate)
+                            @Html.TextBoxFor(a => a.ToDate, new { @class = "form-control", @type = "datetime-local" })
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="form-group">
+                            <label>Loại xe yêu cầu</label>
+                            <input type="text" class="form-control sc-car-readonly" readonly value="@(string.IsNullOrWhiteSpace(typeCar) ? "Theo dòng xe đang xem" : typeCar)" />
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="form-group mb-0">
+                            @Html.LabelFor(a => a.Mobile)
+                            @Html.TextBoxFor(a => a.Mobile, new { @class = "form-control", @placeholder = "Số điện thoại của bạn" })
+                            <small class="text-danger">@Html.ValidationMessageFor(a => a.Mobile)</small>
+                        </div>
+                    </div>
+                </div>
+                <input type="hidden" name="TypeCar" value="@typeCar" />
+                <button type="submit">Nhận báo giá nhanh</button>
+            </form>
+        </div>
+    </div>
+}
+else
+{
+    <form method="post" class="contact-part" id="bookingForm">
+        <h2 class="form-title">
+            Đặt xe trực tuyến
+        </h2>
+        <span class="sub-title">Chúng tôi sẽ liên hệ với bạn ngay trong <strong>3 phút</strong></span>
+        @Html.AntiForgeryToken()
+        @Html.ValidationSummary(true)
+        <div class="form-group">
+            @Html.LabelFor(a => a.From)
+            <div class="input-group autocomplete-container">
+                <img src="~/Content/images/icons8-user-64.png" alt="Icon" />
+                @Html.TextBoxFor(a => a.From, new { @class = "form-control autocomplete-input", @placeholder = "Nhập điểm đón", @id = "diemDi" })
+                <div id="autocompleteList" class="autocomplete-list"></div>
+            </div>
+            <small class="text-danger">@Html.ValidationMessageFor(a => a.From)</small>
+        </div>
+        <div class="form-group ">
+            @Html.LabelFor(a => a.To)
+            <div class="input-group autocomplete-container">
+                <img src="~/Content/images/icons8-map-64.png" alt="Icon" />
+                @Html.TextBoxFor(a => a.To, new { @class = "form-control autocomplete-input", @placeholder = "Nhập điểm đến", @id = "diemDi" })
+                <div id="autocompleteList" class="autocomplete-list"></div>
+            </div>
+            <small class="text-danger">@Html.ValidationMessageFor(a => a.To)</small>
+        </div>
+        <div class="way">
+            <div class="button-wrap">
+                <div class="button-bg">
+                    <div class="button-switch"></div>
+                </div>
+            </div>
+            <span>2 chiều</span>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(a => a.FromDate)
+            <div class="input-group">
+                <img src="~/Content/images/icons8-time-64.png" alt="Icon" />
+                @Html.TextBoxFor(a => a.FromDate, new { @class = "form-control", @type = "datetime-local" })
+            </div>
+            <small class="text-danger">@Html.ValidationMessageFor(a => a.FromDate)</small>
+        </div>
+        <div class="form-group toDate">
+            @Html.LabelFor(a => a.ToDate)
+            <div class="input-group">
+                <img src="~/Content/images/icons8-time-64.png" alt="Icon" />
+                @Html.TextBoxFor(a => a.ToDate, new { @class = "form-control", @type = "datetime-local" })
+            </div>
+            <small class="text-danger">@Html.ValidationMessageFor(a => a.ToDate)</small>
+        </div>
+        <input type="hidden" name="TypeCar" value="@typeCar" />
+        <div class="form-group">
+            @Html.LabelFor(a => a.Mobile)
+            <div class="input-group">
+                <img src="~/Content/images/icons8-phone-64.png" alt="Icon" />
+                @Html.TextBoxFor(a => a.Mobile, new { @class = "form-control", @placeholder = "Số điện thoại" })
+            </div>
+            <small class="text-danger">@Html.ValidationMessageFor(a => a.Mobile)</small>
+        </div>
+        <button type="submit" class="mt-2">
+            Đặt xe
+        </button>
+    </form>
+}

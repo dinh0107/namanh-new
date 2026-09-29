@@ -1,0 +1,41 @@
+@model hailinh.Models.Voucher
+
+<div class="card card-dark-blue p-0" style="width: 500px">
+    <div class="card-header">Thông tin voucher</div>
+    <div class="card-body">
+        @using (Html.BeginForm("UpdateVoucher", "Customer", FormMethod.Post, new { enctype = "multipart/form-data" }))
+        {
+            @Html.AntiForgeryToken()
+            @Html.HiddenFor(a => a.Id)
+
+            <div class="mb-3 row">
+                @Html.LabelFor(a => a.Code, new { @class = "col-form-label col-lg-3" })
+                <div class="col-lg-9">
+                    <input type="text" name="Code" readonly value="@Model.Code" class="form_control readonly" />
+                </div>
+            </div>
+            <div class="mb-3 row">
+                @Html.LabelFor(a => a.Active, new { @class = "col-form-label col-lg-3" })
+                <div class="col-lg-9">
+                    <label class="form-check-label">
+                        <input type="checkbox" name="Active" @if (Model.Active) { @Html.Raw("value='true' checked")  } else { @Html.Raw("value='false'") } />
+                        <span class="checkmark"></span>
+                    </label>
+                </div>
+            </div>
+            <div class="btn-group">
+                <button type="submit" class="btn-main btn-primary text-white ms-3">
+                    <span>Lưu</span>
+                    <i class="fa-solid fa-floppy-disk ms-2"></i>
+                </button>
+            </div>
+        }
+    </div>
+</div>
+
+<script>
+    $(".form-check-label input").click(function (e) {
+        var check = $(this).is(":checked");
+        $(this).val(check);
+    });
+</script>

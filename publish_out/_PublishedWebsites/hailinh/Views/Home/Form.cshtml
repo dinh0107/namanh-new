@@ -1,0 +1,352 @@
+@model hailinh.Models.Contact
+@using hailinh.Models
+@{
+    var config = (ConfigSite)HttpContext.Current.Application["ConfigSite"];
+    var services = ViewBag.Services as IEnumerable<CarService> ?? new List<CarService>();
+    var hotLocations = ViewBag.Locations as IEnumerable<string> ?? new List<string>();
+    var hideCarType = ViewBag.HideCarType == true;
+    var presetTypeCar = ViewBag.PresetTypeCar as string;
+}
+
+<div class="premium-booking-card" id="booking-form-card">
+    <form id="heroBookingForm" method="post" action="@Url.Action("ContactForm", "Home")">
+        @Html.AntiForgeryToken()
+
+        <div class="booking-top-bar">
+            <div class="segmented-trip-toggle">
+                <button type="button" class="trip-btn active" id="btnTripOneWay">
+                    <span>1 Chiều</span>
+                </button>
+                <button type="button" class="trip-btn" id="btnTripRoundTrip">
+                    <i class="fa-solid fa-arrow-right-arrow-left" style="font-size: 0.75rem;"></i>
+                    <span>Khứ hồi (2 Chiều)</span>
+                </button>
+                <input type="hidden" name="trip_type" id="tripTypeValue" value="1_way" />
+            </div>
+
+            
+        </div>
+
+        <div class="row g-3 align-items-end" id="bookingInputsRow">
+            <div class="col-lg-4 col-md-5 col-10" id="pickupCol">
+                <div class="booking-input-unit">
+                    <label class="unit-label" for="pickupLoc">
+                        <i class="fa-solid fa-location-dot text-primary"></i>
+                        <span>Điểm đón</span>
+                        <span class="req">*</span>
+                    </label>
+                    <div class="booking-input-wrap">
+                        @*<span class="unit-icon"><i class="fa-solid fa-location-crosshairs text-primary"></i></span>*@
+                        <input id="pickupLoc" name="From" required class="form-control" placeholder="Nhập điểm đón..." type="text" value="Hà Nội">
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-1 col-md-2 col-2 location-swap-col" id="swapCol">
+                <button id="switchLocationsBtn" class="btn-location-swap" type="button" title="Đổi chiều điểm đón và điểm đến">
+                    <i class="fa-solid fa-arrow-right-arrow-left"></i>
+                </button>
+            </div>
+
+            <div class="col-lg-4 col-md-5 col-12" id="dropoffCol">
+                <div class="booking-input-unit">
+                    <label class="unit-label" for="dropoffLoc">
+                        <i class="fa-solid fa-location-dot text-danger"></i>
+                        <span>Điểm đến</span>
+                        <span class="req">*</span>
+                    </label>
+                    <div class="booking-input-wrap">
+                        @*<span class="unit-icon"><i class="fa-solid fa-map-pin text-danger"></i></span>*@
+                        <input id="dropoffLoc" name="To" required class="form-control" placeholder="Tỉnh / Thành phố đến..." type="text">
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg col-md-6 col-sm-12" id="fromDateCol">
+                <div class="booking-input-unit">
+                    <div class="d-flex justify-content-between align-items-center mb-1">
+                        <label class="unit-label mb-0" for="fromDateInput">
+                            <i class="fa-regular fa-calendar-check text-primary"></i>
+                            <span>Ngày đi</span>
+                            <span class="req">*</span>
+                        </label>
+                    </div>
+                    <div class="booking-input-wrap">
+                        <input id="fromDateInput" name="FromDate" required class="form-control font-monospace" type="datetime-local">
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg col-md-6 col-sm-6 d-none" id="toDateContainer" style="display: none;">
+                <div class="booking-input-unit">
+                    <div class="d-flex justify-content-between align-items-center mb-1">
+                        <label class="unit-label mb-0" for="toDateInput">
+                            <i class="fa-regular fa-calendar-plus text-primary"></i>
+                            <span>Ngày về</span>
+                            <span class="req">*</span>
+                        </label>
+                        <span class="badge bg-primary bg-opacity-10 text-primary fw-bold" style="font-size: 0.65rem;" id="badgeReturn">Khứ hồi</span>
+                    </div>
+                    <div class="booking-input-wrap" id="toDateWrap">
+                        <input id="toDateInput" name="ToDate" class="form-control font-monospace" type="datetime-local" disabled>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-3 align-items-end mt-1">
+            @if (hideCarType)
+            {
+                <input type="hidden" name="TypeCar" value="@(presetTypeCar ?? "")" />
+            }
+            else
+            {
+                <div class="col-lg-4 col-md-6">
+                    <div class="booking-input-unit">
+                        <label class="unit-label" for="carTypeSelect">
+                            <i class="fa-solid fa-car text-primary"></i>
+                            <span>Loại xe mong muốn</span>
+                            <span class="req">*</span>
+                        </label>
+                        <div class="booking-input-wrap">
+                            <select id="carTypeSelect" name="TypeCar" required class="form-select">
+                                @if (services.Any())
+                                {
+                                    foreach (var s in services)
+                                    {
+                                        var cap = !string.IsNullOrWhiteSpace(s.Capacity) ? s.Capacity : s.Title;
+                                        <option value="@cap" @(cap.Contains("7") ? "selected" : "")>@s.Title (@(s.Car ?? cap))</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            }
+
+            <div class="@(hideCarType ? "col-lg-6" : "col-lg-4") col-md-6">
+                <div class="booking-input-unit">
+                    <label class="unit-label" for="phoneInput">
+                        <i class="fa-solid fa-phone text-success"></i>
+                        <span>Số điện thoại nhận báo giá</span>
+                        <span class="req">*</span>
+                    </label>
+                    <div class="booking-input-wrap">
+                        <input id="phoneInput" name="Mobile" required pattern="[0-9]{10}" class="form-control" placeholder="Nhập số điện thoại (10 số)..." type="tel">
+                    </div>
+                </div>
+            </div>
+
+            <div class="@(hideCarType ? "col-lg-6" : "col-lg-4") col-md-12">
+                <button id="bookingSubmitBtn" class="btn-booking-submit" type="submit">
+                    <span id="bookingBtnText">NHẬN BÁO GIÁ NHANH</span>
+                    <i class="fa-solid fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="booking-trust-seal">
+            <div class="seal-item">
+                <i class="fa-solid fa-bolt text-warning"></i>
+                <span>Báo giá ngay sau 5 phút</span>
+            </div>
+            <div class="seal-item">
+                <i class="fa-solid fa-shield-halved text-success"></i>
+                <span>Bảo mật thông tin 100%</span>
+            </div>
+            <div class="seal-item">
+                <i class="fa-solid fa-award text-primary"></i>
+                <span>Xe đời mới – Cam kết không phát sinh</span>
+            </div>
+        </div>
+    </form>
+</div>
+<script>
+(function () {
+    function notifyToast(ok, heading, text) {
+        if (typeof $.toast !== 'function') {
+            window.alert(text || heading);
+            return;
+        }
+        $.toast({
+            heading: heading,
+            text: text || '',
+            icon: ok ? 'success' : 'error',
+            position: 'bottom-right',
+            hideAfter: ok ? 4000 : 3500,
+            stack: 4
+        });
+    }
+
+    function initBookingForm() {
+        window.selectCarAndBook = function (carType) {
+            var $carSelect = $('#carTypeSelect');
+            if ($carSelect.length && carType) {
+                var needle = String(carType).toLowerCase();
+                $carSelect.find('option').each(function () {
+                    var val = String($(this).val() || '').toLowerCase();
+                    if (val.indexOf(needle) !== -1 || needle.indexOf(val) !== -1) {
+                        $carSelect.val($(this).val());
+                        return false;
+                    }
+                });
+            }
+            var $formCard = $('#booking-form-card');
+            if ($formCard.length) {
+                $('html, body').animate({ scrollTop: $formCard.offset().top - 80 }, 400);
+                $formCard.css('box-shadow', '0 0 0 4px rgba(245, 130, 32, 0.4), var(--brand-shadow-lg)');
+                setTimeout(function () { $formCard.css('box-shadow', ''); }, 1800);
+            }
+            setTimeout(function () { $('#phoneInput').trigger('focus'); }, 400);
+        };
+
+        window.selectRouteAndBook = function (fromLoc, toLoc, carType) {
+            if (fromLoc) $('#pickupLoc').val(fromLoc);
+            if (toLoc) $('#dropoffLoc').val(toLoc);
+            if (carType) window.selectCarAndBook(carType);
+            else window.selectCarAndBook();
+        };
+
+        var now = new Date();
+        now.setHours(now.getHours() + 2);
+        now.setMinutes(0);
+        var offset = now.getTimezoneOffset() * 60000;
+        var localISOTime = (new Date(now - offset)).toISOString().slice(0, 16);
+
+        var nextDay = new Date(now.getTime() + 24 * 60 * 60 * 1000);
+        nextDay.setHours(18, 0, 0, 0);
+        var localReturnTime = (new Date(nextDay - offset)).toISOString().slice(0, 16);
+
+        var $fromInput = $('#fromDateInput');
+        var $toDateInput = $('#toDateInput');
+        if ($fromInput.length && !$fromInput.val()) $fromInput.val(localISOTime);
+        if ($toDateInput.length && !$toDateInput.val()) $toDateInput.val(localReturnTime);
+
+        var $btnOneWay = $('#btnTripOneWay');
+        var $btnRoundTrip = $('#btnTripRoundTrip');
+        var $tripTypeValue = $('#tripTypeValue');
+        var $toDateContainer = $('#toDateContainer');
+        var $pickupCol = $('#pickupCol');
+        var $dropoffCol = $('#dropoffCol');
+        var $fromDateCol = $('#fromDateCol');
+        var $swapCol = $('#swapCol');
+
+        function setTripType(isRoundTrip) {
+            if (isRoundTrip) {
+                $btnRoundTrip.addClass('active');
+                $btnOneWay.removeClass('active');
+                $tripTypeValue.val('2_way');
+                $toDateContainer.removeClass('d-none').show();
+                $toDateInput.prop('disabled', false);
+                if (!$toDateInput.val()) {
+                    var baseDate = $fromInput.val() ? new Date($fromInput.val()) : new Date();
+                    var returnD = new Date(baseDate.getTime() + 24 * 60 * 60 * 1000);
+                    returnD.setHours(18, 0, 0, 0);
+                    $toDateInput.val((new Date(returnD - offset)).toISOString().slice(0, 16));
+                }
+                $pickupCol.attr('class', 'col-lg-3 col-md-5 col-10');
+                $dropoffCol.attr('class', 'col-lg-3 col-md-5 col-12');
+                $fromDateCol.attr('class', 'col-lg col-md-6 col-sm-6');
+                $swapCol.attr('class', 'col-lg-auto col-md-2 col-2 location-swap-col');
+            } else {
+                $btnOneWay.addClass('active');
+                $btnRoundTrip.removeClass('active');
+                $tripTypeValue.val('1_way');
+                $toDateContainer.addClass('d-none').hide();
+                $toDateInput.prop('disabled', true).val('');
+                $pickupCol.attr('class', 'col-lg-4 col-md-5 col-10');
+                $dropoffCol.attr('class', 'col-lg-4 col-md-5 col-12');
+                $fromDateCol.attr('class', 'col-lg col-md-6 col-sm-12');
+                $swapCol.attr('class', 'col-lg-auto col-md-2 col-2 location-swap-col');
+            }
+        }
+
+        $btnOneWay.on('click', function () { setTripType(false); });
+        $btnRoundTrip.on('click', function () { setTripType(true); });
+
+        $(document).on('click', '.date-pill', function () {
+            var $btn = $(this);
+            $('.date-pill').removeClass('active');
+            $btn.addClass('active');
+
+            var days = parseInt($btn.attr('data-days') || '0', 10);
+            var targetDate = new Date();
+            if (days === 2) {
+                var currentDay = targetDate.getDay();
+                var dist = (6 - currentDay + 7) % 7;
+                if (dist === 0) dist = 7;
+                targetDate.setDate(targetDate.getDate() + dist);
+            } else {
+                targetDate.setDate(targetDate.getDate() + days);
+            }
+            targetDate.setHours(8, 0, 0, 0);
+            $fromInput.val((new Date(targetDate - offset)).toISOString().slice(0, 16));
+            if ($tripTypeValue.val() === '2_way') {
+                targetDate.setHours(18, 0, 0, 0);
+                $toDateInput.val((new Date(targetDate - offset)).toISOString().slice(0, 16));
+            }
+        });
+
+        $(document).on('click', '.dest-pill', function () {
+            var $chip = $(this);
+            var $dropoff = $('#dropoffLoc');
+            $dropoff.val($chip.attr('data-loc') || $.trim($chip.text()));
+            var $wrap = $dropoff.closest('.booking-input-wrap');
+            $wrap.css({ borderColor: 'var(--brand-orange)', boxShadow: '0 0 0 4px rgba(245, 130, 32, 0.2)' });
+            setTimeout(function () { $wrap.css({ borderColor: '', boxShadow: '' }); }, 600);
+        });
+
+        $('#switchLocationsBtn').on('click', function () {
+            var $pickup = $('#pickupLoc');
+            var $dropoff = $('#dropoffLoc');
+            var temp = $pickup.val();
+            $pickup.val($dropoff.val());
+            $dropoff.val(temp);
+        });
+
+        $('#heroBookingForm').on('submit', function (e) {
+            e.preventDefault();
+            var $form = $(this);
+            var $btn = $('#bookingSubmitBtn');
+            var $btnText = $('#bookingBtnText');
+
+            $btn.prop('disabled', true);
+            $btnText.text('Đang gửi yêu cầu...');
+
+            $.ajax({
+                url: $form.attr('action'),
+                type: 'POST',
+                data: $form.serialize(),
+                headers: { 'X-Requested-With': 'XMLHttpRequest' },
+                success: function (data) {
+                    if (data && data.status) {
+                        notifyToast(true, 'Thành công', 'Gửi yêu cầu báo giá thành công! Chúng tôi sẽ gọi lại trong 5 phút.');
+                        $form[0].reset();
+                        setTripType(true);
+                        $fromInput.val(localISOTime);
+                        $toDateInput.val(localReturnTime);
+                    } else {
+                        notifyToast(false, 'Thất bại', (data && data.msg) || 'Có lỗi xảy ra, vui lòng kiểm tra lại thông tin.');
+                    }
+                },
+                error: function () {
+                    notifyToast(false, 'Thất bại', 'Không thể gửi yêu cầu lúc này. Vui lòng gọi trực tiếp hotline!');
+                },
+                complete: function () {
+                    $btn.prop('disabled', false);
+                    $btnText.text('NHẬN BÁO GIÁ NHANH');
+                }
+            });
+        });
+    }
+
+    function waitJq() {
+        if (window.jQuery) {
+            jQuery(initBookingForm);
+        } else {
+            setTimeout(waitJq, 30);
+        }
+    }
+    waitJq();
+})();
+</script>
