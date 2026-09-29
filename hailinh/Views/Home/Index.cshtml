@@ -63,19 +63,6 @@
     }
 
     var articles = Model?.Articles?.ToList() ?? new List<Article>();
-    var steps = Model?.Banners?.Where(b => b.GroupId == 3 && b.Active).OrderBy(b => b.Sort).ToList() ?? new List<Banner>();
-    if (!steps.Any())
-    {
-        steps = new List<Banner>
-        {
-            new Banner { Sort = 1, BannerName = "Phản hồi" },
-            new Banner { Sort = 2, BannerName = "Chọn tuyến du lịch hoặc số ngày thuê." },
-            new Banner { Sort = 3, BannerName = "Chọn loại xe (16 chỗ, 29 chỗ, 45 chỗ...)" },
-            new Banner { Sort = 4, BannerName = "Nhập số lượng hành khách + lịch trình." },
-            new Banner { Sort = 5, BannerName = "Xác nhận giá + ký hợp đồng điện tử." },
-            new Banner { Sort = 6, BannerName = "Nhà xe chuẩn bị xe và tài xế đúng ngày giờ." }
-        };
-    }
     var faqs = Model?.Banners?.Where(b => b.GroupId == 4 && b.Active).OrderBy(b => b.Sort).ToList() ?? new List<Banner>();
     if (!faqs.Any())
     {
@@ -756,52 +743,51 @@
         </div>
     </section>
 }*@
-@if (steps.Any() || faqs.Any())
+@if (faqs.Any())
 {
-    <section class="page-section" id="cau-hoi">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-4">
-                    <div class="step">
-                        <h2 class="section-title text-left">Quy trình thuê xe đơn giản</h2>
-                        @foreach (var step in steps)
-                        {
-                            <div class="d-flex mt-4 align-items-center gap-2">
-                                <div class="step-count">
-                                    @step.Sort
-                                </div>
-                                <div class="step-name h-auto">
-                                    @step.BannerName
-                                </div>
-                            </div>
-                        }
-                    </div>
+    <section class="py-5 bg-light border-top" id="cau-hoi">
+        <div class="container" style="max-width: 850px;">
+            <div class="text-center mb-5">
+                <h2 class="section-title mb-2 @editClass"@Html.Raw(EditAttrs("HomeFaqTitle", "config", null))>@faqTitle</h2>
+                <div class="title-line text-primary mb-2">
+                    <i class="fa-solid fa-circle-question fs-5"></i>
                 </div>
-                <div class="col-lg-8 position-relative QA mt-lg-0 mt-4">
-                    <h2 class="title @editClass"@Html.Raw(EditAttrs("HomeFaqTitle", "config", null))>@faqTitle</h2>
-                    <p class="sub-title">Câu hỏi thường gặp</p>
+            </div>
 
-                    <div class="custom-faq-list" id="customFaqList">
-                        @{
-                            var fIndex = 0;
-                        }
-                        @foreach (var faq in faqs)
-                        {
-                            var isFirst = fIndex == 0;
-                            <div class="faq-item @(isFirst ? "is-active" : "")" data-aos-duration="700" data-aos-delay="200" data-aos="fade-right">
-                                <div class="faq-question">
-                                    <span>@faq.BannerName</span>
-                                    <i class="fa-solid fa-arrow-down faq-icon"></i>
-                                </div>
-                                <div class="faq-answer" @(isFirst ? "" : "style=\"display:none\"")>
-                                    <div class="faq-answer-inner">
-                                        @Html.Raw(faq.Content ?? faq.Slogan)
-                                    </div>
-                                </div>
+            <div class="accordion custom-faq" id="homeFaqAccordion">
+                @{
+                    var fIndex = 1;
+                }
+                @foreach (var faq in faqs)
+                {
+                    var isFirst = fIndex == 1;
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="faqHeading@(fIndex)">
+                            <button class="accordion-button @(isFirst ? "" : "collapsed")" type="button" data-bs-toggle="collapse" data-bs-target="#faqCollapse@(fIndex)" aria-expanded="@(isFirst ? "true" : "false")" aria-controls="faqCollapse@(fIndex)">
+                                <i class="fa-regular fa-file-lines text-primary me-2"></i>
+                                <span>@faq.BannerName</span>
+                            </button>
+                        </h2>
+                        <div id="faqCollapse@(fIndex)" class="accordion-collapse collapse @(isFirst ? "show" : "")" aria-labelledby="faqHeading@(fIndex)" data-bs-parent="#homeFaqAccordion">
+                            <div class="accordion-body">
+                                @Html.Raw(faq.Content ?? faq.Slogan)
                             </div>
-                            fIndex++;
-                        }
+                        </div>
                     </div>
+                    fIndex++;
+                }
+            </div>
+
+            <div class="mt-4 p-4 rounded-3 text-center bg-white border shadow-sm">
+                <h4 class="h6 fw-bold text-dark mb-1 @editClass"@Html.Raw(EditAttrs("HomeFaqCtaTitle", "config", null))>@faqCtaTitle</h4>
+                <p class="small text-muted mb-3 @editClass"@Html.Raw(EditAttrs("HomeFaqCtaDesc", "config", null))>@faqCtaDesc</p>
+                <div class="d-flex justify-content-center gap-3">
+                    <a href="tel:@hotline" class="btn btn-primary btn-sm px-3 fw-bold" style="background-color: var(--brand-dark-blue); border: none;">
+                        <i class="fa-solid fa-phone me-1"></i> Hotline: @hotline
+                    </a>
+                    <a href="@zaloUrl" target="_blank" rel="noopener" class="btn btn-outline-primary btn-sm px-3 fw-bold">
+                        <i class="fa-solid fa-comments me-1"></i> Chat Zalo
+                    </a>
                 </div>
             </div>
         </div>
@@ -929,20 +915,33 @@
                 });
             }
 
-            // Custom FAQ accordion
-            $(document).on('click', '#customFaqList .faq-question', function () {
-                var $item = $(this).closest('.faq-item');
-                var $answer = $item.find('.faq-answer');
-                var isOpen = $item.hasClass('is-active');
+            // FAQ accordion click toggle
+            $(document).on('click', '#homeFaqAccordion .accordion-button', function (e) {
+                e.preventDefault();
+                var $btn = $(this);
+                var targetSelector = $btn.data('bs-target') || $btn.attr('data-bs-target');
+                var $target = $(targetSelector);
+                if (!$target.length) return;
 
-                // Close all
-                $('#customFaqList .faq-item').removeClass('is-active');
-                $('#customFaqList .faq-answer').slideUp(250);
+                var isOpen = $target.hasClass('show');
 
-                // Toggle current
-                if (!isOpen) {
-                    $item.addClass('is-active');
-                    $answer.slideDown(250);
+                // Close other items
+                $('#homeFaqAccordion .accordion-collapse').not($target).slideUp(200, function () {
+                    $(this).removeClass('show');
+                });
+                $('#homeFaqAccordion .accordion-button').not($btn).addClass('collapsed').attr('aria-expanded', 'false');
+
+                // Toggle current item
+                if (isOpen) {
+                    $target.slideUp(200, function () {
+                        $target.removeClass('show');
+                    });
+                    $btn.addClass('collapsed').attr('aria-expanded', 'false');
+                } else {
+                    $target.slideDown(200, function () {
+                        $target.addClass('show');
+                    });
+                    $btn.removeClass('collapsed').attr('aria-expanded', 'true');
                 }
             });
 

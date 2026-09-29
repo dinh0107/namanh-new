@@ -1630,65 +1630,7 @@ a:hover {
   transform: rotate(0deg);
 }
 
-/* Custom FAQ (jQuery toggle) */
-.custom-faq-list .faq-item {
-  margin-bottom: 20px;
-  background: #ebebeb;
-  border-radius: 10px;
-  overflow: hidden;
-  position: relative;
-  transition: background-color 0.2s, box-shadow 0.2s;
-}
-.custom-faq-list .faq-item.is-active {
-  background-color: #fff;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-}
-.custom-faq-list .faq-item.is-active::after {
-  content: "";
-  position: absolute;
-  width: 8px;
-  height: 100%;
-  background: #004596;
-  left: 0;
-  top: 0;
-  z-index: 1;
-}
-.custom-faq-list .faq-question {
-  font-weight: 600;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 16px 20px 16px 28px;
-  cursor: pointer;
-  user-select: none;
-}
-.custom-faq-list .faq-item.is-active .faq-question {
-  padding-bottom: 0;
-}
-.custom-faq-list .faq-icon {
-  color: #1C65B6;
-  border-radius: 50%;
-  width: 33px;
-  height: 33px;
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transform: rotate(180deg);
-  transition: transform 0.3s ease;
-}
-.custom-faq-list .faq-item.is-active .faq-icon {
-  transform: rotate(0deg);
-}
-.custom-faq-list .faq-answer {
-  padding: 0 20px 0 28px;
-}
-.custom-faq-list .faq-answer-inner {
-  padding-bottom: 16px;
-  color: #444;
-  font-size: 15px;
-  line-height: 1.7;
-}
+
 
 
 .seed-wrap {
