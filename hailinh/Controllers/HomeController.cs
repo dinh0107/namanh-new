@@ -9,9 +9,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.SessionState;
 
 namespace hailinh.Controllers
 {
+    [SessionState(SessionStateBehavior.ReadOnly)]
     public class HomeController : Controller
     {
         private readonly UnitOfWork _unitOfWork = new UnitOfWork();
@@ -254,18 +256,6 @@ namespace hailinh.Controllers
             Response.StatusCode = 404;
             Response.TrySkipIisCustomErrors = true;
             return View();
-        }
-        [Route("gioi-thieu")]
-        public ActionResult Introduct()
-        {
-            var banners = _unitOfWork.BannerRepository.GetQuery(a => a.Active, o => o.OrderBy(a => a.Sort));
-            var model = new IntroduceViewModel
-            {
-                Introduce = _unitOfWork.IntroduceRepository.GetQuery().FirstOrDefault(),
-                Banners = banners.Where(a => a.GroupId == 6).Take(3),
-                Banner = banners.Where(a => a.GroupId == 7 && a.Image != null).FirstOrDefault()
-            };
-            return View(model);
         }
 
         public PartialViewResult PriceTable()
