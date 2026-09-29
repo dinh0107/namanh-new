@@ -1,4 +1,4 @@
-﻿$(document).ready(function () {
+$(document).ready(function () {
     setTimeout(ClearAlert, 2000);
 
     function ClearAlert() {
@@ -39,8 +39,10 @@ $(".nav-item-submenu").click(function (e) {
         $(this).find(".nav-group-sub").slideToggle();
     }
 });
-$("textarea.ckeditor").ckeditor();
-CKEDITOR.timestamp = new Date();
+if ($("textarea.ckeditor").length && typeof CKEDITOR !== 'undefined') {
+    CKEDITOR.timestamp = 'namanh2026';
+    $("textarea.ckeditor").ckeditor();
+}
 
 function resetAnyFormById(formId) {
     formId = "#" + formId;

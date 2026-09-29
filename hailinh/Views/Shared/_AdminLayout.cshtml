@@ -1,4 +1,4 @@
-﻿@using hailinh.Models
+@using hailinh.Models
 @{
     var config = (ConfigSite)HttpContext.Current.Application["ConfigSite"];
 }
@@ -8,9 +8,9 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewBag.Title</title>
-    @if (config.Favicon != null)
+    @if (config?.Favicon != null)
     {
-        <link rel="shortcut icon" href="@Path.Combine("/images/configs/", config.Favicon)?w=64&h=64">
+        <link rel="shortcut icon" href="@Url.Content("~/images/configs/" + config.Favicon)">
     }
     @Styles.Render("~/Content/admincss", "~/Content/themes/base/css")
     <link href="~/Content/admin.css" rel="stylesheet" />
@@ -20,10 +20,10 @@
 <body>
     <div class="navbar navbar-dark">
         <div class="navbar-brand">
-            @if (config.Image != null)
+            @if (config?.Image != null)
             {
                 <a href="@Url.Action("Index","Home")" target="_blank" class="d-inline-block">
-                    <img src="@Path.Combine("/images/configs/", config.Image)" alt="logo" />
+                    <img src="@Url.Content("~/images/configs/" + config.Image)" alt="logo" />
                 </a>
             }
         </div>
@@ -222,7 +222,6 @@
     <script src="~/Scripts/ckeditor/adapters/jquery.js"></script>
     <script src="~/Scripts/jquery.cookie.js"></script>
     <script src="~/Scripts/jquery.fancybox.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.3.8/html5-qrcode.min.js" integrity="sha512-r6rDA7W6ZeQhvl8S7yRVQUKVHdexq+GAlNkNNqVC7YyIV+NwqCTJe2hDWCiffTyRNOeGEzRRJ9ifvRm/HCzGYg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="~/Scripts/scriptAdmin.js"></script>
     @RenderSection("scripts", false)
 </body>

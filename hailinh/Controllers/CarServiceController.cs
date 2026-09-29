@@ -8,13 +8,14 @@ using System.Reflection;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Services.Description;
+using System.Web.SessionState;
 using hailinh.DAL;
 using hailinh.Models;
 using hailinh.ViewModel;
 
 namespace hailinh.Controllers
 {
-    [Authorize, RoutePrefix("mms")]
+    [Authorize, RoutePrefix("mms"), SessionState(SessionStateBehavior.ReadOnly)]
     public class CarServiceController : Controller
     {
         private readonly UnitOfWork _unitOfWork = new UnitOfWork();

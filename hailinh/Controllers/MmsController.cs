@@ -10,12 +10,12 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Security;
 using System.Data.Entity;
-using System.Globalization;
 using PagedList;
+using System.Web.SessionState;
 
 namespace hailinh.Controllers
 {
-    [Authorize, RoutePrefix("mms")]
+    [Authorize, RoutePrefix("mms"), SessionState(SessionStateBehavior.ReadOnly)]
     public class MmsController : Controller
     {
         public readonly UnitOfWork _unitOfWork = new UnitOfWork();

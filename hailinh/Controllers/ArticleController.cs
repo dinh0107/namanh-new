@@ -10,9 +10,11 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Web.Mvc;
+using System.Web.SessionState;
+
 namespace hailinh.Controllers
 {
-    [Authorize, RoutePrefix("mms")]
+    [Authorize, RoutePrefix("mms"), SessionState(SessionStateBehavior.ReadOnly)]
     public class ArticleController : Controller
     {
         private readonly UnitOfWork _unitOfWork = new UnitOfWork();

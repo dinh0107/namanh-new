@@ -7,9 +7,11 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Web.Mvc;
+using System.Web.SessionState;
+
 namespace hailinh.Controllers
 {
-    [Authorize, RoutePrefix("mms")]
+    [Authorize, RoutePrefix("mms"), SessionState(SessionStateBehavior.ReadOnly)]
     public class ContactController : CustomerController
     {
         private readonly UnitOfWork _unitOfWork = new UnitOfWork();
