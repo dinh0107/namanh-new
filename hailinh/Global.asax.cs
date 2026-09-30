@@ -30,6 +30,11 @@ namespace hailinh
             using (var unitofWork = new UnitOfWork())
             {
                 Application["ConfigSite"] = unitofWork.ConfigSiteRepository.GetQuery().FirstOrDefault();
+                try
+                {
+                    unitofWork.CarServiceRepository.GetQuery(a => a.Active).Take(1).ToList();
+                }
+                catch { }
             }
         }
         

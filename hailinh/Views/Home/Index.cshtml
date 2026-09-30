@@ -204,21 +204,18 @@
                         <div>
                             <div class="fleet-card-luxury">
                                 <div class="fleet-stage">
-                                    <img src="@img" alt="@car.Title" loading="lazy" decoding="async" />
+                                    <img src="@img" alt="@car.Title" loading="lazy" decoding="async" onerror="this.onerror=null;this.src='/Content/images/xe-1.png';" />
+                                    @{
+                                        var shortTag = !string.IsNullOrWhiteSpace(car.Slogan)
+                                            ? car.Slogan.Split(new[] { '–', '-', '|', ';' }, StringSplitOptions.RemoveEmptyEntries)[0].Trim()
+                                            : "Đời mới 2024";
+                                    }
                                     <div class="fleet-card-header">
                                         <span class="fleet-pill-badge">@capacity</span>
-                                        @if (!string.IsNullOrWhiteSpace(car.Slogan))
-                                        {
-                                            <span class="fleet-tag-pill">
-                                                <i class="fa-solid fa-sparkles"></i> @car.Slogan
-                                            </span>
-                                        }
-                                        else
-                                        {
-                                            <span class="fleet-tag-pill">
-                                                <i class="fa-solid fa-sparkles"></i> Đời mới 2024
-                                            </span>
-                                        }
+                                        <span class="fleet-tag-pill" title="@car.Slogan">
+                                            <i class="fa-solid fa-sparkles"></i>
+                                            <span>@shortTag</span>
+                                        </span>
                                     </div>
                                 </div>
 

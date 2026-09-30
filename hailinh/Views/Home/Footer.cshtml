@@ -4,13 +4,16 @@
     var config = (ConfigSite)HttpContext.Current.Application["ConfigSite"];
     var siteTitle = config?.Title ?? "Hà Linh - Cho thuê xe có lái";
     var hotline = config?.Hotline ?? "";
+    var hotline2 = config?.Hotline2 ?? "";
     var email = config?.Email ?? "";
     var place = config?.Place ?? "Hà Nội, Việt Nam";
     var zalo = config?.Zalo;
     var zaloUrl = !string.IsNullOrWhiteSpace(zalo) ? ("https://zalo.me/" + zalo.Trim()) : ("tel:" + hotline);
     var facebook = config?.Facebook;
     var messenger = config?.Messenger;
+    var logoUrl = config?.Image != null ? Path.Combine("/images/configs/", config.Image) : null;
     var messengerUrl = !string.IsNullOrWhiteSpace(messenger) ? ("https://" + messenger.Trim().Replace("https://", "")) : "#";
+    var services = Model?.Services?.ToList() ?? new List<CarService>();
 }
 
 <footer class="main-footer" id="lien-he">
@@ -18,8 +21,14 @@
         <div class="row g-4 pb-4 border-bottom border-white border-opacity-10">
             <div class="col-lg-4 col-md-6">
                 <div class="d-flex align-items-center gap-2 mb-3">
-                    <span class="h4 fw-bold fst-italic text-white mb-0">@siteTitle</span>
-                    <i class="fa-solid fa-car-side text-primary fs-5"></i>
+                    @if (logoUrl != null)
+                    {
+                        <img src="@logoUrl" alt="@siteTitle" height="42" class="d-inline-block align-text-top object-fit-contain" />
+                    }
+                    else
+                    {
+                        <span class="h4 fw-bold fst-italic text-white mb-0">@siteTitle</span>
+                    }
                 </div>
                 <p class="small text-white-50 pe-lg-4 mb-3">
                     @(config?.Description ?? "Cung cấp dịch vụ thuê xe du lịch, đưa đón sân bay, xe cưới, công tác, hội nghị... với đội xe đời mới, sạch đẹp và tài xế giàu kinh nghiệm.")
@@ -29,6 +38,13 @@
                         <i class="fa-solid fa-phone text-primary"></i>
                         <span><strong>Hotline:</strong> <a href="tel:@hotline" class="text-white text-decoration-none">@hotline</a></span>
                     </p>
+                    @if (!string.IsNullOrWhiteSpace(hotline2))
+                    {
+                        <p class="mb-1 d-flex align-items-center gap-2">
+                            <i class="fa-solid fa-phone-volume text-primary"></i>
+                            <span><strong>Hotline 2:</strong> <a href="tel:@hotline2" class="text-white text-decoration-none">@hotline2</a></span>
+                        </p>
+                    }
                     <p class="mb-1 d-flex align-items-center gap-2">
                         <i class="fa-solid fa-envelope text-primary"></i>
                         <span><strong>Email:</strong> <a href="mailto:@email" class="text-white text-decoration-none">@email</a></span>
@@ -58,55 +74,56 @@
                         </a>
                     }
                 </div>
+                @if (!string.IsNullOrWhiteSpace(config?.InfoFooter))
+                {
+                    <div class="mt-3 small text-white-50 info-footer-content">
+                        @Html.Raw(config.InfoFooter)
+                    </div>
+                }
             </div>
 
             <div class="col-lg-2 col-md-6 col-6">
                 <h5>Về Chúng Tôi</h5>
                 <ul>
-                    <li><a href="@Url.Action("Introduct", "Home")">Giới thiệu</a></li>
-                    <li><a href="#gioi-thieu">Tại sao chọn chúng tôi</a></li>
-                    <li><a href="#tuyen-xe">Đội xe đời mới</a></li>
-                    <li><a href="#tuyen-xe">Tài xế chuyên nghiệp</a></li>
-                    <li><a href="#tin-tuc">Tin tức & Sự kiện</a></li>
-                </ul>
-            </div>
-
-            <div class="col-lg-2 col-md-6 col-6">
-                <h5>Dịch vụ</h5>
-                <ul>
-                    <li><a href="#tuyen-xe">Thuê xe 4 - 5 chỗ</a></li>
-                    <li><a href="#tuyen-xe">Thuê xe 7 chỗ</a></li>
-                    <li><a href="#tuyen-xe">Thuê xe 16 chỗ</a></li>
-                    <li><a href="#tuyen-xe">Thuê xe 29 chỗ</a></li>
-                    <li><a href="#tuyen-xe">Thuê xe 45 chỗ</a></li>
-                    <li><a href="#tuyen-xe">Thuê xe Limousine</a></li>
-                </ul>
-            </div>
-
-            <div class="col-lg-2 col-md-6 col-6">
-                <h5>Hỗ trợ</h5>
-                <ul>
-                    <li><a href="#bang-gia">Bảng giá tham khảo</a></li>
-                    <li><a href="#booking-form">Câu hỏi thường gặp</a></li>
-                    <li><a href="@Url.Action("Contact", "Home")">Quy trình đặt xe</a></li>
-                    <li><a href="@Url.Action("Contact", "Home")">Chính sách hủy / đổi</a></li>
+                    <li><a href="/#gioi-thieu">Giới thiệu</a></li>
+                    <li><a href="/#gioi-thieu">Tại sao chọn chúng tôi</a></li>
+                    <li><a href="/#tuyen-xe">Đội xe đời mới</a></li>
+                    <li><a href="/#bang-gia">Bảng giá dịch vụ</a></li>
+                    <li><a href="/#cau-hoi">Câu hỏi thường gặp</a></li>
                     <li><a href="@Url.Action("Contact", "Home")">Liên hệ hỗ trợ</a></li>
                 </ul>
             </div>
 
-            <div class="col-lg-2 col-md-6 col-6">
-                <h5>Liên hệ 24/7</h5>
+            <div class="col-lg-3 col-md-6 col-6">
+                <h5>Dịch vụ thuê xe</h5>
+                <ul>
+                    @if (services.Any())
+                    {
+                        foreach (var s in services)
+                        {
+                            <li>
+                                <a href="@Url.Action("ServiceCar", "Home", new { url = s.Slug })">@s.Title</a>
+                            </li>
+                        }
+                    }
+                    
+                </ul>
+            </div>
+
+            <div class="col-lg-3 col-md-6 col-12">
+                <h5>Tư vấn & Đặt xe 24/7</h5>
                 <div class="h5 fw-bold text-warning mb-2">
                     <i class="fa-solid fa-phone me-1"></i>
                     <a href="tel:@hotline" class="text-warning text-decoration-none">@hotline</a>
                 </div>
-                <p class="small text-white-50 mb-3">
-                    Sẵn sàng phục vụ mọi lúc, mọi nơi
-                </p>
-                <a class="btn btn-outline-light btn-sm w-100 py-2 fw-semibold" href="#booking-form">
-                    <span>Nhận báo giá nhanh</span>
-                    <i class="fa-solid fa-arrow-right ms-1"></i>
-                </a>
+                @if (!string.IsNullOrWhiteSpace(hotline2))
+                {
+                    <div class="small fw-semibold text-white-50 mb-2">
+                        <i class="fa-solid fa-phone-volume me-1 text-primary"></i>
+                        <a href="tel:@hotline2" class="text-white-50 text-decoration-none">@hotline2</a>
+                    </div>
+                }
+               
             </div>
         </div>
 

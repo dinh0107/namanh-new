@@ -38,11 +38,7 @@
                 {
                     <img src="@logoUrl" alt="@siteTitle" height="42" class="d-inline-block align-text-top object-fit-contain" />
                 }
-                else
-                {
-                    <span class="fw-bold fst-italic" style="color: var(--brand-dark-blue);">@siteTitle</span>
-                    <i class="fa-solid fa-car-side text-primary ms-1"></i>
-                }
+              
             </a>
 
             <div class="d-flex align-items-center d-lg-none gap-2">
@@ -63,7 +59,7 @@
                     @if (services.Any())
                     {
                         <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#tuyen-xe" id="servicesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <a class="nav-link dropdown-toggle" href="/#tuyen-xe" id="servicesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 Thuê xe
                             </a>
                             <ul class="dropdown-menu shadow border-0" aria-labelledby="servicesDropdown">
@@ -135,3 +131,32 @@
         </div>
     </nav>
 </header>
+<script>
+    (function () {
+        var isDesktop = function () { return window.innerWidth >= 992; };
+        var dropdownToggles = document.querySelectorAll('.main-header .dropdown-toggle');
+
+        dropdownToggles.forEach(function (toggle) {
+            toggle.addEventListener('click', function (e) {
+                if (isDesktop()) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    var href = toggle.getAttribute('href');
+                    if (href && href !== '#' && !href.startsWith('javascript')) {
+                        if (href.startsWith('/#')) {
+                            var hash = href.substring(1);
+                            if (window.location.pathname === '/' || window.location.pathname === '') {
+                                var target = document.querySelector(hash);
+                                if (target) {
+                                    target.scrollIntoView({ behavior: 'smooth' });
+                                    return;
+                                }
+                            }
+                        }
+                        window.location.href = href;
+                    }
+                }
+            });
+        });
+    })();
+</script>

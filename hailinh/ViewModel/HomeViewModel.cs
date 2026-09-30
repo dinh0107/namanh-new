@@ -38,6 +38,7 @@ namespace hailinh.ViewModel
         public IEnumerable<Article> Articles { get; set; }
         public IEnumerable<ArticleCategory> ArticleCategories { get; set; }
         public IEnumerable<ProductCategory> ProductCategories { get; set; }
+        public IEnumerable<CarService> Services { get; set; }
     }
 
     public class AllArticleViewModel

@@ -27,6 +27,14 @@ namespace hailinh.Controllers
             var allcats = _unitOfWork.CarServiceRepository.Get(orderBy: q => q.OrderBy(a => a.Id));
             return PartialView(allcats);
         }
+        [Route("khoi-tao-du-lieu-xe")]
+        public ActionResult SeedDefaultCars()
+        {
+            using (var hc = new HomeController())
+            {
+                return hc.SeedCarServices();
+            }
+        }
         [Route("them-trang-dich-vu")]
         public ActionResult CarService(string result = "")
         {
