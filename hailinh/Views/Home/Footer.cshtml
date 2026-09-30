@@ -11,7 +11,7 @@
     var zaloUrl = !string.IsNullOrWhiteSpace(zalo) ? ("https://zalo.me/" + zalo.Trim()) : ("tel:" + hotline);
     var facebook = config?.Facebook;
     var messenger = config?.Messenger;
-    var logoUrl = config?.Image != null ? Path.Combine("/images/configs/", config.Image) : null;
+    var logoUrl = config?.Image != null ? (Url.Content("~/images/configs/" + config.Image) + "?h=84") : null;
     var messengerUrl = !string.IsNullOrWhiteSpace(messenger) ? ("https://" + messenger.Trim().Replace("https://", "")) : "#";
     var services = Model?.Services?.ToList() ?? new List<CarService>();
 }

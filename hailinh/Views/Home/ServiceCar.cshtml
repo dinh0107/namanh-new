@@ -17,16 +17,16 @@
     Func<string, string> carImg = path =>
     {
         if (string.IsNullOrWhiteSpace(path)) return null;
-        if (path.StartsWith("http", StringComparison.OrdinalIgnoreCase) || path.StartsWith("/"))
-            return path.StartsWith("http", StringComparison.OrdinalIgnoreCase) ? path : Url.Content("~" + path);
-        return Url.Content("~/images/carService/" + path.TrimStart('/'));
+        if (path.StartsWith("http", StringComparison.OrdinalIgnoreCase)) return path;
+        var p = path.StartsWith("/") ? path : ("/images/carService/" + path.TrimStart('/'));
+        return Url.Content("~" + p + (p.Contains("?") ? "&w=600" : "?w=600"));
     };
     Func<string, string> detailImg = path =>
     {
         if (string.IsNullOrWhiteSpace(path)) return null;
-        if (path.StartsWith("http", StringComparison.OrdinalIgnoreCase) || path.StartsWith("/"))
-            return path.StartsWith("http", StringComparison.OrdinalIgnoreCase) ? path : Url.Content("~" + path);
-        return Url.Content("~/images/detail/" + path.TrimStart('/'));
+        if (path.StartsWith("http", StringComparison.OrdinalIgnoreCase)) return path;
+        var p = path.StartsWith("/") ? path : ("/images/detail/" + path.TrimStart('/'));
+        return Url.Content("~" + p + (p.Contains("?") ? "&w=450" : "?w=450"));
     };
 
     var heroImg = carImg(cs.ImageUrl ?? cs.Image ?? cs.ImageUrlMobile) ?? Url.Content("~/images/carService/seed/hero-vios.webp");

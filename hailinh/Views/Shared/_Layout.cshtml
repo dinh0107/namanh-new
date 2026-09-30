@@ -54,7 +54,9 @@
     
     <div id="fb-root"></div>
     <script>
-        window.addEventListener('load', function () {
+        function loadFbSdk() {
+            if (window._fbLoaded) return;
+            window._fbLoaded = true;
             var js = document.createElement('script');
             js.id = 'facebook-jssdk';
             js.src = 'https://connect.facebook.net/vi_VN/sdk.js#xfbml=1&version=v23.0&appId=872873711287852';
@@ -62,7 +64,10 @@
             js.defer = true;
             js.crossOrigin = 'anonymous';
             document.body.appendChild(js);
-        });
+        }
+        window.addEventListener('scroll', loadFbSdk, { once: true, passive: true });
+        window.addEventListener('touchstart', loadFbSdk, { once: true, passive: true });
+        setTimeout(loadFbSdk, 3500);
     </script>
 </body>
 </html>

@@ -18,8 +18,8 @@
     var heroTitle = !string.IsNullOrWhiteSpace(heroBanner?.BannerName) ? heroBanner.BannerName : "Cho thuê xe có lái – Xe đẹp, tài xế chuyên nghiệp, báo giá nhanh";
     var heroDesc = !string.IsNullOrWhiteSpace(heroBanner?.Slogan) ? heroBanner.Slogan : (config?.Description ?? "Cung cấp dịch vụ thuê xe du lịch, đưa đón sân bay, công tác, cưới hỏi, đi tỉnh... với đội xe đời mới, sạch đẹp và tài xế giàu kinh nghiệm.");
     var heroImg = !string.IsNullOrWhiteSpace(heroBanner?.Image)
-        ? (heroBanner.Image.StartsWith("http") ? heroBanner.Image : Url.Content("~/images/banners/" + heroBanner.Image))
-        : (!string.IsNullOrWhiteSpace(config?.AboutImage) ? Url.Content("~/images/configs/" + config.AboutImage) : "https://lh3.googleusercontent.com/aida-public/AB6AXuC__i21Wh1UkG1m7MvdXP_pp07pp56ss_ADvcowbOIM5uBngiWjp2yCBAjQxxwoc88U82Tpc7mqMbpr0-BYa0Z1f0yahWSlMkWBeJ2WpqCdlmBAmtQ-Mj3LjmhFPh145BGFWTtYQQx66YTiZ7G8IvXYoKRQCGp_Z740f8bwVDo3Zx511_jAN5KFer0kpRBEdO2GtZ04LVoLG0M9V1MlnYNxOcMjRJTWzeptgQEsPa31fVrkh6vGNqy34g");
+        ? (heroBanner.Image.StartsWith("http") ? heroBanner.Image : Url.Content("~/images/banners/" + heroBanner.Image + "?w=900"))
+        : (!string.IsNullOrWhiteSpace(config?.AboutImage) ? Url.Content("~/images/configs/" + config.AboutImage + "?w=900") : "https://lh3.googleusercontent.com/aida-public/AB6AXuC__i21Wh1UkG1m7MvdXP_pp07pp56ss_ADvcowbOIM5uBngiWjp2yCBAjQxxwoc88U82Tpc7mqMbpr0-BYa0Z1f0yahWSlMkWBeJ2WpqCdlmBAmtQ-Mj3LjmhFPh145BGFWTtYQQx66YTiZ7G8IvXYoKRQCGp_Z740f8bwVDo3Zx511_jAN5KFer0kpRBEdO2GtZ04LVoLG0M9V1MlnYNxOcMjRJTWzeptgQEsPa31fVrkh6vGNqy34g");
     var services = Model?.Services?.ToList() ?? new List<CarService>();
     var priceLangdings = Model?.PriceLangdings?.ToList() ?? new List<PriceLangding>();
     var feedbackSliders = Model?.Banners?.Where(b => b.GroupId == 5 && b.Active).OrderBy(b => b.Sort).ToList();
@@ -197,7 +197,7 @@
                     {
                         var capacity = !string.IsNullOrWhiteSpace(car.Capacity) ? car.Capacity : (car.Title ?? "Xe du lịch");
                         var img = !string.IsNullOrWhiteSpace(car.Image)
-                            ? (car.Image.StartsWith("http") ? car.Image : Url.Content("~/images/carService/" + car.Image))
+                            ? (car.Image.StartsWith("http") ? car.Image : Url.Content("~/images/carService/" + car.Image + "?w=450"))
                             : "https://lh3.googleusercontent.com/aida-public/AB6AXuBxH9mM3TTqypemJmIspSjhh78iSk2e6dFPMa1Baap857mWAR3BixkGaeQR7BLOZIzmUj6HNeVGraRNBpwZADIY3TOcrn6XVDQmpZFG3pPbLB1hT8pYHhP4WHSJNzu91LrOx5nHAMd7x9tfqNfp47_A1r5UuZdEMw2USWeoL29vZPEaqgreInmmpsFtGc1bXAquR1WSd9ZR0S_IhZG5o_nopXLNvq4AnnOoujRrCfcreM7EPnGLNdCYAw";
                         var carUrl = Url.Action("ServiceCar", "Home", new { url = car.Slug });
                         
@@ -274,7 +274,7 @@
     var tabLim = priceLangdings.FirstOrDefault(t => NormTab(t.Name).Contains("limo")) ?? tabsOrdered.ElementAtOrDefault(5);
     Func<PriceLangding, string> TabImg = tab =>
         tab != null && !string.IsNullOrWhiteSpace(tab.Image)
-            ? Url.Content("~/images/pricelangdings/" + tab.Image)
+            ? (tab.Image.StartsWith("http") ? tab.Image : Url.Content("~/images/pricelangdings/" + tab.Image + "?w=200"))
             : null;
     Func<string, PriceLangding, string> PriceFor = (dest, tab) =>
     {
@@ -631,7 +631,7 @@
                     @foreach (var item in feedbackSliders)
                     {
                         var imgUrl = !string.IsNullOrWhiteSpace(item.Image)
-                            ? (item.Image.StartsWith("http") ? item.Image : Url.Content("~/images/banners/" + item.Image))
+                            ? (item.Image.StartsWith("http") ? item.Image : Url.Content("~/images/banners/" + item.Image + "?w=650"))
                             : "";
                         <img src="@imgUrl" alt="@item.BannerName" loading="lazy" decoding="async" />
                     }
@@ -640,7 +640,7 @@
                     @foreach (var item in feedbackSliders)
                     {
                         var imgUrl = !string.IsNullOrWhiteSpace(item.Image)
-                            ? (item.Image.StartsWith("http") ? item.Image : Url.Content("~/images/banners/" + item.Image))
+                            ? (item.Image.StartsWith("http") ? item.Image : Url.Content("~/images/banners/" + item.Image + "?w=160&h=120&mode=crop"))
                             : "";
                         <img src="@imgUrl" alt="@item.BannerName" loading="lazy" decoding="async" />
                     }
@@ -653,14 +653,14 @@
                             @foreach (var item in marqueeCol1)
                             {
                                 var imgUrl = !string.IsNullOrWhiteSpace(item.Image)
-                                    ? (item.Image.StartsWith("http") ? item.Image : Url.Content("~/images/banners/" + item.Image))
+                                    ? (item.Image.StartsWith("http") ? item.Image : Url.Content("~/images/banners/" + item.Image + "?w=320"))
                                     : "";
                                 <img src="@imgUrl" alt="@item.BannerName" loading="lazy" decoding="async" />
                             }
                             @foreach (var item in marqueeCol1)
                             {
                                 var imgUrl = !string.IsNullOrWhiteSpace(item.Image)
-                                    ? (item.Image.StartsWith("http") ? item.Image : Url.Content("~/images/banners/" + item.Image))
+                                    ? (item.Image.StartsWith("http") ? item.Image : Url.Content("~/images/banners/" + item.Image + "?w=320"))
                                     : "";
                                 <img src="@imgUrl" alt="@item.BannerName" loading="lazy" decoding="async" />
                             }
@@ -671,14 +671,14 @@
                             @foreach (var item in marqueeCol2)
                             {
                                 var imgUrl = !string.IsNullOrWhiteSpace(item.Image)
-                                    ? (item.Image.StartsWith("http") ? item.Image : Url.Content("~/images/banners/" + item.Image))
+                                    ? (item.Image.StartsWith("http") ? item.Image : Url.Content("~/images/banners/" + item.Image + "?w=320"))
                                     : "";
                                 <img src="@imgUrl" alt="@item.BannerName" loading="lazy" decoding="async" />
                             }
                             @foreach (var item in marqueeCol2)
                             {
                                 var imgUrl = !string.IsNullOrWhiteSpace(item.Image)
-                                    ? (item.Image.StartsWith("http") ? item.Image : Url.Content("~/images/banners/" + item.Image))
+                                    ? (item.Image.StartsWith("http") ? item.Image : Url.Content("~/images/banners/" + item.Image + "?w=320"))
                                     : "";
                                 <img src="@imgUrl" alt="@item.BannerName" loading="lazy" decoding="async" />
                             }

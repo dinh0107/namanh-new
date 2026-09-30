@@ -3,7 +3,7 @@
 @using System.Configuration
 @{
     var config = (ConfigSite)HttpContext.Current.Application["ConfigSite"];
-    var logoUrl = config?.Image != null ? Path.Combine("/images/configs/", config.Image) : null;
+    var logoUrl = config?.Image != null ? (Url.Content("~/images/configs/" + config.Image) + "?h=84") : null;
     var siteTitle = config?.Title ?? "Hà Linh - Cho thuê xe có lái";
     var hotline = config?.Hotline ?? "1900 8866";
     var articleParents = Model?.ArticleCategories?
