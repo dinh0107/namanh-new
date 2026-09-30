@@ -115,7 +115,7 @@
                                     foreach (var s in services)
                                     {
                                         var cap = !string.IsNullOrWhiteSpace(s.Capacity) ? s.Capacity : s.Title;
-                                        <option value="@cap" @(cap.Contains("7") ? "selected" : "")>@s.Title (@(s.Car ?? cap))</option>
+                                        <option value="@cap" @(cap.Contains("7") ? "selected" : "")>@s.Title</option>
                                     }
                                 }
                             </select>
