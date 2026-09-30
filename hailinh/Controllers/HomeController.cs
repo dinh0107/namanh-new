@@ -79,6 +79,57 @@ namespace hailinh.Controllers
             return list;
         }
 
+        public static void ClearHomeCache()
+        {
+            var cache = System.Web.HttpContext.Current?.Cache;
+            if (cache == null) return;
+            cache.Remove("_HomeCarServices");
+            cache.Remove("_MenuCarServices");
+            cache.Remove("_AllCarServices");
+            cache.Remove("_FormLocations");
+            cache.Remove("_HomeBanners");
+            cache.Remove("_HomePriceLangdings");
+        }
+
+        private List<Banner> GetCachedBanners()
+        {
+            var cache = System.Web.HttpContext.Current?.Cache;
+            const string key = "_HomeBanners";
+            if (cache?[key] is List<Banner> cached) return cached;
+
+            var list = _unitOfWork.BannerRepository
+                .GetQuery(a => a.Active, o => o.OrderBy(a => a.Sort))
+                .AsNoTracking()
+                .ToList();
+            cache?.Insert(key, list, null, DateTime.Now.AddMinutes(30), System.Web.Caching.Cache.NoSlidingExpiration);
+            return list;
+        }
+
+        private List<PriceLangding> GetCachedPriceLangdings()
+        {
+            var cache = System.Web.HttpContext.Current?.Cache;
+            const string key = "_HomePriceLangdings";
+            if (cache?[key] is List<PriceLangding> cached) return cached;
+
+            var list = _unitOfWork.PriceLangdingRepository
+                .GetQuery(a => a.Active, orderBy: a => a.OrderBy(b => b.Sort), includeProperties: "Locations")
+                .AsNoTracking()
+                .ToList();
+
+            foreach (var langding in list)
+            {
+                if (langding.Locations != null)
+                {
+                    langding.Locations = langding.Locations
+                        .Where(x => x.Active)
+                        .OrderBy(l => l.Sort)
+                        .ToList();
+                }
+            }
+            cache?.Insert(key, list, null, DateTime.Now.AddMinutes(30), System.Web.Caching.Cache.NoSlidingExpiration);
+            return list;
+        }
+
         private IEnumerable<ArticleCategory> ArticleCategories()
         {
             if (System.Web.HttpContext.Current?.Items["_ArticleCategoriesCache"] is IEnumerable<ArticleCategory> cached)
@@ -101,8 +152,7 @@ namespace hailinh.Controllers
             var model = new HeaderViewModel
             {
                 ArticleCategories = Enumerable.Empty<ArticleCategory>(),
-                Services = GetCachedMenuServices(),
-                Banner = _unitOfWork.BannerRepository.GetQuery(a => a.Active && a.GroupId == 1 && a.Image != null).AsNoTracking().FirstOrDefault()
+                Services = GetCachedMenuServices()
             };
             return PartialView(model);
         }
@@ -119,24 +169,9 @@ namespace hailinh.Controllers
         [OutputCache(Duration = 300, VaryByCustom = "IsAdmin")]
         public ActionResult Index()
         {
-            var banner = _unitOfWork.BannerRepository.GetQuery(a => a.Active, o => o.OrderBy(a => a.Sort)).AsNoTracking().ToList();
+            var banner = GetCachedBanners();
             var service = GetCachedHomeServices();
-            
-            var langdings = _unitOfWork.PriceLangdingRepository
-                .GetQuery(a => a.Active, orderBy: a => a.OrderBy(b => b.Sort), includeProperties: "Locations")
-                .AsNoTracking()
-                .ToList();
-
-            foreach (var langding in langdings)
-            {
-                if (langding.Locations != null)
-                {
-                    langding.Locations = langding.Locations
-                        .Where(x => x.Active)
-                        .OrderBy(l => l.Sort)
-                        .ToList();
-                }
-            }
+            var langdings = GetCachedPriceLangdings();
 
             var model = new HomeViewModel
             {
@@ -170,9 +205,9 @@ namespace hailinh.Controllers
             {
                 return RedirectToActionPermanent("ErrorPage");
             }
-            var banner = _unitOfWork.BannerRepository
-                .GetQuery(a => a.Active && a.GroupId == 5, o => o.OrderBy(a => a.Sort))
-                .AsNoTracking()
+            var banner = GetCachedBanners()
+                .Where(a => a.Active && a.GroupId == 5)
+                .OrderBy(a => a.Sort)
                 .ToList();
             var model = new ServiceCarViewModel
             {
@@ -321,17 +356,7 @@ namespace hailinh.Controllers
 
         public PartialViewResult PriceTable()
         {
-            var langdings = _unitOfWork.PriceLangdingRepository
-                .GetQuery(a => a.Active, orderBy: a => a.OrderBy(b => b.Sort))
-                .ToList();
-
-            foreach (var langding in langdings)
-            {
-                langding.Locations = _unitOfWork.LocationRepository
-                    .Get(x => x.PriceLangdingId == langding.Id && x.Active, orderBy: q => q.OrderBy(l => l.Sort))
-                    .ToList();
-            }
-
+            var langdings = GetCachedPriceLangdings();
             var model = new HomeViewModel
             {
                 PriceLangdings = langdings

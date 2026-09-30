@@ -518,14 +518,6 @@
 
         <div class="bottom-grid">
             <section class="notes-card">
-                <div class="notes-icon-wrapper" aria-hidden="true">
-                    <svg viewBox="0 0 48 48" class="notes-icon-img">
-                        <circle cx="24" cy="24" r="24" fill="#0b5bd3"/>
-                        <rect x="15" y="12" width="18" height="24" rx="3" fill="#fff"/>
-                        <rect x="19" y="9" width="10" height="6" rx="2" fill="#fff"/>
-                        <path d="M19 22h10M19 26h10M19 30h7" stroke="#0b5bd3" stroke-width="1.8" stroke-linecap="round"/>
-                    </svg>
-                </div>
                 <div class="notes-content">
                     <h3 class="notes-title @editClass"@Html.Raw(EditAttrs("HomePriceNoteTitle", "config", null))>@priceNoteTitle</h3>
                     @if (!string.IsNullOrWhiteSpace(config?.Price))
@@ -888,15 +880,24 @@
                 var $pricingSlider = $('#pricingMobileSlider');
                 $pricingSlider.slick({
                     dots: false,
+                    arrows: false,
                     infinite: true,
                     speed: 300,
                     slidesToShow: 1,
                     slidesToScroll: 1,
                     adaptiveHeight: true,
                     swipe: true,
-                    touchThreshold: 10,
-                    prevArrow: $('#pricingPrevBtn'),
-                    nextArrow: $('#pricingNextBtn')
+                    touchThreshold: 10
+                });
+
+                $('#pricingPrevBtn').off('click').on('click', function (e) {
+                    e.preventDefault();
+                    $pricingSlider.slick('slickPrev');
+                });
+
+                $('#pricingNextBtn').off('click').on('click', function (e) {
+                    e.preventDefault();
+                    $pricingSlider.slick('slickNext');
                 });
 
                 $pricingSlider.on('afterChange', function (event, slick, currentSlide) {

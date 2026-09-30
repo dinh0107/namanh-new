@@ -43,6 +43,7 @@ namespace hailinh
             Response.Charset = "utf-8";
             Response.ContentEncoding = Encoding.UTF8;
             Response.HeaderEncoding = Encoding.UTF8;
+            Response.Cache.SetOmitVaryStar(true);
         }
 
         protected void Application_PostAuthenticateRequest(Object sender, EventArgs e)
